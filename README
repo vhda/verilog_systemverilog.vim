@@ -1,0 +1,3 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1586
+
+This script extends Verilog syntax highlighting, which comes along with Vim 6.3, and adds SystemVerilog stuff to it. It will recognize Verilog and SystemVerilog syntax in *.v, *.vh and *.sv files. The new syntax is named as "verilog_systemverilog". If your scripts are loaded correctly, you should see this syntax name when you execute the Vim command ":set syntax?" in your Verilog/SystemVerilog files.
