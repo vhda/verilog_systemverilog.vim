@@ -1,6 +1,6 @@
 " Language:     Verilog/SystemVerilog HDL
 " Maintainer:	Amit Sethi <amitrajsethi@yahoo.com>
-" Last Change:	Wed Jun 28 18:20:44 IST 2006
+" Last Change:	Thu Jul 27 12:09:48 IST 2006
 "
 " Credits:
 "   Originally created by
@@ -18,6 +18,8 @@
 " Revision Comments:
 "     Amit Sethi - Wed Jun 28 18:20:44 IST 2006
 "       Added SystemVerilog specific indentations
+"     Amit Sethi - Thu Jul 27 12:09:48 IST 2006
+"       Changed conflicting function name
 "
 
 " Only load this indent file when no other was loaded.
@@ -26,7 +28,7 @@ if exists("b:did_indent")
 endif
 let b:did_indent = 1
 
-setlocal indentexpr=GetVerilogIndent()
+setlocal indentexpr=GetVerilog_SystemVerilogIndent()
 setlocal indentkeys=!^F,o,O,0),0},=begin,=end,=join,=endcase,=join_any,=join_none
 setlocal indentkeys+==endmodule,=endfunction,=endtask,=endspecify
 setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
@@ -34,13 +36,13 @@ setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
 
 " Only define the function once.
-if exists("*GetVerilogIndent")
+if exists("*GetVerilog_SystemVerilogIndent")
   finish
 endif
 
 set cpo-=C
 
-function GetVerilogIndent()
+function GetVerilog_SystemVerilogIndent()
 
   if exists('b:verilog_indent_width')
     let offset = b:verilog_indent_width

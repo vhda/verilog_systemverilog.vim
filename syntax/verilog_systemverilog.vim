@@ -1,8 +1,8 @@
 " Vim syntax file
 " Language:	SystemVerilog (superset extension of Verilog)
 " Maintainer:	Amit Sethi <amitrajsethi@yahoo.com>
-" Last Update:  Mon Jun 26 18:28:10 IST 2006
-" Version: 1.0
+" Last Update:  Thu Jul 27 12:54:08 IST 2006
+" Version: 1.1
 
 " Extends Verilog syntax
 " Requires $VIMRUNTIME/syntax/verilog.vim to exist
@@ -162,6 +162,8 @@ syn match  verilogMethod       "\.purge\>"
 syn match  verilogMethod       "\.start\>"
 syn match  verilogMethod       "\.finish\>"
 
+syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
+
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
@@ -176,6 +178,7 @@ if version >= 508 || !exists("did_verilog_syn_inits")
    " The default highlighting.
    HiLink verilogMethod          Function
    HiLink verilogTypeDef         TypeDef
+   HiLink verilogAssertion       Include
 
    delcommand HiLink
 endif
