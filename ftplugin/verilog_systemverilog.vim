@@ -4,4 +4,10 @@
 " Last Change:	Tue Jun 26 08:56:34 IST 2006
 " Version: 1.0
 
-au BufNewFile,BufRead *.v,*.vh,*.sv,*.svi	set filetype=verilog_systemverilog
+" Only do this when not done yet for this buffer
+if exists("b:did_ftplugin")
+  finish
+endif
+
+" Behaves just like Verilog
+runtime! ftplugin/verilog.vim
