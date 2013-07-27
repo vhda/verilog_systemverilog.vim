@@ -147,11 +147,8 @@ function GetVerilog_SystemVerilogIndent()
   " De-indent for the end of one-line block
   elseif ( last_line !~ '\<begin\>' ||
     \ last_line =~ '\(//\|/\*\).*\<begin\>' ) &&
-    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|always\|initial\|do\|foreach\|final\)\>.*' .
-      \ vlog_comment . '*$' &&
-    \ last_line2 !~
-      \
-    '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|always\|initial\|do\|foreach\|final\)\>' &&
+    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|always\|initial\|do\|foreach\|final\)\>.*' . vlog_comment . '*$' &&
+    \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|always\|initial\|do\|foreach\|final\)\>' &&
     \ last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
     \ ( last_line2 !~ '\<begin\>' ||
     \ last_line2 =~ '\(//\|/\*\).*\<begin\>' )
