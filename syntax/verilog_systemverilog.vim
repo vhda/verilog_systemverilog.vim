@@ -32,6 +32,7 @@ syn sync lines=1000
 
 syn keyword verilogStatement   always_comb always_ff always_latch
 syn keyword verilogStatement   class endclass
+syn keyword verilogStatement   checker endchecker
 syn keyword verilogStatement   virtual local const protected
 syn keyword verilogStatement   package endpackage
 syn keyword verilogStatement   rand randc constraint randomize
