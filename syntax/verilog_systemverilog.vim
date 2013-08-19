@@ -27,6 +27,32 @@ syn sync lines=1000
 "       SystemVerilog Syntax
 "##########################################################
 
+syn clear verilogStatement
+syn keyword verilogStatement   always and assign automatic buf
+syn keyword verilogStatement   bufif0 bufif1 cell cmos
+syn keyword verilogStatement   config deassign defparam design
+syn keyword verilogStatement   disable edge endconfig
+syn keyword verilogStatement   endgenerate endmodule
+syn keyword verilogStatement   endprimitive endspecify endtable
+syn keyword verilogStatement   event force
+syn keyword verilogStatement   generate genvar highz0 highz1 ifnone
+syn keyword verilogStatement   incdir include initial inout input
+syn keyword verilogStatement   instance integer large liblist
+syn keyword verilogStatement   library localparam macromodule medium
+syn keyword verilogStatement   module nand negedge nmos nor
+syn keyword verilogStatement   noshowcancelled not notif0 notif1 or
+syn keyword verilogStatement   output parameter pmos posedge primitive
+syn keyword verilogStatement   pull0 pull1 pulldown pullup
+syn keyword verilogStatement   pulsestyle_onevent pulsestyle_ondetect
+syn keyword verilogStatement   rcmos real realtime reg release
+syn keyword verilogStatement   rnmos rpmos rtran rtranif0 rtranif1
+syn keyword verilogStatement   scalared showcancelled signed small
+syn keyword verilogStatement   specify specparam strong0 strong1
+syn keyword verilogStatement   supply0 supply1 table time tran
+syn keyword verilogStatement   tranif0 tranif1 tri tri0 tri1 triand
+syn keyword verilogStatement   trior trireg unsigned use vectored wait
+syn keyword verilogStatement   wand weak0 weak1 wire wor xnor xor
+
 syn keyword verilogStatement   always_comb always_ff always_latch
 syn keyword verilogStatement   class endclass
 syn keyword verilogStatement   checker endchecker
@@ -35,7 +61,7 @@ syn keyword verilogStatement   package endpackage
 syn keyword verilogStatement   rand randc constraint randomize
 syn keyword verilogStatement   with inside dist
 syn keyword verilogStatement   randcase
-syn keyword verilogStatement   sequence endsequence randsequence 
+syn keyword verilogStatement   randsequence
 syn keyword verilogStatement   get_randstate set_randstate
 syn keyword verilogStatement   srandom
 syn keyword verilogStatement   logic bit byte time
@@ -47,8 +73,7 @@ syn keyword verilogStatement   context pure
 syn keyword verilogStatement   void shortreal chandle string
 syn keyword verilogStatement   clocking endclocking
 syn keyword verilogStatement   interface endinterface modport
-syn keyword verilogStatement   cover covergroup coverpoint endgroup
-syn keyword verilogStatement   property endproperty
+syn keyword verilogStatement   cover coverpoint
 syn keyword verilogStatement   program endprogram
 syn keyword verilogStatement   bins binsof illegal_bins ignore_bins
 syn keyword verilogStatement   alias matches solve static assert
@@ -86,6 +111,46 @@ syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
 
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)"
+
+" Only enable folding if g:verilog_syntax_fold is defined
+if exists("g:verilog_syntax_fold")
+    let s:verilog_syntax_fold=split(g:verilog_syntax_fold, ",")
+else
+    let s:verilog_syntax_fold=[]
+endif
+
+if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogStatement   start="\<task\>"        end="\<endtask\>"       transparent keepend fold
+else
+    syn keyword verilogStatement  task endtask
+endif
+if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogStatement   start="\<function\>"    end="\<endfunction\>"   transparent keepend fold
+else
+    syn keyword verilogStatement  function endfunction
+endif
+if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogStatement   start="\<covergroup\>"  end="\<endgroup\>"      transparent keepend fold
+else
+    syn keyword verilogStatement  covergroup endgroup
+endif
+if index(s:verilog_syntax_fold, "sequence") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogStatement   start="\<sequence\>"    end="\<endsequence\>"   transparent keepend fold
+else
+    syn keyword verilogStatement  sequence endsequence
+endif
+if index(s:verilog_syntax_fold, "property") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogStatement   start="\<property\>"    end="\<endproperty\>"   transparent keepend fold
+else
+    syn keyword verilogStatement  property endproperty
+endif
+
+" Clear and redefine verilogComment to include folding
+if len(s:verilog_syntax_fold) > 0
+    syn clear   verilogComment
+    syn match   verilogComment  "//.*"                      contains=verilogTodo,@Spell
+    syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell,verilogFold
+endif
 
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
