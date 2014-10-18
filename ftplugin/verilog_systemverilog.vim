@@ -9,6 +9,9 @@ endif
 " Define include string
 setlocal include=^\s*`include
 
+" Set omni completion function
+set omnifunc=verilog_systemverilog#Complete
+
 " Behaves just like Verilog
 runtime! ftplugin/verilog.vim
 
