@@ -1,0 +1,37 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Fishman Ctags	//
+!_TAG_PROGRAM_URL	https://github.com/fishman/ctags	/official site/
+!_TAG_PROGRAM_VERSION	Development	//
+a	mod.sv	/^    function method (input a, input b);$/;"	p	function:myclass.method
+a	mod.sv	/^    input a,$/;"	p	function:mod.test
+a	mod.sv	/^    task atask (input a, output x);$/;"	p	task:myclass.atask
+atask	mod.sv	/^    task atask (input a, output x);$/;"	t	class:myclass
+b	mod.sv	/^    function method (input a, input b);$/;"	p	function:myclass.method
+b	mod.sv	/^    input b,$/;"	p	function:mod.test
+in1	mod.sv	/^    input  wire     [7:0] in1,$/;"	p	module:mod
+in2	mod.sv	/^    input  wire           in2,$/;"	p	module:mod
+method	mod.sv	/^    function method (input a, input b);$/;"	f	class:myclass
+mod	mod.sv	/^module mod ($/;"	m
+mod.in1	mod.sv	/^    input  wire     [7:0] in1,$/;"	p	module:mod
+mod.in2	mod.sv	/^    input  wire           in2,$/;"	p	module:mod
+mod.out	mod.sv	/^    output reg            out$/;"	p	module:mod
+mod.test	mod.sv	/^function test ($/;"	f	module:mod
+mod.test.a	mod.sv	/^    input a,$/;"	p	function:mod.test
+mod.test.b	mod.sv	/^    input b,$/;"	p	function:mod.test
+mod.test.z	mod.sv	/^    output z$/;"	p	function:mod.test
+myclass	mod.sv	/^class myclass;$/;"	c
+myclass.atask	mod.sv	/^    task atask (input a, output x);$/;"	t	class:myclass
+myclass.atask.a	mod.sv	/^    task atask (input a, output x);$/;"	p	task:myclass.atask
+myclass.atask.x	mod.sv	/^    task atask (input a, output x);$/;"	p	task:myclass.atask
+myclass.method	mod.sv	/^    function method (input a, input b);$/;"	f	class:myclass
+myclass.method.a	mod.sv	/^    function method (input a, input b);$/;"	p	function:myclass.method
+myclass.method.b	mod.sv	/^    function method (input a, input b);$/;"	p	function:myclass.method
+myclass.variable	mod.sv	/^    logic variable;$/;"	r	class:myclass
+out	mod.sv	/^    output reg            out$/;"	p	module:mod
+test	mod.sv	/^function test ($/;"	f	module:mod
+test	ola.v	/^reg test;$/;"	r
+variable	mod.sv	/^    logic variable;$/;"	r	class:myclass
+x	mod.sv	/^    task atask (input a, output x);$/;"	p	task:myclass.atask
+z	mod.sv	/^    output z$/;"	p	function:mod.test
