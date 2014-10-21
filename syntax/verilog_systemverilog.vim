@@ -1,8 +1,5 @@
 " Vim syntax file
 " Language:	SystemVerilog (superset extension of Verilog)
-" Maintainer:	Amit Sethi <amitrajsethi@yahoo.com>
-" Last Update:  Thu Jul 27 12:54:08 IST 2006
-" Version: 1.1
 
 " Extends Verilog syntax
 " Requires $VIMRUNTIME/syntax/verilog.vim to exist
