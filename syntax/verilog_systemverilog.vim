@@ -81,6 +81,7 @@ syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=\([fpnum]\|\)s\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=step\>"
 
+syn match  verilogMethod       "\(\s\+\.\)\@<!\<\w\+\((\)\@="
 syn match  verilogMethod       "\.atobin"
 syn match  verilogMethod       "\.atohex\>"
 syn match  verilogMethod       "\.atoi\>"
