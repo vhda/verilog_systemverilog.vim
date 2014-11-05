@@ -190,7 +190,7 @@ function GetVerilog_SystemVerilogIndent()
 
   " De-indent on the end of the block
   " join/end/endcase/endfunction/endtask/endspecify
-  if curr_line =~ '^\s*\<\(join\|join_any\|join_none\|\|end\|endcase\)\>' ||
+  if curr_line =~ '^\s*\<\(join\|join_any\|join_none\|end\|endcase\)\>' ||
       \ curr_line =~ '^\s*\<\(endfunction\|endtask\|endspecify\|endclass\)\>' ||
       \ curr_line =~ '^\s*\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
       \ curr_line =~ '^\s*\<\(endgroup\|endproperty\|endprogram\)\>' ||
@@ -198,7 +198,11 @@ function GetVerilog_SystemVerilogIndent()
     let ind = ind - offset
     if vverb | echom "De-indent the end of a block." | endif
   elseif curr_line =~ '^\s*\<endmodule\>'
-    let ind = ind - indent_modules
+    if exists("g:verilog_dont_deindent_eos")
+      let ind = ind - offset
+    else
+      let ind = ind - indent_modules
+    endif
     if vverb && indent_modules
       echom "De-indent the end of a module."
     endif
@@ -219,14 +223,23 @@ function GetVerilog_SystemVerilogIndent()
       endif
     endif
 
-  " De-indent after the end of multiple-line statement
-  elseif curr_line =~ '^\s*)' &&
+  " De-indent at the end of multiple-line statement
+  elseif !exists("g:verilog_dont_deindent_eos") && curr_line =~ '^\s*)' &&
     \ ( last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
     \ last_line !~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
     \ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
     let ind = ind - offset
     if vverb
-      echom "De-indent the end of a multiple statement."
+      echom "De-indent at the end of a multiple statement."
+    endif
+
+  " De-indent after the end of multiple-line statement
+  elseif exists("g:verilog_dont_deindent_eos") && last_line =~ '^\s*)' "&&
+    "\ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$'
+    let ind = ind - offset
+    if vverb
+      echom "De-indent after the end of a multiple statement."
+      echom "last_line: " . last_line . " last_line2: " . last_line2
     endif
 
   " De-indent `else and `endif
