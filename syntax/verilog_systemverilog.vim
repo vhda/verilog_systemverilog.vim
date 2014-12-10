@@ -163,6 +163,8 @@ syn match  verilogMethod       "\.finish\>"
 
 syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
 
+syn match  verilogObject       "\<\w\+\(\(::\|\.\)\)\@="
+
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
@@ -178,6 +180,7 @@ if version >= 508 || !exists("did_verilog_syn_inits")
    HiLink verilogMethod          Function
    HiLink verilogTypeDef         TypeDef
    HiLink verilogAssertion       Include
+   HiLink verilogObject          Type
 
    delcommand HiLink
 endif
