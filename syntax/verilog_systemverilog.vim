@@ -81,11 +81,11 @@ syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=\([fpnum]\|\)s\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=step\>"
 
-syn match  verilogMethod       "\(\s\+\.\)\@<!\<\w\+\((\)\@="
+syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 
 syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
 
-syn match  verilogObject       "\<\w\+\(\(::\|\.\)\)\@="
+syn match   verilogObject      "\<\w\+\ze\(::\|\.\)"
 
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
