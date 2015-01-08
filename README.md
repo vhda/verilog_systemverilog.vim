@@ -91,7 +91,7 @@ To enable syntax folding set the following option:
 ### Matchit
 
 This addon allows using `%` to jump between matching keywords as Vim already
-does for matchin parentheses/brackets. Many syntax files include the definition
+does for matching parentheses/brackets. Many syntax files include the definition
 of the matching keyword pairs for their supported languages.
 
 Since it is already included in all Vim installations and the addon can be
@@ -100,6 +100,12 @@ easily loaded by adding the following line to `.vimrc`:
 ```
 runtime macros/matchit.vim
 ```
+
+### Highlight Matchit
+
+The [hl_matchit.vim][hl_matchit] addon complements Matchit by automatically
+underlining matching words, similarly as Vim already does for
+parentheses/brackets.
 
 ### Tagbar
 
@@ -155,6 +161,7 @@ let g:tagbar_type_verilog_systemverilog = {
 [v]: https://github.com/gmarik/vundle
 [e]: http://ctags.sourceforge.net/
 [t]: http://majutsushi.github.io/tagbar/
+[hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
 [vim-omni]:     http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
 [vim-omnifunc]: http://vimdoc.sourceforge.net/htmldoc/options.html#'omnifunc'
 
