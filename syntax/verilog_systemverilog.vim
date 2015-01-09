@@ -33,7 +33,7 @@ syn keyword verilogStatement   bufif0 bufif1 cell cmos
 syn keyword verilogStatement   config deassign defparam design
 syn keyword verilogStatement   disable edge endconfig
 syn keyword verilogStatement   endgenerate endmodule
-syn keyword verilogStatement   endprimitive endspecify endtable
+syn keyword verilogStatement   endprimitive endtable
 syn keyword verilogStatement   event force
 syn keyword verilogStatement   generate genvar highz0 highz1 ifnone
 syn keyword verilogStatement   incdir include initial inout input
@@ -47,7 +47,7 @@ syn keyword verilogStatement   pulsestyle_onevent pulsestyle_ondetect
 syn keyword verilogStatement   rcmos real realtime reg release
 syn keyword verilogStatement   rnmos rpmos rtran rtranif0 rtranif1
 syn keyword verilogStatement   scalared showcancelled signed small
-syn keyword verilogStatement   specify specparam strong0 strong1
+syn keyword verilogStatement   specparam strong0 strong1
 syn keyword verilogStatement   supply0 supply1 table time tran
 syn keyword verilogStatement   tranif0 tranif1 tri tri0 tri1 triand
 syn keyword verilogStatement   trior trireg unsigned use vectored wait
@@ -87,6 +87,9 @@ syn keyword verilogStatement   triggered
 syn keyword verilogStatement   std
 syn keyword verilogStatement   new
 
+syn clear verilogLabel
+syn keyword verilogLabel       fork join
+
 syn keyword verilogTypeDef     typedef enum
 
 syn keyword verilogConditional iff
@@ -120,12 +123,12 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\<task\>"        end="\<endtask\>"       transparent keepend fold
+    syn region  verilogFold       matchgroup=verilogStatement   start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"       end="\<endtask\>"       transparent keepend fold
 else
     syn keyword verilogStatement  task endtask
 endif
 if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\<function\>"    end="\<endfunction\>"   transparent keepend fold
+    syn region  verilogFold       matchgroup=verilogStatement   start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"   end="\<endfunction\>"   transparent keepend fold
 else
     syn keyword verilogStatement  function endfunction
 endif
@@ -144,12 +147,26 @@ if index(s:verilog_syntax_fold, "property") >= 0 || index(s:verilog_syntax_fold,
 else
     syn keyword verilogStatement  property endproperty
 endif
+if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogLabel       start="\<specify\>"     end="\<endspecify\>"    transparent keepend fold
+else
+    syn keyword verilogLabel      specify endspecify
+endif
+if index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold       matchgroup=verilogLabel       start="\<begin\>"       end="\<end\>"           transparent keepend fold
+else
+    syn keyword verilogLabel      begin end
+endif
 
-" Clear and redefine verilogComment to include folding
+" Expand verilogComment
 if len(s:verilog_syntax_fold) > 0
     syn clear   verilogComment
     syn match   verilogComment  "//.*"                      contains=verilogTodo,@Spell
-    syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell,verilogFold
+    if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+        syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell                     keepend fold
+    else
+        syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell                     keepend
+    endif
 endif
 
 " Define the default highlighting.

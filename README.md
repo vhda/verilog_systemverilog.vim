@@ -78,6 +78,9 @@ To enable syntax folding set the following option:
   * covergroup
   * sequence
   * property
+  * specify
+  * block (begin..end)
+  * comment (/*..*/)
   * all (enables all above options)
   Set to an empty string to disable syntax folding.
 
