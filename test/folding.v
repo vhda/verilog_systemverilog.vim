@@ -7,6 +7,8 @@ endfunction : f
 task t;
 
 begin
+    begin
+    end
 end
 
 endtask : t

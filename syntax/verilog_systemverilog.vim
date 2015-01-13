@@ -153,7 +153,7 @@ else
     syn keyword verilogLabel      specify endspecify
 endif
 if index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogLabel       start="\<begin\>"       end="\<end\>"           transparent keepend fold
+    syn region  verilogFold       matchgroup=verilogLabel       start="\<begin\>"       end="\<end\>"           transparent fold
 else
     syn keyword verilogLabel      begin end
 endif
