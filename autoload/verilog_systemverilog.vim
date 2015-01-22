@@ -87,6 +87,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         elseif len(items) == 1
           let base = s:instname
         endif
+        call s:Verbose("Searching tags starting with " . base)
         let tags = s:FilterPorts(taglist('^' . base))
         call map(tags, 'strpart(v:val["name"], len(base . "."))')
         return {'words' : tags}
@@ -102,6 +103,7 @@ function! verilog_systemverilog#Complete(findstart, base)
 
       let type = s:GetVariableType(word)
       if type != ""
+        call s:Verbose("Searching tags starting with " . type)
         let tags = taglist('^' . type)
         if len(tags) == 0
           return -1
@@ -118,7 +120,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         " Remove the variable type prefix
-        call map(tags, 'strpart(v:val["name"], len(s:prefix)+1)')
+        call map(tags, 'strpart(v:val["name"], len(type)+1)')
         return {'words' : tags}
       endif
       return -1
