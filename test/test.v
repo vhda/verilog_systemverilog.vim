@@ -2,6 +2,8 @@ te
 
 reg test;
 myclass object
+myclass object_with_long_name;
+myclass obj;
 
     test.
 test.
@@ -55,3 +57,7 @@ object.method(
 object.atask(.);
 
 object.
+
+object_with_long_name.
+
+obj.
