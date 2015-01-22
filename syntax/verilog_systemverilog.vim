@@ -113,7 +113,7 @@ syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 
 syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
 
-syn match   verilogObject      "\<\w\+\ze\(::\|\.\)"
+syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
 " Only enable folding if g:verilog_syntax_fold is defined
 if exists("g:verilog_syntax_fold")
