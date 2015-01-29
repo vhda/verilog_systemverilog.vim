@@ -7,7 +7,7 @@ if exists("b:did_ftplugin")
 endif
 
 " Define include string
-setlocal include=^\s*`include
+setlocal include=^\\s*`include
 
 " Set omni completion function
 set omnifunc=verilog_systemverilog#Complete
