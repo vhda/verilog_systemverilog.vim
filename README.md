@@ -79,8 +79,9 @@ To enable syntax folding set the following option:
   * sequence
   * property
   * specify
-  * block (begin..end)
-  * comment (/*..*/)
+  * block (`begin`, `end`)
+  * comment (`/*..*/`)
+  * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
   * all (enables all above options)
   Set to an empty string to disable syntax folding.
 
