@@ -124,9 +124,9 @@ endif
 
 if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
         \ end="\<endtask\>"
-        \ matchgroup=verilogStatement
         \ transparent
         \ keepend
         \ fold
@@ -135,9 +135,9 @@ else
 endif
 if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
         \ end="\<endfunction\>"
-        \ matchgroup=verilogStatement
         \ transparent
         \ keepend
         \ fold
@@ -157,9 +157,9 @@ else
 endif
 if index(s:verilog_syntax_fold, "sequence") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogStatement
         \ start="\<sequence\>"
         \ end="\<endsequence\>"
-        \ matchgroup=verilogStatement
         \ transparent
         \ keepend
         \ fold
@@ -168,9 +168,9 @@ else
 endif
 if index(s:verilog_syntax_fold, "property") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogStatement
         \ start="\<property\>"
         \ end="\<endproperty\>"
-        \ matchgroup=verilogStatement
         \ transparent
         \ keepend
         \ fold
@@ -179,9 +179,9 @@ else
 endif
 if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogLabel
         \ start="\<specify\>"
         \ end="\<endspecify\>"
-        \ matchgroup=verilogLabel
         \ transparent
         \ keepend
         \ fold
@@ -197,6 +197,41 @@ if index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "a
         \ fold
 else
     syn keyword verilogLabel      begin end
+endif
+if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogFoldIfContainer
+        \ start="`ifn\?def\>"
+        \ end="`endif\>"
+        \ transparent
+        \ keepend extend
+        \ containedin=ALLBUT,verilogComment
+        \ contains=NONE
+    syn region verilogFoldIf
+        \ start="`ifn\?def\>"
+        \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
+        \ fold transparent
+        \ keepend
+        \ contained containedin=verilogFoldIfContainer
+        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contains=TOP
+    syn region verilogFoldElseIf
+        \ start="`els\(e\|if\)\>"
+        \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
+        \ fold transparent
+        \ keepend
+        \ contained containedin=verilogFoldIfContainer
+        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contains=TOP
+    syn region verilogFoldElse
+        \ start="`else\>"
+        \ end="`endif\>"
+        \ fold transparent
+        \ keepend
+        \ contained containedin=verilogFoldIfContainer
+        \ contains=TOP
+    " The above syntax regions start/end matches will disable the respective
+    " verilogGlobal keywords. This syntax match fixes that:
+    syn match verilogGlobal "\<`\(ifn\?def\|e\(els\(e\|if\)\)\|ndif\)\>"
 endif
 
 " Expand verilogComment

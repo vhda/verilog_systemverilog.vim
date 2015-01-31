@@ -68,12 +68,61 @@ specify
 
 endspecify
 
-covergroup
+covergroup cov;
 
 endgroup
 
-property
+property prop;
 endproperty
 
 sequence
 endsequence
+
+`ifdef A
+reg test;
+
+//  `ifdef A_1
+//
+//  `else
+//
+//  `endif
+
+`else
+
+`endif
+
+`ifndef B
+
+`elsif C
+
+`elsif D
+
+`else
+
+`endif
+
+`ifdef E
+
+  `ifndef E_1
+
+  `else
+
+  `endif
+
+`endif
+
+`ifdef A
+
+  `ifdef B
+
+
+  `else
+
+  `endif
+
+`elsif C
+
+`else
+
+`endif
+
