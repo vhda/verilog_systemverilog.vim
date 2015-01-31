@@ -123,37 +123,78 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"       end="\<endtask\>"       transparent keepend fold
+    syn region  verilogFold
+        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
+        \ end="\<endtask\>"
+        \ matchgroup=verilogStatement
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogStatement  task endtask
 endif
 if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"   end="\<endfunction\>"   transparent keepend fold
+    syn region  verilogFold
+        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
+        \ end="\<endfunction\>"
+        \ matchgroup=verilogStatement
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogStatement  function endfunction
 endif
 if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\<covergroup\>"  end="\<endgroup\>"      transparent keepend fold
+    syn region  verilogFold
+        \ start="\<covergroup\>"
+        \ end="\<endgroup\>"
+        \ matchgroup=verilogStatement
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogStatement  covergroup endgroup
 endif
 if index(s:verilog_syntax_fold, "sequence") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\<sequence\>"    end="\<endsequence\>"   transparent keepend fold
+    syn region  verilogFold
+        \ start="\<sequence\>"
+        \ end="\<endsequence\>"
+        \ matchgroup=verilogStatement
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogStatement  sequence endsequence
 endif
 if index(s:verilog_syntax_fold, "property") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogStatement   start="\<property\>"    end="\<endproperty\>"   transparent keepend fold
+    syn region  verilogFold
+        \ start="\<property\>"
+        \ end="\<endproperty\>"
+        \ matchgroup=verilogStatement
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogStatement  property endproperty
 endif
 if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogLabel       start="\<specify\>"     end="\<endspecify\>"    transparent keepend fold
+    syn region  verilogFold
+        \ start="\<specify\>"
+        \ end="\<endspecify\>"
+        \ matchgroup=verilogLabel
+        \ transparent
+        \ keepend
+        \ fold
 else
     syn keyword verilogLabel      specify endspecify
 endif
 if index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold       matchgroup=verilogLabel       start="\<begin\>"       end="\<end\>"           transparent fold
+    syn region  verilogFold
+        \ matchgroup=verilogLabel
+        \ start="\<begin\>"
+        \ end="\<end\>"
+        \ transparent
+        \ fold
 else
     syn keyword verilogLabel      begin end
 endif
