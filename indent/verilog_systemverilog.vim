@@ -184,7 +184,7 @@ function GetVerilog_SystemVerilogIndent()
     " Close statement
     "   De-indent for an optional close parenthesis and a semicolon, and only
     "   if there exists precedent non-whitespace char
-    elseif last_line =~ ')*\s*;\s*' . vlog_comment . '*$' &&
+    elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '^\s*)*\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
@@ -214,7 +214,8 @@ function GetVerilog_SystemVerilogIndent()
       \ curr_line =~ '^\s*\<\(endfunction\|endtask\|endspecify\|endclass\)\>' ||
       \ curr_line =~ '^\s*\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
       \ curr_line =~ '^\s*\<\(endgroup\|endproperty\|endprogram\)\>' ||
-      \ curr_line =~ '^\s*}'
+      \ curr_line =~ '^\s*}' ||
+      \ last_line =~ '}' && last_line !~ '^\s*}'
     let ind = ind - offset
     if vverb
       echom "De-indent the end of a block:"
