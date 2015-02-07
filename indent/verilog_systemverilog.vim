@@ -86,7 +86,8 @@ function GetVerilog_SystemVerilogIndent()
   if last_line =~ '\*/\s*$' && last_line !~ '/\*.\{-}\*/'
     let ind = ind - offset_comment1
     if vverb
-      echom "De-indent after a multiple-line comment."
+      echom "De-indent after a multiple-line comment:"
+      echom last_line
     endif
 
   " Indent after if/else/for/case/always/initial/specify/fork blocks
@@ -97,7 +98,10 @@ function GetVerilog_SystemVerilogIndent()
     if last_line !~ '\(;\|\<end\>\)\s*' . vlog_comment . '*$' ||
       \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
       let ind = ind + offset
-      if vverb | echom "Indent after a block statement." | endif
+      if vverb
+        echom "Indent after a block statement:"
+        echom last_line
+      endif
     endif
   " Indent after function/task/class/package/sequence/clocking/
   " interface/covergroup/property/program blocks
@@ -109,7 +113,8 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
       let ind = ind + offset
       if vverb
-	echom "Indent after function/task/class block statement."
+        echom "Indent after function/task/class block statement:"
+        echom last_line
       endif
     endif
 
@@ -123,7 +128,8 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line !~ '\(//\|/\*\).*[(,]\s*' . vlog_comment . '*$'
       let ind = ind + offset
       if vverb
-	echom "Indent after a multiple-line module statement."
+        echom "Indent after a multiple-line module statement:"
+        echom last_line
       endif
     endif
 
@@ -133,7 +139,10 @@ function GetVerilog_SystemVerilogIndent()
     \ ( last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
     \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . vlog_comment . '*$' )
     let ind = ind + offset
-    if vverb | echom "Indent after begin statement." | endif
+    if vverb
+      echom "Indent after begin statement:"
+      echom last_line
+    endif
 
   " Indent after a '{' or a '('
   elseif last_line =~ '[{(]' . vlog_comment . '*$' &&
@@ -141,7 +150,10 @@ function GetVerilog_SystemVerilogIndent()
     \ ( last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
     \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . vlog_comment . '*$' )
     let ind = ind + offset
-    if vverb | echom "Indent after begin statement." | endif
+    if vverb
+      echom "Indent after begin statement:"
+      echom last_line
+    endif
 
   " De-indent for the end of one-line block
   elseif ( last_line !~ '\<begin\>' ||
@@ -153,7 +165,8 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line2 =~ '\(//\|/\*\).*\<begin\>' )
     let ind = ind - offset
     if vverb
-      echom "De-indent after the end of one-line statement."
+      echom "De-indent after the end of one-line statement:"
+      echom last_line
     endif
 
     " Multiple-line statement (including case statement)
@@ -163,7 +176,10 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line !~ '\(//\|/\*\).*' . vlog_openstat . '\s*$' &&
       \ last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$'
       let ind = ind + offset
-      if vverb | echom "Indent after an open statement." | endif
+      if vverb
+        echom "Indent after an open statement:"
+        echom last_line
+      endif
 
     " Close statement
     "   De-indent for an optional close parenthesis and a semicolon, and only
@@ -175,13 +191,17 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$'
       let ind = ind - offset
-      if vverb | echom "De-indent after a close statement." | endif
+      if vverb
+        echom "De-indent after a close statement:"
+        echom last_line
+      endif
 
   " `ifdef and `else
   elseif last_line =~ '^\s*`\<\(ifdef\|else\)\>'
     let ind = ind + offset
     if vverb
       echom "Indent after a `ifdef or `else statement."
+      echom last_line
     endif
 
   endif
@@ -196,7 +216,10 @@ function GetVerilog_SystemVerilogIndent()
       \ curr_line =~ '^\s*\<\(endgroup\|endproperty\|endprogram\)\>' ||
       \ curr_line =~ '^\s*}'
     let ind = ind - offset
-    if vverb | echom "De-indent the end of a block." | endif
+    if vverb
+      echom "De-indent the end of a block:"
+      echom last_line
+    endif
   elseif curr_line =~ '^\s*\<endmodule\>'
     if exists("g:verilog_dont_deindent_eos")
       let ind = ind - offset
@@ -204,7 +227,8 @@ function GetVerilog_SystemVerilogIndent()
       let ind = ind - indent_modules
     endif
     if vverb && indent_modules
-      echom "De-indent the end of a module."
+      echom "De-indent the end of a module:"
+      echom last_line
     endif
 
   " De-indent on a stand-alone 'begin'
@@ -219,7 +243,8 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
       let ind = ind - offset
       if vverb
-	echom "De-indent a stand alone begin statement."
+        echom "De-indent a stand alone begin statement:"
+        echom last_line
       endif
     endif
 
@@ -230,7 +255,8 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
     let ind = ind - offset
     if vverb
-      echom "De-indent at the end of a multiple statement."
+      echom "De-indent at the end of a multiple statement:"
+      echom last_line
     endif
 
   " De-indent after the end of multiple-line statement
@@ -238,14 +264,17 @@ function GetVerilog_SystemVerilogIndent()
     "\ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$'
     let ind = ind - offset
     if vverb
-      echom "De-indent after the end of a multiple statement."
-      echom "last_line: " . last_line . " last_line2: " . last_line2
+      echom "De-indent after the end of a multiple statement:"
+      echom last_line
     endif
 
   " De-indent `else and `endif
   elseif curr_line =~ '^\s*`\<\(else\|endif\)\>'
     let ind = ind - offset
-    if vverb | echom "De-indent `else and `endif statement." | endif
+    if vverb
+      echom "De-indent `else and `endif statement:"
+      echom last_line
+    endif
 
   endif
 
