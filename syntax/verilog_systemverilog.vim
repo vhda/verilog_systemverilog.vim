@@ -77,7 +77,7 @@ syn keyword verilogStatement   cover coverpoint
 syn keyword verilogStatement   program endprogram
 syn keyword verilogStatement   bins binsof illegal_bins ignore_bins
 syn keyword verilogStatement   alias matches solve static assert
-syn keyword verilogStatement   assume super before expect bind
+syn keyword verilogStatement   assume before expect bind
 syn keyword verilogStatement   extends null tagged extern this
 syn keyword verilogStatement   first_match throughout timeprecision
 syn keyword verilogStatement   timeunit priority type union 
@@ -85,7 +85,6 @@ syn keyword verilogStatement   uwire var cross ref wait_order intersect
 syn keyword verilogStatement   wildcard within
 syn keyword verilogStatement   triggered
 syn keyword verilogStatement   std
-syn keyword verilogStatement   new
 
 syn clear verilogLabel
 syn keyword verilogLabel       fork join
@@ -109,10 +108,12 @@ syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=\([fpnum]\|\)s\>"
 syn match   verilogNumber      "\<[0-9][0-9_\.]\=step\>"
 
+syn keyword verilogMethod      new
 syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 
 syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
 
+syn keyword verilogObject      super
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
 " Only enable folding if g:verilog_syntax_fold is defined
