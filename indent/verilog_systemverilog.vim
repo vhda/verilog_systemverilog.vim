@@ -91,7 +91,7 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " Indent after if/else/for/case/always/initial/specify/fork blocks
-  elseif last_line =~ '`\@<!\<\(if\|else\)\>' ||
+  elseif last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>'

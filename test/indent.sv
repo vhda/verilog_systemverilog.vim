@@ -11,6 +11,8 @@ class z;
 
     ts s[];
 
+    // if there are
+    // more comments
     typedef struct {
         real a;
         int b;
