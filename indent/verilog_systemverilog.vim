@@ -189,7 +189,8 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
-      \ last_line2 !~ '^\s*' . vlog_comment . '$'
+      \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
+      \ last_line =~ '}' && last_line !~ '^\s*}'
       let ind = ind - offset
       if vverb
         echom "De-indent after a close statement:"
@@ -214,8 +215,7 @@ function GetVerilog_SystemVerilogIndent()
       \ curr_line =~ '^\s*\<\(endfunction\|endtask\|endspecify\|endclass\)\>' ||
       \ curr_line =~ '^\s*\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
       \ curr_line =~ '^\s*\<\(endgroup\|endproperty\|endprogram\)\>' ||
-      \ curr_line =~ '^\s*}' ||
-      \ last_line =~ '}' && last_line !~ '^\s*}'
+      \ curr_line =~ '^\s*}'
     let ind = ind - offset
     if vverb
       echom "De-indent the end of a block:"
