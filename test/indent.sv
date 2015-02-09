@@ -1,6 +1,8 @@
 // Code based on: https://github.com/vhda/verilog_systemverilog.vim/issues/2
 class z;
 
+    // this is a comment
+    // -----------------
     typedef struct {
         real a;
         int b;
@@ -25,3 +27,5 @@ class z;
     endfunction;
 
 endclass
+
+// vim: set sts=4 sw=4:
