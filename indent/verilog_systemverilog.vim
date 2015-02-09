@@ -219,7 +219,7 @@ function GetVerilog_SystemVerilogIndent()
     let ind = ind - offset
     if vverb
       echom "De-indent the end of a block:"
-      echom last_line
+      echom curr_line
     endif
   elseif curr_line =~ '^\s*\<endmodule\>'
     if exists("g:verilog_dont_deindent_eos")
@@ -229,7 +229,7 @@ function GetVerilog_SystemVerilogIndent()
     endif
     if vverb && indent_modules
       echom "De-indent the end of a module:"
-      echom last_line
+      echom curr_line
     endif
 
   " De-indent on a stand-alone 'begin'
@@ -274,7 +274,7 @@ function GetVerilog_SystemVerilogIndent()
     let ind = ind - offset
     if vverb
       echom "De-indent `else and `endif statement:"
-      echom last_line
+      echom curr_line
     endif
 
   endif
