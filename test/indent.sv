@@ -28,6 +28,21 @@ class z;
         super.new();
     endfunction;
 
+    // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/4
+    task run_phase(uvm_phase phase);
+
+        assert(my_seq.randomize());
+        my_seq.start(low_sequencer_h);
+
+        assert(my_seq.randomize() with {Nr==6;});
+        my_seq.start(low_sequencer_h);
+
+        assert(my_seq.randomize() with
+        {Nr==6; Time==8;});
+        my_seq.start(low_sequencer_h);
+
+    endtask
+
 endclass
 
 // vim: set sts=4 sw=4:

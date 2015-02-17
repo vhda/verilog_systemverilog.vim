@@ -187,9 +187,12 @@ function GetVerilog_SystemVerilogIndent()
     elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '^\s*)*\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
+      \ last_line !~ '.*\<assert\>\s*(.*)\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
+      \ last_line2 !~ '.*\<assert\>\s*\((.*)\?\)\?\s*' . vlog_comment . '*$' &&
+      \ last_line !~ '.*\<assert\>\s*(.*)\s*;\s*' . vlog_comment . '*$' &&
       \ last_line =~ '}' && last_line !~ '^\s*}'
       let ind = ind - offset
       if vverb
