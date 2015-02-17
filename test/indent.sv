@@ -41,8 +41,50 @@ class z;
         {Nr==6; Time==8;});
         my_seq.start(low_sequencer_h);
 
+        // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/5
+        fork
+            begin : isolating_thread
+                do_something();
+            end : isolating_thread
+        join
+
     endtask
+
+    task fork_test;
+        fork
+            do_something1();
+            do_something2();
+        join_none
+        do_something3();
+    endtask
+
+    function old_style_function_with_var(
+        input a
+    );
+    reg test;
+    begin
+    end
+    endfunction
+
+    function old_style_function_without_var(
+        input a
+    );
+    reg test;
+    begin
+    end
+    endfunction
+
+    function old_style_function_one_line_with_var(input a);
+        reg x;
+    begin
+    end
+    endfunction
+
+    function old_style_function_one_line_without_var(input a);
+    begin
+    end
+    endfunction
 
 endclass
 
-// vim: set sts=4 sw=4:
+// vim: set sts=4 sw=4 nofen:
