@@ -237,14 +237,15 @@ function GetVerilog_SystemVerilogIndent()
 
   " De-indent on a stand-alone 'begin'
   elseif curr_line =~ '^\s*\<begin\>'
-    if last_line !~ '^\s*\<\(function\|task\|specify\|module\|class\|package\)\>' ||
-      \ last_line !~ '^\s*\<\(sequence\|clocking\|interface\|covergroup\)\>' ||
+    if last_line !~ '^\s*\<\(fork\)\>' &&
+      \ last_line !~ '^\s*\<\(function\|task\|specify\|module\|class\|package\)\>' &&
+      \ last_line !~ '^\s*\<\(sequence\|clocking\|interface\|covergroup\)\>'  &&
       \ last_line !~ '^\s*\<\(property\|program\)\>' &&
-      \ last_line !~ '^\s*\()*\s*;\|)\+\)\s*' . vlog_comment . '*$' &&
-      \ ( last_line =~
-      \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
-      \ last_line =~ ')\s*' . vlog_comment . '*$' ||
-      \ last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
+      \ last_line !~ '^\s*\()*\s*;\|)\+\)\s*' . vlog_comment . '*$' && (
+        \ last_line =~
+        \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
+        \ last_line =~ ')\s*' . vlog_comment . '*$' ||
+        \ last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
       let ind = ind - offset
       if vverb
         echom "De-indent a stand alone begin statement:"
