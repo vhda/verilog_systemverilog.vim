@@ -96,7 +96,7 @@ class z;
         input a
     );
     reg test;
-    begin
+    begin 
         do_something1();
         do_something2();
         begin
