@@ -134,7 +134,7 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " Indent after a 'begin' statement
-  elseif last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*' . vlog_comment . '*$' &&
+  elseif last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*\s*' . vlog_comment . '*$' &&
     \ last_line !~ '\(//\|/\*\).*\(\<begin\>\)' &&
     \ ( last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
     \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . vlog_comment . '*$' )
