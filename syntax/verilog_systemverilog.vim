@@ -85,6 +85,11 @@ syn keyword verilogStatement   uwire var cross ref wait_order intersect
 syn keyword verilogStatement   wildcard within
 syn keyword verilogStatement   triggered
 syn keyword verilogStatement   std
+syn keyword verilogStatement   accept_on eventually global implements implies
+syn keyword verilogStatement   interconnect let nettype nexttime reject_on restrict soft
+syn keyword verilogStatement   s_always s_eventually s_nexttime s_until s_until_with
+syn keyword verilogStatement   strong sync_accept_on sync_reject_on unique unique0
+syn keyword verilogStatement   until until_with untyped weak
 
 syn clear verilogLabel
 syn keyword verilogLabel       fork join
