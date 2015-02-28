@@ -110,8 +110,8 @@ syn match   verilogGlobal      "`restore_\w\+"
 
 syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
 
-syn match   verilogNumber      "\<[0-9][0-9_\.]\=\([fpnum]\|\)s\>"
-syn match   verilogNumber      "\<[0-9][0-9_\.]\=step\>"
+syn match   verilogNumber      "\<\d[0-9_\.]*\([fpnum]\)\=s\>"
+syn match   verilogNumber      "\<\d[0-9_\.]\=step\>"
 
 syn keyword verilogMethod      new
 syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("

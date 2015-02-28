@@ -248,3 +248,15 @@ wor
 xnor
 xor
 `endif
+`ifdef TIME
+10ns
+100ns
+1ps
+2_0ps
+3_000_000s
+1.23ns
+1_000.123ns
+10_000.123ns
+100_000.123ns
+1_000_000.123ns
+`endif
