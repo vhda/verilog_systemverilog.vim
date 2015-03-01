@@ -141,7 +141,12 @@ if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "al
         \ fold
     syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<task\>"
 else
-    syn keyword verilogStatement  task endtask
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
+        \ end="\<endtask\>"
+        \ transparent
+        \ keepend
 endif
 if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
@@ -153,7 +158,12 @@ if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold,
         \ fold
     syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<function\>"
 else
-    syn keyword verilogStatement  function endfunction
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
+        \ end="\<endfunction\>"
+        \ transparent
+        \ keepend
 endif
 if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
@@ -257,7 +267,11 @@ elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold
         \ transparent
         \ fold
 else
-    syn keyword verilogStatement  begin end
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\<begin\>"
+        \ end="\<end\>"
+        \ transparent
 endif
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFoldIfContainer
