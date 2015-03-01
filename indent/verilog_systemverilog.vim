@@ -75,7 +75,6 @@ function GetVerilog_SystemVerilogIndent()
   " Define the condition when the statement ends with a one-line comment
   let vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
   if exists('b:verilog_indent_verbose')
-    let vverb_str = 'INDENT VERBOSE:'
     let vverb = 1
   else
     let vverb = 0
