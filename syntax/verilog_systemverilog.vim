@@ -208,6 +208,7 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
     syn region verilogFoldIfContainer
         \ start="`ifn\?def\>"
         \ end="`endif\>"
+        \ skip="/[*/].*"
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
