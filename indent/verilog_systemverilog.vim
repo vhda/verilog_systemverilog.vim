@@ -71,7 +71,7 @@ function GetVerilog_SystemVerilogIndent()
   let offset_comment1 = 1
   " Define the condition of an open statement
   "   Exclude the match of //, /* or */
-  let vlog_openstat = '\(\<or\>\|\([*/].*\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
+  let vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
   " Define the condition when the statement ends with a one-line comment
   let vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
   if exists('b:verilog_indent_verbose')
@@ -79,6 +79,12 @@ function GetVerilog_SystemVerilogIndent()
   else
     let vverb = 0
   endif
+
+  " Get new context line if it is fully commented out
+  while last_line2 =~ '^\s*/\(/\|\*.*\*/\s*$\)'
+    let lnum2 = prevnonblank(lnum2 - 1)
+    let last_line2 = getline(lnum2)
+  endwhile
 
   " Indent accoding to last line
   " End of multiple-line comment
