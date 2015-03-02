@@ -156,17 +156,15 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " De-indent for the end of one-line block
-  elseif ( last_line !~ '\<begin\>' ||
-    \ last_line =~ '\(//\|/\*\).*\<begin\>' ) &&
+  elseif last_line =~ ';' . vlog_comment . '*$' &&
     \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>.*' . vlog_comment . '*$' &&
     \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
-    \ last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
     \ ( last_line2 !~ '\<begin\>' ||
-    \ last_line2 =~ '\(//\|/\*\).*\<begin\>' )
+    \   last_line2 =~ '\(//\|/\*\).*\<begin\>' )
     let ind = ind - offset
     if vverb
       echom "De-indent after the end of one-line statement:"
-      echom last_line
+      echom last_line2
     endif
 
     " Multiple-line statement (including case statement)
