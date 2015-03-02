@@ -93,7 +93,8 @@ function GetVerilog_SystemVerilogIndent()
   elseif last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
-    \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>'
+    \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
+    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
     if last_line !~ '\(;\|\<end\>\)\s*' . vlog_comment . '*$' ||
       \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
       let ind = ind + offset
@@ -186,12 +187,9 @@ function GetVerilog_SystemVerilogIndent()
     elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '^\s*)*\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '.*\<assert\>\s*(.*)\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
-      \ last_line2 !~ '.*\<assert\>\s*\((.*)\?\)\?\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '.*\<assert\>\s*(.*)\s*;\s*' . vlog_comment . '*$' &&
       \ last_line =~ '}' && last_line !~ '^\s*}'
       let ind = ind - offset
       if vverb
