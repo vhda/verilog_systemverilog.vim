@@ -152,9 +152,9 @@ else
 endif
 if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
+        \ matchgroup=verilogStatement
         \ start="\<covergroup\>"
         \ end="\<endgroup\>"
-        \ matchgroup=verilogStatement
         \ transparent
         \ keepend
         \ fold
