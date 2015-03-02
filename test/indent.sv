@@ -53,8 +53,10 @@ class z;
                 do_something();
             end : isolating_thread
         join
+        // End of copied code
 
     endtask
+    // End of copied code
 
     // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/7
     task run_phase2(uvm_phase phase);
@@ -64,6 +66,7 @@ class z;
             out[i]=new;
         end
     endtask
+    // End of copied code
 
     // Oter tests
     task fork_test;
@@ -139,5 +142,35 @@ class z;
     endfunction
 
 endclass
+
+module m (
+    portA,
+    portB
+);
+
+device d0 (
+    .port (port[1]),
+    .port2(), // comment
+    .portA(port[2])
+);
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/6
+device d1 (
+    .port (port[1]),
+    // .port2(), // comment
+    .*
+);
+// End of copied code
+
+device d1 (
+    .port (port[1]),
+    // .port1(), comment
+    /**/.port2(), // comment
+    /*.port3(), */   
+    // .port4(), comment
+    .portA(port[2])
+);
+
+endmodule
 
 // vim: set sts=4 sw=4 nofen:
