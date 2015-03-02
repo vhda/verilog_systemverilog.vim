@@ -74,6 +74,24 @@ class z;
         do_something3();
     endtask
 
+    task while_one_line;
+        while (1)
+            do_something();
+    endtask
+
+    task while_block;
+        while (1)
+        begin
+            do_something();
+        end
+    endtask
+
+    task while_block2;
+        while (1) begin
+            do_something();
+        end
+    endtask
+
     function old_style_function_with_var(
         input a
     );
