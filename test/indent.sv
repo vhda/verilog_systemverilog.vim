@@ -38,7 +38,13 @@ class z;
         my_seq.start(low_sequencer_h);
 
         assert(my_seq.randomize() with
-        {Nr==6; Time==8;});
+            {Nr==6; Time==8;});
+        my_seq.start(low_sequencer_h);
+
+        assert(
+            my_seq.randomize() with
+            {Nr==6; Time==8;}
+        );
         my_seq.start(low_sequencer_h);
 
         // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/5
@@ -48,6 +54,15 @@ class z;
             end : isolating_thread
         join
 
+    endtask
+
+    // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/7
+    task run_phase2(uvm_phase phase);
+        assert(out>0) else $warning("xxx");
+        assert(out>0) else $warning("xxx");
+        foreach(out[i]) begin
+            out[i]=new;
+        end
     endtask
 
     // Oter tests
