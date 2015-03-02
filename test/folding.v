@@ -126,3 +126,12 @@ reg test;
 
 `endif
 
+
+/*
+  `ifdef X
+
+  `else
+
+  `endif
+*/
+
