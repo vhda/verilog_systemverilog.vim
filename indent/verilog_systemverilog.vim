@@ -203,11 +203,11 @@ function GetVerilog_SystemVerilogIndent()
         echom last_line
       endif
 
-  " `ifdef and `else
-  elseif last_line =~ '^\s*`\<\(ifdef\|else\)\>'
+  " `ifdef , `ifndef and `else
+  elseif last_line =~ '^\s*`\<\(ifdef\|ifndef\|else\)\>'
     let ind = ind + offset
     if vverb
-      echom "Indent after a `ifdef or `else statement."
+      echom "Indent after a `ifdef , `ifndef or `else statement."
       echom last_line
     endif
 
