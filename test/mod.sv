@@ -1,10 +1,10 @@
-module mod (
+module mod(
     input  wire     [7:0] in1,
     input  wire           in2,
     output reg            out
 );
 
-function test (
+function test(
     input a,
     input b,
     output z
@@ -15,11 +15,12 @@ endmodule
 
 class myclass;
     logic variable;
+    real rl_variable = 1.0;
 
-    function method (input a, input b);
+    function method(input a, input b);
     endfunction : method
 
-    task atask (input a, output x);
+    task atask(input a, output x);
     endtask : atask
 
 endclass : myclass
