@@ -194,7 +194,7 @@ function GetVerilog_SystemVerilogIndent()
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
-      \ last_line =~ '}' && last_line !~ '^\s*}'
+      \ last_line =~ '}' && last_line !~ '^\s*}' && last_line !~ vlog_comment . '}'
       let ind = ind - offset
       if vverb
         echom "De-indent after a close statement:"

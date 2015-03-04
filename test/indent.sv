@@ -73,7 +73,7 @@ class z;
         fork
             do_something1();
             do_something2();
-        join_none
+        join_none // {}
         do_something3();
     endtask
 
