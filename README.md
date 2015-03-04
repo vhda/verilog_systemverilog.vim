@@ -19,10 +19,10 @@ Besides some bug corrections, the following features were added to this set of s
 
 The omni-completion functionality requires a tags file generated with
 [exuberant-ctags][e] using the `--extra=+q` argument to enable class qualified
-tags. No other command or tools was tested, but should work seemingly as long as
-it able to generate standard class qualified tags.
-For more information on using omni-completion please check the vim man page for
-[`i_CTRL-X_CTRL-O`][vim-omni].
+tags. No tool alternative to [exuberant-ctags][e] was tested, but any tool
+should work seemingly as long as it is able to generate standard class qualified
+tags file. For more information on using omni-completion please check the vim
+man page for [`i_CTRL-X_CTRL-O`][vim-omni].
 
 Currently supported contexts:
 
@@ -66,7 +66,7 @@ To enable syntax folding set the following option:
 
 * __b:verilog\_indent\_modules__ - Indent code after module declaration.
 
-* __b:g:verilog\_dont\_deindent\_eos__ - Keep last `)` of module port declaration de-indented.
+* __b:g:verilog\_dont\_deindent\_eos__ - Keep last `)` of module port declaration indented.
 
 ### Syntax options
 
@@ -83,6 +83,7 @@ To enable syntax folding set the following option:
   * comment (`/*..*/`)
   * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
   * all (enables all above options)
+
   Set to an empty string to disable syntax folding.
 
 ### Debug options
@@ -90,7 +91,7 @@ To enable syntax folding set the following option:
 * __b:verilog\_indent\_verbose__ - Verbose indenting (uses `echom`).
 * __b:verilog\_omni\_verbose__ - Verbose omni-completion (uses `echom`).
 
-## Other Verilog/SystemVerilog addons for Vim
+## Other Vim addons helpful for Verilog/SystemVerilog
 
 ### Matchit
 
