@@ -75,6 +75,12 @@ class z;
     endtask
     // End of copied code
 
+    // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/14
+    pure virtual function void a(input int unsigned N, ref t Data);
+    pure virtual function void b(input int unsigned N, ref t Data);
+    pure virtual function void c(input int unsigned N, ref t Data);
+    // End of copied code
+
     // Oter tests
     task fork_test;
         fork
