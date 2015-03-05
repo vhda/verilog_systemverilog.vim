@@ -187,7 +187,7 @@ device d1 (
     device d3 ( .out(out), .* );
 `else
     device d3 ( .out(out), .portA(portB), .portB(portA) );
-`elsif 
+`endif
 
 endmodule
 
