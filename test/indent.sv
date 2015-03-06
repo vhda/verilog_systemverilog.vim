@@ -184,6 +184,17 @@ device d1 (
     .portA(port[2])
 );
 
+`ifdef V95
+    device d2 ( out, portA, portB );
+`elsif V2K
+    device d2 ( .out(out), .* );
+`endif
+`ifndef SWAP
+    device d3 ( .out(out), .* );
+`else
+    device d3 ( .out(out), .portA(portB), .portB(portA) );
+`endif
+
 endmodule
 
 // vim: set sts=4 sw=4 nofen:

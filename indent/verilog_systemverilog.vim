@@ -203,11 +203,11 @@ function GetVerilog_SystemVerilogIndent()
         echom last_line
       endif
 
-  " `ifdef and `else
-  elseif last_line =~ '^\s*`\<\(ifdef\|else\)\>'
+  " `ifdef , `ifndef , `elsif , or `else
+  elseif last_line =~ '^\s*`\<\(ifdef\|ifndef\|elsif\|else\)\>'
     let ind = ind + offset
     if vverb
-      echom "Indent after a `ifdef or `else statement."
+      echom "Indent after a `ifdef , `ifndef , `elsif or `else statement."
       echom last_line
     endif
 
@@ -276,11 +276,11 @@ function GetVerilog_SystemVerilogIndent()
       echom last_line
     endif
 
-  " De-indent `else and `endif
-  elseif curr_line =~ '^\s*`\<\(else\|endif\)\>'
+  " De-indent `else , `elsif , or `endif
+  elseif curr_line =~ '^\s*`\<\(else\|elsif\|endif\)\>'
     let ind = ind - offset
     if vverb
-      echom "De-indent `else and `endif statement:"
+      echom "De-indent `else , `elsif , or `endif statement:"
       echom curr_line
     endif
 
