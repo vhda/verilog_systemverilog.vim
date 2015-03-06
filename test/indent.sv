@@ -156,6 +156,19 @@ class z;
 
 endclass
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/14
+virtual class base;
+
+    extern function void x(input int unsigned N, ref t Data);
+    extern function void y(input int unsigned N, ref t Data);
+
+    pure virtual function void a(input int unsigned N, ref t Data);
+    pure virtual function void b(input int unsigned N, ref t Data);
+    pure virtual function void c(input int unsigned N, ref t Data);
+
+endclass;
+// End of copied code
+
 module m (
     portA,
     portB
