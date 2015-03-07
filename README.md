@@ -7,6 +7,8 @@ Based on script originally found at:
 http://www.vim.org/scripts/script.php?script_id=1586
 [comment]: <> "_ stop highlighting the underscore from the link above"
 
+#__NOTICE: Repository history has been rewritten__
+
 ## Features
 
 Besides some bug corrections, the following features were added to this set of scripts:
