@@ -7,6 +7,8 @@
 " https://github.com/exuberant-ctags/ctags
 " ctags must be run with --extra=+q
 function! verilog_systemverilog#Complete(findstart, base)
+  "------------------------------------------------------------------------
+  " Phase 1: Find and return prefix of completion
   if a:findstart
     let linenr = line('.')
     let line = getline('.')
@@ -55,17 +57,19 @@ function! verilog_systemverilog#Complete(findstart, base)
     return prefixpos
   endif
 
-  " Search for type definition in tags file
+  "------------------------------------------------------------------------
+  " Phase 2: Search for type definition in tags file
   if exists("s:prefix") && s:prefix != ''
     call s:Verbose("Prefix: " . s:prefix)
     call s:Verbose("Word  : " . s:word)
     if s:instname != ''
       " Process an instance
       if s:insttype != ''
+        call s:Verbose("Process instance")
         if exists("s:word")
-          let tags = taglist('^' . s:insttype . "." . s:word)
+          let tags = taglist('^' . s:insttype . '\.' . s:word)
         else
-          let tags = taglist('^' . s:insttype)
+          let tags = taglist('^' . s:insttype . '\.')
         endif
         call s:Verbose("Number of tags found: " . len(tags))
         " In instances only return ports
@@ -94,33 +98,37 @@ function! verilog_systemverilog#Complete(findstart, base)
       endif
     else
       " Process an object
+      call s:Verbose("Process object")
       let idx = match(s:prefix, '\.')
       if idx >= 0
-        let word = strpart(s:prefix, 0, idx)
+        let object = strpart(s:prefix, 0, idx)
       else
-        let word = s:prefix
+        let object = s:prefix
       endif
 
-      let type = s:GetVariableType(word)
+      let type = s:GetVariableType(object)
       if type != ""
+        " Check if this is a class defined type
+        let newtype = s:GetClassDefaultParameterValue("", type)
+        if newtype != ""
+          let type = newtype
+        endif
+        " Search for inherited tags
+        let tags = s:GetInheritanceTags(type, object)
         call s:Verbose("Searching tags starting with " . type)
-        let tags = taglist('^' . type)
+        let localtags = taglist('^' . type . '\.' . s:word)
+        let localtags = s:AppendSignature(localtags)
+        " Filter out parameters
+        call filter(localtags, 'v:val["kind"] != "c"')
+        " Remove the variable type prefix
+        call map(localtags, 'strpart(v:val["name"], len(type)+1)')
+        let tags += localtags
+        " Break if no tags were found
         if len(tags) == 0
           return -1
         endif
-        " Append () to functions and tasks
-        let newtags = []
-        for t in tags
-          if t["kind"] == "t" || t["kind"] == "f"
-            let t["name"] = t["name"] . "()"
-          endif
-          call add(newtags, t)
-        endfor
-        let tags = newtags
         " Filter out hierarchical ports
-        call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
-        " Remove the variable type prefix
-        call map(tags, 'strpart(v:val["name"], len(type)+1)')
+        call filter(tags, 'len(split(v:val, "\\.")) > 1 ? 0 : 1')
         return {'words' : tags}
       endif
       return -1
@@ -215,15 +223,130 @@ function! s:GetInstanceInfo(linenr, column)
   return [instname, insttype]
 endfunction
 
+" Append signature to functions and tasks
+function s:AppendSignature(tags)
+  let newtags = []
+  for t in a:tags
+    if t["kind"] == "t" || t["kind"] == "f"
+      let t["name"] = t["name"] . "()"
+    endif
+    call add(newtags, t)
+  endfor
+  return newtags
+endfunction
+
+" Get list of inheritance tags
+function s:GetInheritanceTags(class, object)
+  call s:Verbose("Searching inheritance of " . a:object)
+  let tags = []
+  let inheritance = a:class
+  let classtag = taglist('^' . inheritance . '$')
+  while exists('classtag[0]["inherits"]')
+    call s:Verbose("Following class " . a:class)
+    call s:Verbose(inheritance . " inherits " . classtag[0]["inherits"])
+    let inheritance = classtag[0]["inherits"]
+    " First check if inheritance is a parameter of the class
+    let localtags = taglist('^' . a:class . '.' . inheritance . '$')
+    if len(localtags) == 1 && localtags[0]["kind"] == "c"
+      call s:Verbose(a:class . " inherits from a parameter")
+      let parameter = inheritance
+      " Search for parameter initialization in object declaration line
+      let inheritance = s:GetObjectParameterValue(a:object, parameter)
+      if inheritance == ""
+        " Search for parameter default value in class declaration
+        let inheritance = s:GetClassDefaultParameterValue(a:class, parameter)
+        if inheritance == ""
+          call s:Verbose("No default inheritance found")
+          return tags
+        endif
+      endif
+      call s:Verbose(a:class . " inherits from " . inheritance)
+    endif
+    " Get tags from inherited class
+    let localtags = taglist('^' . inheritance . '.' . s:word)
+    let localtags = s:AppendSignature(localtags)
+    call map(localtags, 'strpart(v:val["name"], len(inheritance)+1)')
+    let tags += localtags
+    let classtag = taglist('^' . inheritance . '$')
+  endwhile
+  return tags
+endfunction
+
 " Searches for declaration of "word" and returns its type
 function s:GetVariableType(word)
+  let position = getpos(".")
   if searchdecl(a:word, 0) == 0
     let line = getline('.')
     let type = split(line)[0]
     call s:Verbose("Found declation for: " . a:word . " (" . type . ")")
+    call setpos(".", position)
     return type
   endif
   return 0
+endfunction
+
+" Searches for declaration of "object" and returns "parameter" initialization value
+function s:GetObjectParameterValue(object, parameter)
+  let position = getpos(".")
+  if searchdecl(a:object, 0) == 0
+    let line = getline('.')
+    if match(line, 'type\s\+' . a:parameter . '\s*=\s*\w\+') >= 0
+      let value = substitute(line, '.*\<type\s\+' . a:parameter . '\s*=\s*\(\w\+\).*', '\1', '')
+      " TODO If type was not found search in the previous line
+      call s:Verbose("Found variable initialization value: " . a:parameter . " = " . value)
+      call setpos(position)
+      return value
+    endif
+  endif
+  call s:Verbose("Initialization of " . a:parameter . " was not found in " . a:object . " declaration")
+  call setpos(position)
+  return ""
+endfunction
+
+" Searches for declaration of "class" and returns default "parameter" value
+function s:GetClassDefaultParameterValue(class, parameter)
+  if a:class == ""
+    call s:Verbose("Search for default value of parameter " . a:parameter . " in current class")
+    let declaration = {'cmd': '/.*type\s\+' . a:parameter . '\s*='}
+    let contents = readfile(@%)
+  else
+    call s:Verbose("Search for default value of parameter " . a:parameter . " of class " . a:class)
+    let declaration = taglist('^' . a:class . '$')[0]
+    let contents = readfile(declaration.filename)
+  endif
+  if declaration.cmd[0] == '/'
+    " Find index through pattern
+    let pattern = strpart(declaration.cmd, 1, len(declaration.cmd) - 2)
+    let match_idx = match(contents, pattern)
+  else
+    " Calculate index from line number
+    let match_idx = declaration.cmd - 1
+  endif
+  if match_idx >= 0
+    " Search for parameter in class declaration
+    while match_idx < len(contents) && contents[match_idx] !~ ';' && contents[match_idx] !~ a:parameter
+      let match_idx += 1
+    endwhile
+    if contents[match_idx] !~ a:parameter
+      call s:Verbose("No declaration of " . a:parameter . " was found in class " . a:class)
+      return ""
+    endif
+    " Find value assignment in current line
+    let pattern = 'type\s\+' . a:parameter . '\s*=\s*\w\+'
+    let idx_start = match(contents[match_idx], pattern)
+    if idx_start >= 0
+      let idx_end = matchend(contents[match_idx], pattern) - 1
+      let result = contents[match_idx][idx_start : idx_end]
+      let result = substitute(split(result, '=')[1], '^\s*\(.\{-\}\)\(\s\|,\)*$', '\1', '')
+      return result
+    else
+      call s:Verbose("Found parameter " . a:parameter . "but failed to find assignment in the same line")
+      return ""
+    endif
+  else
+    call s:Verbose("Parameter default value not found")
+    return ""
+  endif
 endfunction
 
 " Filter tag list to only return ports

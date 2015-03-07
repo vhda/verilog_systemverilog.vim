@@ -13,8 +13,11 @@ endfunction
 
 endmodule
 
-class myclass;
-    logic variable;
+class myclass #(
+  type BASE = extended_base   ,
+  int size = 1
+) extends BASE;
+    logic value_myclass;
     real rl_variable = 1.0;
 
     function method(input a, input b);
@@ -24,3 +27,22 @@ class myclass;
     endtask : atask
 
 endclass : myclass
+
+class extended_base extends base;
+    logic value_extended_base;
+
+    function method(input a, input b);
+    endfunction : method
+
+    task btask(input a, output x);
+    endtask : atask
+
+endclass : extended_base
+
+class base;
+    logic value_base;
+
+    task ctask(input x, output z);
+    endtask : ctask
+
+endclass : base

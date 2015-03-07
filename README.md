@@ -1,37 +1,45 @@
-#Vim Syntax Addon for Verilog and SystemVerilog
+#Vim Syntax Plugin for Verilog and SystemVerilog
 
 ## About
 
 Based on script originally found at:
 
 http://www.vim.org/scripts/script.php?script_id=1586
+[comment]: <> "_ stop highlighting the underscore from the link above"
 
 ## Features
 
 Besides some bug corrections, the following features were added to this set of scripts:
 
-* Omni-completion.
+* Omni completion.
 * Configurable syntax folding.
 * Updated matchit configurations to properly support Verilog 2001 and SystemVerilog.
 * Automatically enabled for the following file extensions: .v.vh.sv.svi.svh
 
-### Omni-Completion
+### Omni Completion
 
-The omni-completion functionality requires a tags file generated with
-[exuberant-ctags][e] using the `--extra=+q` argument to enable class qualified
-tags. No tool alternative to [exuberant-ctags][e] was tested, but any tool
-should work seemingly as long as it is able to generate standard class qualified
-tags file. For more information on using omni-completion please check the vim
-man page for [`i_CTRL-X_CTRL-O`][vim-omni].
-
-Currently supported contexts:
+This plugin implements an omni completion function that will offer completion
+suggestions depending on the current context. This will only work if a `.`
+character is found in the keyword behind the cursor. At the moment the following
+contexts are supported:
 
 1. Module instantiation port names.
 2. Function/task arguments.
 3. Object methods and attrtibutes.
 
-The required option [`omnifunc`][vim-omnifunc] is automatically defined for the
-supported file extensions.
+In order to use omni completion a tags file must be generated using the
+following arguments:
+
+* `--extra=+q` - Enable hierarchy qualified tags extraction.
+* `--fields=+i` - Enable class inheritance extraction.
+* `-n` - (Optional) Use line number instead of Ex: patterns to identify
+  declaration.
+
+No tool alternative to [exuberant-ctags][e] was tested, but any tool should work
+seemingly as long as it is able to generate a standard class qualified tags file.
+For more information on using omni completion please check the vim man page for
+[`i_CTRL-X_CTRL-O`][vim-omni] (the required option [`omnifunc`][vim-omnifunc] is
+automatically defined for the supported file extensions).
 
 __Note__: Proper SystemVerilog tag generation requires development version of
 [exuberant-ctags][c].
@@ -88,8 +96,8 @@ To enable syntax folding set the following option:
 
 ### Debug options
 
-* __b:verilog\_indent\_verbose__ - Verbose indenting (uses `echom`).
-* __b:verilog\_omni\_verbose__ - Verbose omni-completion (uses `echom`).
+* __b:verilog\_indent\_verbose__ - Verbose indenting (uses [`echom`][vim-echom]).
+* __b:verilog\_omni\_verbose__ - Verbose omni completion (uses [`echom`][vim-echom]).
 
 ## Other Vim addons helpful for Verilog/SystemVerilog
 
@@ -111,6 +119,17 @@ runtime macros/matchit.vim
 The [hl_matchit.vim][hl_matchit] addon complements Matchit by automatically
 underlining matching words, similarly as Vim already does for
 parentheses/brackets.
+
+### Supertab
+
+[Supertab][supertab] configures the <kbd>tab</kbd> key to perform insert
+completion. To take full advantage of the omni completion functionality the
+following configuration should be used:
+
+`let g:SuperTabDefaultCompletionType = "context"`
+
+When this is done [Supertab][supertab] will choose the most appropriate type of
+completion to use depending on the current context.
 
 ### Tagbar
 
@@ -167,8 +186,10 @@ let g:tagbar_type_verilog_systemverilog = {
 [e]: http://ctags.sourceforge.net/
 [t]: http://majutsushi.github.io/tagbar/
 [hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
+[supertab]:     https://github.com/ervandew/supertab
 [vim-omni]:     http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
 [vim-omnifunc]: http://vimdoc.sourceforge.net/htmldoc/options.html#'omnifunc'
+[vim-echom]:    http://vimdoc.sourceforge.net/htmldoc/eval.html#:echom
 
 
 <!-- Other links:

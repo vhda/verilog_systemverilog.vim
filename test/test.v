@@ -1,9 +1,6 @@
-te
+module test1;
 
 reg test;
-myclass object
-myclass object_with_long_name;
-myclass obj;
 
     test.
 test.
@@ -49,6 +46,14 @@ ola = test.
 mod u_mod1 (
     .
 );
+endmodule
+
+class test2 #(type T=base);
+
+myclass #(type BASE=base) object;
+myclass object_with_long_name;
+myclass obj;
+T typeclass;
 
 object.method(
     .
@@ -61,3 +66,7 @@ object.
 object_with_long_name.
 
 obj.
+
+typeclass.
+
+endclass
