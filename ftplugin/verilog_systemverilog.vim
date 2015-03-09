@@ -46,3 +46,9 @@ if exists("loaded_matchit")
     \ '\<property\>:\<endproperty\>,' .
     \ '\<sequence\>:\<endsequence\>'
 endif
+
+" Raise warning if smartindent is defined
+if &smartindent
+    echohl WarningMsg
+    echo "Option 'smartindent' should not be used in Verilog syntax, use 'autoindent' instead."
+endif
