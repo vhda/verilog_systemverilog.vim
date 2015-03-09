@@ -12,6 +12,9 @@ setlocal include=^\\s*`include
 " Set omni completion function
 set omnifunc=verilog_systemverilog#Complete
 
+" Command definitions
+command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)
+
 " Behaves just like Verilog
 runtime! ftplugin/verilog.vim
 

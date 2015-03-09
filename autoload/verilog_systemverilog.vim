@@ -1,11 +1,15 @@
-" Vim completion script
+" Verilog/SystemVerilog support functions
 " Language:     Verilog/SystemVerilog
 " Maintainer:   Vitor Antunes <vitor.hda@gmail.com>
 
+"------------------------------------------------------------------------
+" Omni completion functions
+"
 " Requires ctags from:
 " https://github.com/fishman/ctags
 " https://github.com/exuberant-ctags/ctags
 " ctags must be run with --extra=+q
+" {{{
 function! verilog_systemverilog#Complete(findstart, base)
   "------------------------------------------------------------------------
   " Phase 1: Find and return prefix of completion
@@ -363,5 +367,109 @@ function s:Verbose(message)
     echom a:message
   endif
 endfunction
+" }}}
 
-" vi: sw=2 st=2:
+"------------------------------------------------------------------------
+" Definitions for errorformat
+" {{{
+function! verilog_systemverilog#VerilogErrorFormat(...)
+  " Choose tool
+  if (a:0 == 0)
+    let l:tool = inputlist([
+          \"1. VCS",
+          \"2. Modelsim",
+          \"3. iverilog",
+          \"4. cver",
+          \"5. Leda",
+          \])
+    echo "\n"
+    if (l:tool == 1)
+      let l:tool = "vcs"
+    elseif (l:tool == 2)
+      let l:tool = "msim"
+    elseif (l:tool == 3)
+      let l:tool = "iverilog"
+    elseif (l:tool == 4)
+      let l:tool = "cver"
+    elseif (l:tool == 5)
+      let l:tool = "leda"
+    else
+      let l:tool = "iverilog"
+    endif
+  else
+    let l:tool = tolower(a:1)
+  endif
+
+  " Choose error level
+  if (a:0 <= 1)
+    if (l:tool == "vcs" || l:tool == "msim" || l:tool == "cver")
+      let l:mode = inputlist([
+            \"1. check all",
+            \"2. ignore lint",
+            \"3. ignore lint and warnings"
+            \])
+      echo "\n"
+    endif
+  else
+    let l_mode = a:2
+  endif
+
+  if (l:tool == "vcs")
+    " Error messages
+    set errorformat=%E%trror-\[%.%\\+\]\ %m
+    set errorformat+=%C%m\"%f\"\\,\ %l%.%#
+    set errorformat+=%C%f\\,\ %l
+    set errorformat+=%C%\\s%\\+%l:\ %m
+    set errorformat+=%C%m\"%f\"\\,%.%#
+    set errorformat+=%Z%p^                      "Column pointer
+    set errorformat+=%C%m                       "Catch all rule
+    set errorformat+=%Z%m                       "Finalization messages
+    " Warning messages
+    if (l:mode <= 2)
+      set errorformat+=%W%tarning-\[%.%\\+]\\$
+      set errorformat+=%-W%tarning-[LCA_FEATURES_ENABLED]\ Usage\ warning    "Ignore LCA enabled warning
+      set errorformat+=%W%tarning-\[%.%\\+\]\ %m
+    " Lint message
+    elseif (l:mode <= 1)
+      set errorformat+=%I%tint-\[%.%\\+\]\ %m
+    endif
+    echo "Selected VCS errorformat"
+    "TODO Add support for:
+    "Error-[SE] Syntax error
+    "  Following verilog source has syntax error :
+    "  "../../rtl_v/anadigintf/anasoftramp.v", 128: token is 'else'
+    "          else
+  endif
+  if (l:tool == "msim")
+    " Error messages
+    set errorformat=\*\*\ Error:\ %f(%l):\ %m
+    " Warning messages
+    if (l:mode <= 2)
+      set errorformat+=\*\*\ Warning:\ \[\%n\]\ %f(%l):\ %m
+    endif
+    echo "Selected Modelsim errorformat"
+  endif
+  if (l:tool == "iverilog")
+    set errorformat=%f:%l:\ %m
+    echo "Selected iverilog errorformat"
+  endif
+  if (l:tool == "cver")
+    " Error messages
+    set errorformat=\*\*%f(%l)\ ERROR\*\*\ \[%n\]\ %m
+    " Warning messages
+    if (l:mode <= 2)
+      set errorformat+=\*\*%f(%l)\ WARN\*\*\ \[%n\]\ %m,\*\*\ WARN\*\*\ \[\%n\]\ %m
+    endif
+    echo "Selected cver errorformat"
+  endif
+  if (l:tool == "leda")
+    " Simple errorformat:
+    set errorformat=%f:%l:\ %.%#\[%t%.%#\]\ %m
+    "TODO Review -> Multiple line errorformat:
+    "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
+    echo "Selected Leda errorformat"
+  endif
+endfunction
+" }}}
+
+" vi: sw=2 st=2 fdm=marker:

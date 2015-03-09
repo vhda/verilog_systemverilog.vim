@@ -17,6 +17,7 @@ Besides some bug corrections, the following features were added to this set of s
 * Omni completion.
 * Configurable syntax folding.
 * Updated matchit configurations to properly support Verilog 2001 and SystemVerilog.
+* Error format definitions for common Verilog tools.
 * Automatically enabled for the following file extensions: .v.vh.sv.svi.svh
 
 ### Omni Completion
@@ -52,6 +53,44 @@ __Note__: Proper SystemVerilog tag generation requires development version of
 To enable syntax folding set the following option:
 
 `set foldmethod=syntax`
+
+### Verilog Compilation and Error format
+
+This plugin includes the [errorformat][vim-errorformat] configurations for
+the following Verilog tools:
+
+* Synopsys VCS (`vcs`)
+* Mentor Modelsim (`msim`)
+* Icarus Verilog (`iverilog`)
+* GPL Cver (`cver`)
+* Synopsys Leda (`leda`)
+
+The command `VerilogErrorFormat` allows the interactive selection of these
+configurations. In some cases it is also possible to ignore _lint_ and/or
+_warning_ level messages.
+
+A specific tool can be directly selected calling this command with some
+arguments. Below is an example for `VCS`:
+
+```
+VerilogErrorFormat vcs 2
+```
+
+In this example the second argument disables the detection of _lint_ messages.
+This argument can take the following values:
+
+1. All messages are detected.
+2. Ignore _lint_ messages.
+3. Ignore _lint_ and _warning_ messages.
+
+After the [errorformat][vim-errorformat] has been so defined, it is only a
+matter of setting [makeprg][vim-makeprg] and run `:make` to call the tool of
+choice and vim will automatically detect errors, open the required file(s) and
+place the cursor on the error position. To navigate the error list use the
+commands `:cnext` and `:cprevious`.
+
+For more information check the help page for the [quickfix][vim-quickfix]
+vim feature.
 
 ## Installation
 
@@ -193,6 +232,9 @@ let g:tagbar_type_verilog_systemverilog = {
 [vim-omni]:     http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
 [vim-omnifunc]: http://vimdoc.sourceforge.net/htmldoc/options.html#'omnifunc'
 [vim-echom]:    http://vimdoc.sourceforge.net/htmldoc/eval.html#:echom
+[vim-errorformat]: http://vimdoc.sourceforge.net/htmldoc/options.html#'errorformat'
+[vim-makeprg]:  http://vimdoc.sourceforge.net/htmldoc/options.html#'makeprg'
+[vim-quickfix]: http://vimdoc.sourceforge.net/htmldoc/quickfix.html
 
 
 <!-- Other links:
