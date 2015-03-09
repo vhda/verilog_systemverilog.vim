@@ -136,6 +136,7 @@ if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "al
         \ transparent
         \ keepend
         \ fold
+    syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<task\>"
 else
     syn keyword verilogStatement  task endtask
 endif
@@ -147,6 +148,7 @@ if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold,
         \ transparent
         \ keepend
         \ fold
+    syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<function\>"
 else
     syn keyword verilogStatement  function endfunction
 endif
