@@ -20,6 +20,9 @@ else
    runtime! syntax/verilog.vim
 endif
 
+" Store cpoptions
+let oldcpo=&cpoptions
+set cpo-=C
 
 syn sync lines=1000
 
@@ -275,5 +278,8 @@ if version >= 508 || !exists("did_verilog_syn_inits")
 endif
 
 let b:current_syntax = "verilog_systemverilog"
+
+" Restore cpoptions
+let &cpoptions=oldcpo
 
 " vim: ts=8

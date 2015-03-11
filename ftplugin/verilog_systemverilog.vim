@@ -18,6 +18,10 @@ command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorForm
 " Behaves just like Verilog
 runtime! ftplugin/verilog.vim
 
+" Store cpoptions
+let oldcpo=&cpoptions
+set cpo-=C
+
 " Override matchit configurations
 if exists("loaded_matchit")
   let b:match_ignorecase=0
@@ -46,6 +50,9 @@ if exists("loaded_matchit")
     \ '\<property\>:\<endproperty\>,' .
     \ '\<sequence\>:\<endsequence\>'
 endif
+
+" Restore cpoptions
+let &cpoptions=oldcpo
 
 " Raise warning if smartindent is defined
 if &smartindent
