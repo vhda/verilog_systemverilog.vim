@@ -57,5 +57,6 @@ let &cpoptions=oldcpo
 " Raise warning if smartindent is defined
 if &smartindent
     echohl WarningMsg
+    redraw
     echo "Option 'smartindent' should not be used in Verilog syntax, use 'autoindent' instead."
 endif
