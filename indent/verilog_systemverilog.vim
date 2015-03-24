@@ -33,6 +33,7 @@ setlocal indentkeys+==endmodule,=endfunction,=endtask,=endspecify
 setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
 setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
+setlocal indentkeys+==else
 
 " Only define the function once.
 if exists("*GetVerilog_SystemVerilogIndent")
