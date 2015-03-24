@@ -55,6 +55,28 @@ class z;
         join
         // End of copied code
 
+        // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/15
+        assert(out>0) else $warning("xxx");
+        $display("Hi");
+
+        assert(out>0)
+        else $warning("xxx");
+        $display("Hi");
+
+        assert(out>0) else $warning("xxx");
+        $display("Hi");
+        $display("Hi");
+        // End of copied code
+
+        assert(out>0)
+        else
+            $warning("xxx");
+        $display("Hi");
+
+        if (1 > 0) $display("1 > 0");
+        else $display("1 < 0");
+        $display();
+
     endtask
     // End of copied code
 

@@ -165,10 +165,10 @@ function GetVerilog_SystemVerilogIndent()
 
   " De-indent for the end of one-line block
   elseif last_line =~ ';' . vlog_comment . '*$' &&
-    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>.*' . vlog_comment . '*$' &&
+    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '*$' &&
     \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
-    \ ( last_line2 !~ '\<begin\>' ||
-    \   last_line2 =~ '\(//\|/\*\).*\<begin\>' )
+    \ ( last_line2 !~ '\<\(begin\|assert\)\>' ||
+    \   last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
     let ind = ind - offset
     if vverb
       echom "De-indent after the end of one-line statement:"
@@ -237,6 +237,15 @@ function GetVerilog_SystemVerilogIndent()
     endif
     if vverb && indent_modules
       echom "De-indent the end of a module:"
+      echom curr_line
+    endif
+
+  " De-indent else of assert
+  elseif curr_line =~ '\<else\>' &&
+    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)' . vlog_comment . '*$'
+    let ind = ind - offset
+    if vverb
+      echom "De-indent else of assert"
       echom curr_line
     endif
 
