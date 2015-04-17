@@ -83,7 +83,11 @@ function! verilog_systemverilog#Complete(findstart, base)
         call s:Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
         call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
-        return {'words' : tags}
+        if (v:version >= 704)
+          return {'words' : tags}
+        else
+          return tags
+        endif
       " Check if it is a function/task call
       else
         call s:Verbose("Searching for function")
@@ -98,7 +102,11 @@ function! verilog_systemverilog#Complete(findstart, base)
         call s:Verbose("Searching tags starting with " . base)
         let tags = s:FilterPorts(taglist('^' . base))
         call map(tags, 'strpart(v:val["name"], len(base . "."))')
-        return {'words' : tags}
+        if (v:version >= 704)
+          return {'words' : tags}
+        else
+          return tags
+        endif
       endif
     else
       " Process an object
@@ -133,7 +141,11 @@ function! verilog_systemverilog#Complete(findstart, base)
         endif
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val, "\\.")) > 1 ? 0 : 1')
-        return {'words' : tags}
+        if (v:version >= 704)
+          return {'words' : tags}
+        else
+          return tags
+        endif
       endif
       return -1
     endif
