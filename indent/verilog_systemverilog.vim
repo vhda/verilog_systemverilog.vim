@@ -191,14 +191,14 @@ function GetVerilog_SystemVerilogIndent()
     "   De-indent for an optional close parenthesis and a semicolon, and only
     "   if there exists precedent non-whitespace char
     "   Also de-indents a close bracket when preceded by a semicolon, but only
-    "   if it is not commented out
+    "   if it is not commented out or alone in a line. "with" statements are
+    "   also ignored.
     elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '^\s*)*\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
-      \ last_line =~ ';\s*}' && last_line !~ vlog_comment . '}'
+      \ last_line =~ ';\s*}' && last_line !~ vlog_comment . '}' && last_line !~ '^\s*}' && last_line !~ '\<with\s*{'
       let ind = ind - offset
       if vverb
         echom "De-indent after a close statement:"
