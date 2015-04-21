@@ -100,7 +100,7 @@ function! verilog_systemverilog#Complete(findstart, base)
           let base = s:instname
         endif
         call s:Verbose("Searching tags starting with " . base)
-        let tags = s:FilterPorts(taglist('^' . base))
+        let tags = s:FilterPorts(taglist('^' . base . '\.'))
         call map(tags, 'strpart(v:val["name"], len(base . "."))')
         if (v:version >= 704)
           return {'words' : tags}
