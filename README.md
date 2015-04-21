@@ -8,8 +8,6 @@ http://www.vim.org/scripts/script.php?script_id=1586
 
 [comment]: <http://> "_ stop highlighting the underscore from the link above"
 
-#__NOTICE: Repository history has been rewritten__
-
 ## Features
 
 Besides some bug corrections, the following features were added to this set of scripts:
@@ -44,6 +42,8 @@ seemingly as long as it is able to generate a standard class qualified tags file
 For more information on using omni completion please check the vim man page for
 [`i_CTRL-X_CTRL-O`][vim-omni] (the required option [`omnifunc`][vim-omnifunc] is
 automatically defined for the supported file extensions).
+
+TODO: Explain how gd works
 
 __Note__: Proper SystemVerilog tag generation requires development version of
 [exuberant-ctags][c].
