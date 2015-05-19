@@ -94,6 +94,16 @@ vim feature.
 
 ## Installation
 
+### Using [vim-plug][P]
+
+1. Add the following to your `vimrc`:
+
+ `Plug 'vhda/verilog_systemverilog.vim'`
+
+2. Run:
+
+ `vim +PlugInstall +qall`
+
 ### Using [Vundle][v]
 
 1. Add the following to your `vimrc`:
@@ -225,6 +235,7 @@ let g:tagbar_type_verilog_systemverilog = {
 [c]: https://github.com/exuberant-ctags/ctags
 [p]: https://github.com/tpope/vim-pathogen
 [v]: https://github.com/gmarik/vundle
+[P]: https://github.com/junegunn/vim-plug
 [e]: http://ctags.sourceforge.net/
 [t]: http://majutsushi.github.io/tagbar/
 [hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
