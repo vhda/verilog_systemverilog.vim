@@ -390,6 +390,13 @@ function verilog_systemverilog#FollowInstanceTag(line, column)
     execute "tag " . values[1]
   endif
 endfunction
+
+function verilog_systemverilog#FollowInstanceSearchWord(line, column)
+  let @/='\<'.expand("<cword>").'\>'
+  call verilog_systemverilog#FollowInstanceTag(a:line, a:column)
+  exec "normal /" . @/
+  normal n
+endfunction
 " }}}
 
 "------------------------------------------------------------------------

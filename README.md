@@ -16,6 +16,7 @@ Besides some bug corrections, the following features were added to this set of s
 * Configurable syntax folding.
 * Updated matchit configurations to properly support Verilog 2001 and SystemVerilog.
 * Error format definitions for common Verilog tools.
+* Commands for following instances.
 * Automatically enabled for the following file extensions: .v.vh.sv.svi.svh
 
 ### Omni Completion
@@ -99,10 +100,15 @@ declaration as long as its respective entry exists in the tags file. To
 do so simply execute `:VerilogFollowInstance` within the instance to
 follow it to its declaration.
 
-This command can be mapped as following:
+Alternatively, if the cursor is placed over a port of the instance the
+command `:VerilogFollowPort` can be used to navigate to the module
+declaration and immediately searching for that port.
+
+These commands can be mapped as following:
 
 ```
 nnoremap <leader>u :VerilogFollowInstance<CR>
+nnoremap <leader>U :VerilogFollowPort<CR>
 ```
 
 ## Installation
