@@ -382,6 +382,17 @@ endfunction
 " }}}
 
 "------------------------------------------------------------------------
+" External functions
+" {{{
+function verilog_systemverilog#FollowInstanceTag(line, column)
+  let values = s:GetInstanceInfo(a:line, a:column)
+  if values[1] != ""
+    execute "tag " . values[1]
+  endif
+endfunction
+" }}}
+
+"------------------------------------------------------------------------
 " Definitions for errorformat
 " {{{
 function! verilog_systemverilog#VerilogErrorFormat(...)

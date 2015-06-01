@@ -92,6 +92,19 @@ commands `:cnext` and `:cprevious`.
 For more information check the help page for the [quickfix][vim-quickfix]
 vim feature.
 
+### Following an Instance
+
+A framework is provided to follow a module instance to its module
+declaration as long as its respective entry exists in the tags file. To
+do so simply execute `:VerilogFollowInstance` within the instance to
+follow it to its declaration.
+
+This command can be mapped as following:
+
+```
+nnoremap <leader>u :VerilogFollowInstance<CR>
+```
+
 ## Installation
 
 ### Using [vim-plug][P]

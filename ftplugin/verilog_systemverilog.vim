@@ -14,6 +14,7 @@ set omnifunc=verilog_systemverilog#Complete
 
 " Command definitions
 command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)
+command!          VerilogFollowInstance call verilog_systemverilog#FollowInstanceTag(line('.'), col('.'))
 
 " Behaves just like Verilog
 runtime! ftplugin/verilog.vim
