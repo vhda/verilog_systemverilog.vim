@@ -107,8 +107,20 @@ declaration and immediately searching for that port.
 These commands can be mapped as following:
 
 ```
-nnoremap <leader>u :VerilogFollowInstance<CR>
-nnoremap <leader>U :VerilogFollowPort<CR>
+nnoremap <leader>i :VerilogFollowInstance<CR>
+nnoremap <leader>I :VerilogFollowPort<CR>
+```
+
+### Go to current instance declaration
+
+The command `:VerilogGotoInstanceStart` is provided to move the cursor
+to the start of the first module instantiation that precedes the current
+cursor location.
+
+This command can be mapped as following:
+
+```
+nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 ```
 
 ## Installation

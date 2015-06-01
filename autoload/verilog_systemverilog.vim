@@ -157,6 +157,7 @@ endfunction
 " Search file for instance information:
 " * name
 " * type (typically a module name, but can also be a function/task/etc)
+" * line number
 function! s:GetInstanceInfo(linenr, column)
   let linenr = a:linenr
   let line = getline(linenr)
@@ -236,7 +237,7 @@ function! s:GetInstanceInfo(linenr, column)
   endwhile
 
   call s:Verbose("Found instance. Name: »" . instname . "« Type: »" . insttype . "«")
-  return [instname, insttype]
+  return [instname, insttype, linenr]
 endfunction
 
 " Append signature to functions and tasks
@@ -384,6 +385,13 @@ endfunction
 "------------------------------------------------------------------------
 " External functions
 " {{{
+function verilog_systemverilog#GotoInstanceStart(line, column)
+  let values = s:GetInstanceInfo(a:line, a:column)
+  if values[2] != ""
+    call cursor(values[2], a:column)
+  endif
+endfunction
+
 function verilog_systemverilog#FollowInstanceTag(line, column)
   let values = s:GetInstanceInfo(a:line, a:column)
   if values[1] != ""
