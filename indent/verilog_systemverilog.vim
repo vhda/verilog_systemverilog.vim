@@ -164,7 +164,12 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " De-indent for the end of one-line block
-  elseif last_line =~ ';' . vlog_comment . '*$' &&
+  " Only de-indents if last line was an end of statement that ended with ;
+  " or if it starts with a `define call, which might not require the ; end
+  elseif (
+    \ last_line =~ ';' . vlog_comment . '*$' ||
+    \ last_line =~ '^\s*`\k\+'
+    \ ) &&
     \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '*$' &&
     \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
     \ ( last_line2 !~ '\<\(begin\|assert\)\>' ||

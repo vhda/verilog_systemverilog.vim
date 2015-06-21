@@ -103,6 +103,17 @@ class z;
     pure virtual function void c(input int unsigned N, ref t Data);
     // End of copied code
 
+    // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/17
+    function void sink_driver::build_phase(uvm_phase phase);
+        if (!uvm_config_db #(sink_agent_config)::get(this, "", "sink_agent_config", m_cfg) )
+            `uvm_fatal("CONFIG_LOAD", "Cannot get() configuration sink_agent_config from uvm_config_db. Have you set() it?")
+        // OK to do this herE>
+        foreach(rand_bool_gen[ch]) begin
+            rand_bool_gen[ch]=new();
+        end
+    endfunction
+    // End of copied code
+
     // Oter tests
     task fork_test;
         fork
