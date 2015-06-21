@@ -86,7 +86,7 @@ This argument can take the following values:
 
 After the [errorformat][vim-errorformat] has been so defined, it is only a
 matter of setting [makeprg][vim-makeprg] and run `:make` to call the tool of
-choice and vim will automatically detect errors, open the required file(s) and
+choice and vim will automatically detect errors, open the required file and
 place the cursor on the error position. To navigate the error list use the
 commands `:cnext` and `:cprevious`.
 
@@ -209,46 +209,8 @@ a nice hierarchical view. SystemVerilog language and Verilog/SystemVerilog
 hierarchical browsing are only supported when used together with the development
 version of [exuberant-ctags][c].
 
-Use the following configuration:
-
-```
-let g:tagbar_type_verilog_systemverilog = {
-        \ 'ctagstype'   : 'SystemVerilog',
-        \ 'kinds'       : [
-            \ 'b:blocks:1:1',
-            \ 'c:constants:1:0',
-            \ 'e:events:1:0',
-            \ 'f:functions:1:1',
-            \ 'm:modules:0:1',
-            \ 'n:nets:1:0',
-            \ 'p:ports:1:0',
-            \ 'r:registers:1:0',
-            \ 't:tasks:1:1',
-            \ 'A:assertions:1:1',
-            \ 'C:classes:0:1',
-            \ 'V:covergroups:0:1',
-            \ 'I:interfaces:0:1',
-            \ 'M:modport:0:1',
-            \ 'K:packages:0:1',
-            \ 'P:programs:0:1',
-            \ 'R:properties:0:1',
-            \ 'T:typedefs:0:1'
-        \ ],
-        \ 'sro'         : '.',
-        \ 'kind2scope'  : {
-            \ 'm' : 'module',
-            \ 'b' : 'block',
-            \ 't' : 'task',
-            \ 'f' : 'function',
-            \ 'C' : 'class',
-            \ 'V' : 'covergroup',
-            \ 'I' : 'interface',
-            \ 'K' : 'package',
-            \ 'P' : 'program',
-            \ 'R' : 'property'
-        \ },
-    \ }
-```
+The required filetype related configuration for [Tagbar][t] is included
+within this addon.
 
 
 [c]: https://github.com/exuberant-ctags/ctags
