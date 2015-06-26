@@ -386,14 +386,14 @@ endfunction
 " External functions
 " {{{
 function verilog_systemverilog#GotoInstanceStart(line, column)
-  let values = s:GetInstanceInfo(a:line, a:column)
+  let values = s:GetInstanceInfo(a:line, 0)
   if values[2] != ""
     call cursor(values[2], a:column)
   endif
 endfunction
 
 function verilog_systemverilog#FollowInstanceTag(line, column)
-  let values = s:GetInstanceInfo(a:line, a:column)
+  let values = s:GetInstanceInfo(a:line, 0)
   if values[1] != ""
     execute "tag " . values[1]
   endif
