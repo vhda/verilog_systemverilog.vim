@@ -3,6 +3,8 @@ module mod(
     input  wire           in2,
     output reg            out
 );
+parameter PARAM1 = 1;
+parameter PARAM2 = 2;
 
 function test(
     input a,

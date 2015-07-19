@@ -77,7 +77,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         endif
         call s:Verbose("Number of tags found: " . len(tags))
         " In instances only return ports
-        let tags = s:FilterPorts(tags)
+        let tags = s:FilterPortsOrConstants(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call s:Verbose("Number of tags after filtering: " . len(tags))
@@ -100,7 +100,7 @@ function! verilog_systemverilog#Complete(findstart, base)
           let base = s:instname
         endif
         call s:Verbose("Searching tags starting with " . base)
-        let tags = s:FilterPorts(taglist('^' . base . '\.'))
+        let tags = s:FilterPortsOrConstants(taglist('^' . base . '\.'))
         call map(tags, 'strpart(v:val["name"], len(base . "."))')
         if (v:version >= 704)
           return {'words' : tags}
@@ -366,10 +366,10 @@ function s:GetClassDefaultParameterValue(class, parameter)
   endif
 endfunction
 
-" Filter tag list to only return ports
-function s:FilterPorts(tags)
+" Filter tag list to only return ports or constants
+function s:FilterPortsOrConstants(tags)
   let tags = a:tags
-  call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" : 1')
+  call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" || v:val["kind"] == "c" : 1')
   return tags
 endfunction
 

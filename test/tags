@@ -5,6 +5,8 @@
 !_TAG_PROGRAM_URL	https://github.com/fishman/ctags	/official site/
 !_TAG_PROGRAM_VERSION	Development	//
 BASE	mod.sv	/^  type BASE = extended_base   ,$/;"	c	class:myclass
+PARAM1	mod.sv	/^parameter PARAM1 = 1;$/;"	c	module:mod
+PARAM2	mod.sv	/^parameter PARAM2 = 2;$/;"	c	module:mod
 a	mod.sv	/^    function method(input a, input b);$/;"	p	function:extended_base.method
 a	mod.sv	/^    function method(input a, input b);$/;"	p	function:myclass.method
 a	mod.sv	/^    input a,$/;"	p	function:mod.test
@@ -34,6 +36,8 @@ in2	mod.sv	/^    input  wire           in2,$/;"	p	module:mod
 method	mod.sv	/^    function method(input a, input b);$/;"	f	class:extended_base
 method	mod.sv	/^    function method(input a, input b);$/;"	f	class:myclass
 mod	mod.sv	/^module mod($/;"	m
+mod.PARAM1	mod.sv	/^parameter PARAM1 = 1;$/;"	c	module:mod
+mod.PARAM2	mod.sv	/^parameter PARAM2 = 2;$/;"	c	module:mod
 mod.in1	mod.sv	/^    input  wire     [7:0] in1,$/;"	p	module:mod
 mod.in2	mod.sv	/^    input  wire           in2,$/;"	p	module:mod
 mod.out	mod.sv	/^    output reg            out$/;"	p	module:mod
