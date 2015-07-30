@@ -476,8 +476,9 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       set errorformat+=%W%tarning-\[%.%\\+]\\$
       set errorformat+=%-W%tarning-[LCA_FEATURES_ENABLED]\ Usage\ warning    "Ignore LCA enabled warning
       set errorformat+=%W%tarning-\[%.%\\+\]\ %m
+    endif
     " Lint message
-    elseif (l:mode <= 1)
+    if (l:mode <= 1)
       set errorformat+=%I%tint-\[%.%\\+\]\ %m
     endif
     echo "Selected VCS errorformat"
