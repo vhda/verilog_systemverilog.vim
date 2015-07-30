@@ -440,11 +440,20 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
 
   " Choose error level
   if (a:0 <= 1)
-    if (l:tool == "vcs" || l:tool == "msim" || l:tool == "cver")
+    if (l:tool == "vcs")
       let l:mode = inputlist([
             \"1. check all",
             \"2. ignore lint",
             \"3. ignore lint and warnings"
+            \])
+      echo "\n"
+    elseif (
+      \ l:tool == "msim" ||
+      \ l:tool == "cver"
+      \ )
+      let l:mode = inputlist([
+            \"1. check all",
+            \"2. ignore warnings"
             \])
       echo "\n"
     endif
@@ -482,7 +491,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     " Error messages
     set errorformat=\*\*\ Error:\ %f(%l):\ %m
     " Warning messages
-    if (l:mode <= 2)
+    if (l:mode <= 1)
       set errorformat+=\*\*\ Warning:\ \[\%n\]\ %f(%l):\ %m
     endif
     echo "Selected Modelsim errorformat"
@@ -495,7 +504,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     " Error messages
     set errorformat=\*\*%f(%l)\ ERROR\*\*\ \[%n\]\ %m
     " Warning messages
-    if (l:mode <= 2)
+    if (l:mode <= 1)
       set errorformat+=\*\*%f(%l)\ WARN\*\*\ \[%n\]\ %m,\*\*\ WARN\*\*\ \[\%n\]\ %m
     endif
     echo "Selected cver errorformat"
