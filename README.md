@@ -44,7 +44,7 @@ For more information on using omni completion please check the vim man page for
 [`i_CTRL-X_CTRL-O`][vim-omni] (the required option [`omnifunc`][vim-omnifunc] is
 automatically defined for the supported file extensions).
 
-TODO: Explain how gd works
+[comment]: TODO: Explain how gd works
 
 __Note__: Proper SystemVerilog tag generation requires development version of
 [exuberant-ctags][c].
@@ -53,7 +53,9 @@ __Note__: Proper SystemVerilog tag generation requires development version of
 
 To enable syntax folding set the following option:
 
-`set foldmethod=syntax`
+```VimL
+set foldmethod=syntax
+```
 
 ### Verilog Compilation and Error format
 
@@ -73,8 +75,8 @@ _warning_ level messages.
 A specific tool can be directly selected calling this command with some
 arguments. Below is an example for `VCS`:
 
-```
-VerilogErrorFormat vcs 2
+```VimL
+:VerilogErrorFormat vcs 2
 ```
 
 In this example the second argument disables the detection of _lint_ messages.
@@ -106,7 +108,7 @@ declaration and immediately searching for that port.
 
 These commands can be mapped as following:
 
-```
+```VimL
 nnoremap <leader>i :VerilogFollowInstance<CR>
 nnoremap <leader>I :VerilogFollowPort<CR>
 ```
@@ -119,7 +121,7 @@ cursor location.
 
 This command can be mapped as following:
 
-```
+```VimL
 nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 ```
 
@@ -129,39 +131,50 @@ nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 
 1. Add the following to your `vimrc`:
 
- `Plug 'vhda/verilog_systemverilog.vim'`
+   ```VimL
+   Plug 'vhda/verilog_systemverilog.vim'
+   ```
 
 2. Run:
 
- `vim +PlugInstall +qall`
+   ```Shell
+   $ vim +PlugInstall +qall
+   ```
 
 ### Using [Vundle][v]
 
 1. Add the following to your `vimrc`:
 
- `Plugin 'vhda/verilog_systemverilog.vim'`
+   ```VimL
+   Plugin 'vhda/verilog_systemverilog.vim'
+   ```
+
 2. Run:
 
- `vim +PluginInstall +qall`
+   ```Shell
+   $ vim +PluginInstall +qall
+   ```
 
 ### Using [Pathogen][p]
 
-1. `cd ~/.vim/bundle`
-2. `git clone https://github.com/vhda/verilog_systemverilog.vim`
+```Shell
+$ cd ~/.vim/bundle
+$ git clone https://github.com/vhda/verilog_systemverilog.vim
+```
 
 ## Configuration
 
 ### Indent options
 
-* __b:verilog\_indent\_width__ - Use this variable to override the option `&shiftwidth`.
+* __`b:verilog_indent_width`__ - Use this variable to override the option `&shiftwidth`.
 
-* __b:verilog\_indent\_modules__ - Indent code after module declaration.
+* __`b:verilog_indent_modules`__ - Indent code after module declaration.
 
-* __b:g:verilog\_dont\_deindent\_eos__ - Keep last `)` of module port declaration indented.
+* __`b:g:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
 
 ### Syntax options
 
-* __g:verilog\_syntax\_fold__ - Enable verilog syntax folding.
+* __`g:verilog_syntax_fold`__ - Enable verilog syntax folding.
   Comma separated list containing one or more of the following values:
   * function
   * task
@@ -179,8 +192,8 @@ nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 
 ### Debug options
 
-* __b:verilog\_indent\_verbose__ - Verbose indenting (uses [`echom`][vim-echom]).
-* __b:verilog\_omni\_verbose__ - Verbose omni completion (uses [`echom`][vim-echom]).
+* __`b:verilog_indent_verbose`__ - Verbose indenting (uses [`echom`][vim-echom]).
+* __`b:verilog_omni_verbose`__ - Verbose omni completion (uses [`echom`][vim-echom]).
 
 ## Other Vim addons helpful for Verilog/SystemVerilog
 
@@ -193,7 +206,7 @@ of the matching keyword pairs for their supported languages.
 Since it is already included in all Vim installations and the addon can be
 easily loaded by adding the following line to `.vimrc`:
 
-```
+```VimL
 runtime macros/matchit.vim
 ```
 
@@ -209,7 +222,9 @@ parentheses/brackets.
 completion. To take full advantage of the omni completion functionality the
 following configuration should be used:
 
-`let g:SuperTabDefaultCompletionType = "context"`
+```VimL
+let g:SuperTabDefaultCompletionType = 'context'
+```
 
 When this is done [Supertab][supertab] will choose the most appropriate type of
 completion to use depending on the current context.
