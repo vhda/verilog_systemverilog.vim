@@ -141,6 +141,18 @@ class z;
         end
     endtask
 
+    virtual task virtual_task;
+        while (1) begin
+            do_something();
+        end
+    endtask
+
+    virtual function virtual_function;
+        while (1) begin
+            do_something();
+        end
+    endfunction
+
     function old_style_function_with_var(
         input a
     );

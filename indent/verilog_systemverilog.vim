@@ -112,7 +112,7 @@ function GetVerilog_SystemVerilogIndent()
     endif
   " Indent after function/task/class/package/sequence/clocking/
   " interface/covergroup/property/program blocks
-  elseif last_line =~ '^\s*\(\<\(static\|protected\|local\)\>\s\+\)\?\<\(function\|task\)\>' ||
+  elseif last_line =~ '^\s*\(\<\(virtual\|static\|protected\|local\)\>\s\+\)\?\<\(function\|task\)\>' ||
     \ last_line =~ '^\s*\(\<virtual\>\s\+\)\?\<\(class\|package\)\>' ||
     \ last_line =~ '^\s*\<\(sequence\|clocking\|interface\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\)\=\s*\<covergroup\>' ||
