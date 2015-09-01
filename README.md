@@ -167,15 +167,13 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 ### Indent options
 
 * __`b:verilog_indent_width`__ - Use this variable to override the option `&shiftwidth`.
-
 * __`b:verilog_indent_modules`__ - Indent code after module declaration.
-
 * __`g:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
 
 ### Syntax options
 
 * __`g:verilog_syntax_fold`__ - Enable verilog syntax folding.
-  Comma separated list containing one or more of the following values:
+  String containing one or more of the following values, separated by comma:
   * function
   * task
   * specify
@@ -187,6 +185,12 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
   * comment (`/*..*/`)
   * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
   * all (enables all above options)
+
+  For example:
+
+  ```VimL
+  let g:verilog_syntax_fold = "function,task"
+  ```
 
   Set to an empty string to disable syntax folding.
 
