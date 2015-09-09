@@ -179,13 +179,16 @@ function! s:GetInstanceInfo(linenr, column)
       elseif line[start - 1] == ')' || p > 0
         if line[start - 1] == ')'
           call s:Verbose("Skipping parentheses, started on line " . linenr)
-          let p += 1
         endif
         while start > 0
-          if line[start - 1] == '('
+          if line[start - 1] == ')'
+            let p += 1
+          elseif line[start - 1] == '('
             let p -= 1
-            call s:Verbose("Skipping parentheses, ended on line " . linenr)
-            break
+            if p == 0
+              call s:Verbose("Skipping parentheses, ended on line " . linenr)
+              break
+            endif
           endif
           let start -= 1
         endwhile

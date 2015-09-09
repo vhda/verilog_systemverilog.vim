@@ -32,6 +32,8 @@ test(
 
  mod test(
     .port1 (test),
+    .port2 (bus[(3-1):0]),
+    .port3 (test),
     .
 );
 
