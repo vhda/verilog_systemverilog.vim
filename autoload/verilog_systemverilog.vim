@@ -66,18 +66,18 @@ function! verilog_systemverilog#Complete(findstart, base)
   if exists("s:prefix") && s:prefix != ''
     call s:Verbose("Prefix: " . s:prefix)
     call s:Verbose("Word  : " . s:word)
-    if s:instname != ''
+    if s:insttype != ''
       " Process an instance
-      if s:insttype != ''
-        call s:Verbose("Process instance")
-        if exists("s:word")
-          let tags = taglist('^' . s:insttype . '\.' . s:word)
-        else
-          let tags = taglist('^' . s:insttype . '\.')
-        endif
-        call s:Verbose("Number of tags found: " . len(tags))
+      call s:Verbose("Process instance")
+      if exists("s:word")
+        let tags = taglist('^' . s:insttype . '\.' . s:word)
+      else
+        let tags = taglist('^' . s:insttype . '\.')
+      endif
+      call s:Verbose("Number of tags found: " . len(tags))
+      if s:instname != ''
         " In instances only return ports
-        let tags = s:FilterPortsOrConstants(tags)
+        let tags = s:FilterPorts(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call s:Verbose("Number of tags after filtering: " . len(tags))
@@ -88,8 +88,23 @@ function! verilog_systemverilog#Complete(findstart, base)
         else
           return tags
         endif
-      " Check if it is a function/task call
       else
+        " In parameter list only return constants
+        let tags = s:FilterConstants(tags)
+        " Filter out hierarchical ports
+        call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
+        call s:Verbose("Number of tags after filtering: " . len(tags))
+        " Remove the module name prefix
+        call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
+        if (v:version >= 704)
+          return {'words' : tags}
+        else
+          return tags
+        endif
+      endif
+    else
+      " Check if it is a function/task call
+      if s:instname != ''
         call s:Verbose("Searching for function")
         let items = split(s:instname, '\.')
         if len(items) > 1
@@ -195,8 +210,13 @@ function! s:GetInstanceInfo(linenr, column)
       " An unmatched opening parentheses indicate start of instance
       " From here backward search for the instance declaration
       elseif line[start - 1] == '(' && p == 0
-        let ininstdecl = -1
-        call s:Verbose("Found instance declaration name start, on line " . linenr)
+        if line[start - 2] == '#'
+          let ininsttype = -1
+          call s:Verbose("Found instance parameter declaration on line " . linenr)
+        else
+          let ininstdecl = -1
+          call s:Verbose("Found instance declaration name start, on line " . linenr)
+        endif
       elseif ininstdecl < 0 && line[start - 1] =~ '\w'
         let ininstdecl = start
       elseif ininstdecl > 0 && ininsttype == 0 && (line[start - 1] =~ '\s' || start == 1)
@@ -367,6 +387,20 @@ function s:GetClassDefaultParameterValue(class, parameter)
     call s:Verbose("Parameter default value not found")
     return ""
   endif
+endfunction
+
+" Filter tag list to only return ports
+function s:FilterPorts(tags)
+  let tags = a:tags
+  call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" : 1')
+  return tags
+endfunction
+
+" Filter tag list to only return constants
+function s:FilterConstants(tags)
+  let tags = a:tags
+  call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "c" : 1')
+  return tags
 endfunction
 
 " Filter tag list to only return ports or constants
