@@ -17,10 +17,16 @@ function! verilog_systemverilog#Complete(findstart, base)
     let linenr = line('.')
     let line = getline('.')
     let start = col('.')
-    let wordpos = start
     let prefixpos = -1
     let s:instname = ''
     let s:insttype = ''
+
+    " Define start position depending on relation with end of line
+    if start == col('$')
+      let wordpos = start
+    else
+      let wordpos = start - 1
+    endif
 
     " Search for keywords in line
     while start > 0
