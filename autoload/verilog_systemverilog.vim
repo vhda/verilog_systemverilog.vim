@@ -108,26 +108,24 @@ function! verilog_systemverilog#Complete(findstart, base)
           return tags
         endif
       endif
-    else
-      " Check if it is a function/task call
-      if s:instname != ''
-        call s:Verbose("Searching for function")
-        let items = split(s:instname, '\.')
-        if len(items) > 1
-          let word_list = [s:GetVariableType(items[0])]
-          call extend(word_list, items[1:])
-          let base = join(word_list, ".")
-        elseif len(items) == 1
-          let base = s:instname
-        endif
-        call s:Verbose("Searching tags starting with " . base)
-        let tags = s:FilterPortsOrConstants(taglist('^' . base . '\.'))
-        call map(tags, 'strpart(v:val["name"], len(base . "."))')
-        if (v:version >= 704)
-          return {'words' : tags}
-        else
-          return tags
-        endif
+    elseif s:instname != ''
+      " Process a function/task call
+      call s:Verbose("Searching for function")
+      let items = split(s:instname, '\.')
+      if len(items) > 1
+        let word_list = [s:GetVariableType(items[0])]
+        call extend(word_list, items[1:])
+        let base = join(word_list, ".")
+      elseif len(items) == 1
+        let base = s:instname
+      endif
+      call s:Verbose("Searching tags starting with " . base)
+      let tags = s:FilterPortsOrConstants(taglist('^' . base . '\.'))
+      call map(tags, 'strpart(v:val["name"], len(base . "."))')
+      if (v:version >= 704)
+        return {'words' : tags}
+      else
+        return tags
       endif
     else
       " Process an object
