@@ -321,6 +321,8 @@ function s:GetVariableType(word)
   let position = getpos(".")
   if searchdecl(a:word, 0) == 0
     let line = getline('.')
+    let line = substitute(line, '\v^\s*(const|rand|randc)', '', '')
+    let line = substitute(line, '\v^\s*(static|protected|local)', '', '')
     let type = split(line)[0]
     call s:Verbose("Found declation for: " . a:word . " (" . type . ")")
     call setpos(".", position)
