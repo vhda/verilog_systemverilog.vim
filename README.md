@@ -181,7 +181,6 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
   * covergroup
   * sequence
   * property
-  * specify
   * block (`begin`, `end`)
   * comment (`/*..*/`)
   * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
