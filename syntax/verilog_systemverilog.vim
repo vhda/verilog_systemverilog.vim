@@ -57,7 +57,6 @@ syn keyword verilogStatement   trior trireg unsigned use vectored wait
 syn keyword verilogStatement   wand weak0 weak1 wire wor xnor xor
 
 syn keyword verilogStatement   always_comb always_ff always_latch
-syn keyword verilogStatement   class endclass
 syn keyword verilogStatement   checker endchecker
 syn keyword verilogStatement   virtual local const protected
 syn keyword verilogStatement   package endpackage
@@ -72,7 +71,7 @@ syn keyword verilogStatement   int longint shortint
 syn keyword verilogStatement   struct packed
 syn keyword verilogStatement   final
 syn keyword verilogStatement   import export
-syn keyword verilogStatement   context pure 
+syn keyword verilogStatement   context pure
 syn keyword verilogStatement   void shortreal chandle string
 syn keyword verilogStatement   clocking endclocking
 syn keyword verilogStatement   interface endinterface modport
@@ -83,7 +82,7 @@ syn keyword verilogStatement   alias matches solve static assert
 syn keyword verilogStatement   assume before expect bind
 syn keyword verilogStatement   extends null tagged extern this
 syn keyword verilogStatement   first_match throughout timeprecision
-syn keyword verilogStatement   timeunit priority type union 
+syn keyword verilogStatement   timeunit priority type union
 syn keyword verilogStatement   uwire var cross ref wait_order intersect
 syn keyword verilogStatement   wildcard within
 syn keyword verilogStatement   triggered
@@ -154,6 +153,18 @@ if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold,
     syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<function\>"
 else
     syn keyword verilogStatement  function endfunction
+endif
+if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\(typedef\s\+\)\@<!\<class\>"
+        \ end="\<endclass\>"
+        \ transparent
+        \ keepend
+        \ fold
+    syn match   veirlogStatement "\(typedef\s\+\)\@<=\<class\>"
+else
+    syn keyword verilogStatement class endclass
 endif
 if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
