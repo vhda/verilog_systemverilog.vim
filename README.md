@@ -174,6 +174,7 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 
 * __`g:verilog_syntax_fold`__ - Enable verilog syntax folding.
   String containing one or more of the following values, separated by comma:
+  * class
   * function
   * task
   * specify
