@@ -178,6 +178,8 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
   * function
   * task
   * specify
+  * interface
+  * clocking
   * covergroup
   * sequence
   * property
