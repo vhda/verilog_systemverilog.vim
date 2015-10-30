@@ -73,8 +73,7 @@ syn keyword verilogStatement   final
 syn keyword verilogStatement   import export
 syn keyword verilogStatement   context pure
 syn keyword verilogStatement   void shortreal chandle string
-syn keyword verilogStatement   clocking endclocking
-syn keyword verilogStatement   interface endinterface modport
+syn keyword verilogStatement   modport
 syn keyword verilogStatement   cover coverpoint
 syn keyword verilogStatement   program endprogram
 syn keyword verilogStatement   bins binsof illegal_bins ignore_bins
@@ -157,7 +156,7 @@ endif
 if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
         \ matchgroup=verilogStatement
-        \ start="\(typedef\s\+\)\@<!\<class\>"
+        \ start="\(typedef\s\+\)\@<!\<\(interface\s\+\)\?class\>"
         \ end="\<endclass\>"
         \ transparent
         \ keepend
@@ -165,6 +164,28 @@ if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "a
     syn match   veirlogStatement "\(typedef\s\+\)\@<=\<class\>"
 else
     syn keyword verilogStatement class endclass
+endif
+if index(s:verilog_syntax_fold, "interface") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\<interface\>\(\s\+class\)\@!"
+        \ end="\<endinterface\>"
+        \ transparent
+        \ keepend
+        \ fold
+else
+    syn keyword verilogStatement interface endinterface
+endif
+if index(s:verilog_syntax_fold, "clocking") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region  verilogFold
+        \ matchgroup=verilogStatement
+        \ start="\<clocking\>"
+        \ end="\<endclocking\>"
+        \ transparent
+        \ keepend
+        \ fold
+else
+    syn keyword verilogStatement clocking endclocking
 endif
 if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
