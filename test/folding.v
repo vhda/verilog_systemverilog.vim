@@ -93,6 +93,16 @@ class class_b;
   endclass : class_b2
 endclass : class_b
 
+interface a;
+
+  interface class b;
+  endclass : b
+
+  clocking cb @ (posedge Clk);
+  endclocking : cb
+
+endinterface : a
+
 `ifdef A
 reg test;
 
