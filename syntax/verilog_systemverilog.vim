@@ -159,7 +159,6 @@ if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "a
         \ start="\(typedef\s\+\)\@<!\<\(interface\s\+\)\?class\>"
         \ end="\<endclass\>"
         \ transparent
-        \ keepend
         \ fold
     syn match   veirlogStatement "\(typedef\s\+\)\@<=\<class\>"
 else

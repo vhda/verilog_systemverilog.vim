@@ -78,6 +78,21 @@ endproperty
 sequence
 endsequence
 
+// Classes
+class class_a;
+
+endclass : class_a
+
+class class_b;
+  class class_b1;
+
+  endclass : class_b1
+
+  class class_b2;
+
+  endclass : class_b2
+endclass : class_b
+
 `ifdef A
 reg test;
 
