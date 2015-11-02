@@ -1,0 +1,14 @@
+language: c
+
+sudo: false
+
+os:
+  - linux
+
+before_script:
+  - curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  - curl -fLo ~/.vimrc https://raw.githubusercontent.com/${TRAVIS_REPO_SLUG}/${TRAVIS_BRANCH}/test/test_vimrc
+  - vim -c ':PlugInstall | :qa!'
+
+script:
+  - make all
