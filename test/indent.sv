@@ -156,47 +156,47 @@ class z;
     function old_style_function_with_var(
         input a
     );
-    reg test;
-    begin 
-        do_something1();
-        do_something2();
+        reg test;
         begin
-            do_something3();
+            do_something1();
+            do_something2();
+            begin
+                do_something3();
+            end
         end
-    end
     endfunction
 
     function old_style_function_without_var(
         input a
     );
-    begin
-        do_something1();
-        do_something2();
         begin
-            do_something3();
+            do_something1();
+            do_something2();
+            begin
+                do_something3();
+            end
         end
-    end
     endfunction
 
     function old_style_function_one_line_with_var(input a);
         reg x;
-    begin
-        do_something1();
-        do_something2();
         begin
-            do_something3();
+            do_something1();
+            do_something2();
+            begin
+                do_something3();
+            end
         end
-    end
     endfunction
 
     function old_style_function_one_line_without_var(input a);
-    begin
-        do_something1();
-        do_something2();
         begin
-            do_something3();
+            do_something1();
+            do_something2();
+            begin
+                do_something3();
+            end
         end
-    end
     endfunction
 
 endclass
@@ -237,7 +237,7 @@ device d1 (
     .port (port[1]),
     // .port1(), comment
     /**/.port2(), // comment
-    /*.port3(), */   
+    /*.port3(), */
     // .port4(), comment
     .portA(port[2])
 );
