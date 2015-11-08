@@ -42,6 +42,24 @@ endif
 
 set cpo-=C
 
+function IsLastLineAFunctionDecl()
+  let lno = prevnonblank(line('.') - 1)
+  let line = getline(lno)
+  if line =~ '[\w\s]*);'
+    while line !~ '.*(.*'
+      let lno = lno - 1
+      let line = getline(lno)
+    endwhile
+  endif
+
+  if line =~ '.*function\s\+\(\w\+\s\+\)\?\w\+(.*' &&
+        \line !~ '\(extern\|pure\s\+virtual\)\s\+.*function.*'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
 function GetVerilog_SystemVerilogIndent()
 
   if exists('b:verilog_indent_width')
@@ -72,7 +90,7 @@ function GetVerilog_SystemVerilogIndent()
   let offset_comment1 = 1
   " Define the condition of an open statement
   "   Exclude the match of //, /* or */
-  let vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
+  let vlog_openstat = '\(\<or\>\|\([*/]\)\@<![(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
   " Define the condition when the statement ends with a one-line comment
   let vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
   if exists('b:verilog_indent_verbose')
@@ -87,17 +105,8 @@ function GetVerilog_SystemVerilogIndent()
     let last_line2 = getline(lnum2)
   endwhile
 
-  " Indent accoding to last line
-  " End of multiple-line comment
-  if last_line =~ '\*/\s*$' && last_line !~ '/\*.\{-}\*/'
-    let ind = ind - offset_comment1
-    if vverb
-      echom "De-indent after a multiple-line comment:"
-      echom last_line
-    endif
-
   " Indent after if/else/for/case/always/initial/specify/fork blocks
-  elseif last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
+  if last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
@@ -116,7 +125,7 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line =~ '^\s*\(\<virtual\>\s\+\)\?\<\(class\|package\)\>' ||
     \ last_line =~ '^\s*\<\(sequence\|clocking\|interface\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\)\=\s*\<covergroup\>' ||
-    \ last_line =~ '^\s*\<\(property\|program\)\>'
+    \ last_line =~ '^\s*\<\(property\|program\)\>' || IsLastLineAFunctionDecl()
     if last_line !~ '\<end\>\s*' . vlog_comment . '*$' ||
       \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
       let ind = ind + offset
@@ -125,6 +134,7 @@ function GetVerilog_SystemVerilogIndent()
         echom last_line
       endif
     endif
+  " elseif lastline =~ ');'
 
   " Indent after module/function/task/specify/fork blocks
   elseif last_line =~ '^\s*\(\<extern\>\s*\)\=\<module\>'
