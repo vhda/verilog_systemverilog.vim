@@ -44,7 +44,7 @@ class z;
         assert(
             my_seq.randomize() with
             {Nr==6; Time==8;}
-        );
+            );
         my_seq.start(low_sequencer_h);
 
         // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/5

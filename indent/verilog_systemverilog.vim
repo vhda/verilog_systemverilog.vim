@@ -195,20 +195,35 @@ function GetVerilog_SystemVerilogIndent()
     " Close statement
     "   De-indent for an optional close parenthesis and a semicolon, and only
     "   if there exists precedent non-whitespace char
-    "   Also de-indents a close bracket when preceded by a semicolon, but only
-    "   if it is not commented out or alone in a line. "with" statements are
-    "   also ignored.
+    "   Always de-indent if a close parenthesis and a semicolon are
+    "   found alone in the previous line
     elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
       \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
       \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
-      \ last_line =~ ';\s*}' && last_line !~ vlog_comment . '}' && last_line !~ '^\s*}' && last_line !~ '\<with\s*{'
+      \ last_line =~ '^\s*)\s*;'
       let ind = ind - offset
       if vverb
         echom "De-indent after a close statement:"
         echom last_line
       endif
+
+  " Close bracket
+  "   Also de-indents a close bracket when preceded by a semicolon, but only
+  "   if it is not commented out or alone in a line.
+  "   "with" statements are treated exceptionally.
+  elseif last_line =~ ';\s*}' &&
+        \ ( last_line !~ '{[^}]\+}' ||
+        \   last_line =~ '}\s*)\s*;') &&
+        \ last_line !~ vlog_comment . '}' &&
+        \ last_line !~ '^\s*}' &&
+        \ last_line !~ '\<with\s*{'
+    let ind = ind - offset
+    if vverb
+      echom "De-indent after a closing bracket:"
+      echom last_line
+    endif
 
   " `ifdef , `ifndef , `elsif , or `else
   elseif last_line =~ '^\s*`\<\(ifdef\|ifndef\|elsif\|else\)\>'
