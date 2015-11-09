@@ -87,17 +87,18 @@ function GetVerilog_SystemVerilogIndent()
     let last_line2 = getline(lnum2)
   endwhile
 
-  " Indent accoding to last line
-  " End of multiple-line comment
-  if last_line =~ '\*/\s*$' && last_line !~ '/\*.\{-}\*/'
-    let ind = ind - offset_comment1
+  " Check if inside a comment
+  if synIDattr(synID(v:lnum, 1, 0), "name") == "verilogComment"
     if vverb
-      echom "De-indent after a multiple-line comment:"
-      echom last_line
+      echom "In comment, returning same indent"
     endif
+    return ind
+  endif
+
+  " Indent accoding to last line
 
   " Indent after if/else/for/case/always/initial/specify/fork blocks
-  elseif last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
+  if  last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
@@ -295,15 +296,6 @@ function GetVerilog_SystemVerilogIndent()
     let ind = ind - offset
     if vverb
       echom "De-indent at the end of a multiple statement:"
-      echom last_line
-    endif
-
-  " De-indent after the end of multiple-line statement
-  elseif exists("g:verilog_dont_deindent_eos") && last_line =~ '^\s*)' "&&
-    "\ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$'
-    let ind = ind - offset
-    if vverb
-      echom "De-indent after the end of a multiple statement:"
       echom last_line
     endif
 

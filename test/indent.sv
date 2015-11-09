@@ -90,6 +90,12 @@ class z;
     endtask
     // End of copied code
 
+    /*
+    *
+    *
+    *
+    */
+
     // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/12
     task my_seq::body();
         `uvm_info({get_type_name(),"::body"}, "something" ,UVM_HIGH)
