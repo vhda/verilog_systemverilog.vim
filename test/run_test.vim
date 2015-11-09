@@ -77,7 +77,7 @@ set noautochdir
 view test/folding.v
 
 " Verify folding
-let test_result=test_result || TestFold()
+let test_result=TestFold() || test_result
 echo ''
 
 "-----------------------------------------------------------------------
@@ -87,7 +87,7 @@ echo ''
 silent edit test/indent.sv
 
 " Verify folding
-let test_result=test_result || TestIndent()
+let test_result=TestIndent() || test_result
 echo ''
 
 silent edit!
