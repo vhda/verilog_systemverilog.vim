@@ -1,3 +1,2 @@
-call plug#begin('~/.vim/bundle')
-Plug 'vhda/verilog_systemverilog.vim'
-call plug#end()
+set nocp
+filetype plugin indent on
