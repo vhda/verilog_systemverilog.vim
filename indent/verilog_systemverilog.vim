@@ -213,10 +213,18 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line2 !~ ';\s*//.*$') &&
       \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
       \ last_line =~ '^\s*)\s*;'
-      let ind = ind - offset
-      if vverb
-        echom "De-indent after a close statement:"
-        echom last_line
+      let synName = synIDattr(synID(lnum, 1, 0), "name")
+      if synName == "verilogFunction" || synName == "verilogTask"
+        if vverb
+          echom "Don't deindent after the first close statement of a function/task declaration:"
+          echom last_line
+        endif
+      else
+        let ind = ind - offset
+        if vverb
+          echom "De-indent after a close statement:"
+          echom last_line
+        endif
       endif
 
   " Close bracket
@@ -254,10 +262,18 @@ function GetVerilog_SystemVerilogIndent()
       \ curr_line =~ '^\s*\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
       \ curr_line =~ '^\s*\<\(endgroup\|endproperty\|endprogram\)\>' ||
       \ curr_line =~ '^\s*}'
-    let ind = ind - offset
-    if vverb
-      echom "De-indent the end of a block:"
-      echom curr_line
+    if curr_line =~ '^\s*\<\(endfunction\|endtask\)\>' &&
+          \ synIDattr(synID(lnum, 1, 0), "name") == "verilogBlock"
+      if vverb
+        echom "Don't deindent end of a function/task declaration when last line was a block:"
+        echom last_line
+      endif
+    else
+      let ind = ind - offset
+      if vverb
+        echom "De-indent the end of a block:"
+        echom curr_line
+      endif
     endif
   elseif curr_line =~ '^\s*\<endmodule\>'
     if dont_deindent_eos

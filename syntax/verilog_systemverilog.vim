@@ -132,7 +132,7 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
+    syn region  verilogTask
         \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
         \ end="\<endtask\>"
@@ -141,7 +141,7 @@ if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "al
         \ fold
     syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<task\>"
 else
-    syn region  verilogFold
+    syn region  verilogTask
         \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
         \ end="\<endtask\>"
@@ -149,7 +149,7 @@ else
         \ keepend
 endif
 if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
+    syn region  verilogFunction
         \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
         \ end="\<endfunction\>"
@@ -158,7 +158,7 @@ if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold,
         \ fold
     syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<function\>"
 else
-    syn region  verilogFold
+    syn region  verilogFunction
         \ matchgroup=verilogStatement
         \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
         \ end="\<endfunction\>"
@@ -251,7 +251,7 @@ if index(s:verilog_syntax_fold, "block_nested") >= 0
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
         \ contains=NONE
-    syn region  verilogFold
+    syn region  verilogBlock
         \ start="\<begin\>"
         \ end="\<end\>"me=s-1
         \ transparent
@@ -260,14 +260,14 @@ if index(s:verilog_syntax_fold, "block_nested") >= 0
         \ contains=TOP
     syn match verilogLabel "\<begin\|end\>"
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
+    syn region  verilogBlock
         \ matchgroup=verilogStatement
         \ start="\<begin\>"
         \ end="\<end\>"
         \ transparent
         \ fold
 else
-    syn region  verilogFold
+    syn region  verilogBlock
         \ matchgroup=verilogStatement
         \ start="\<begin\>"
         \ end="\<end\>"
