@@ -162,7 +162,7 @@ if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "a
         \ end="\<endclass\>"
         \ transparent
         \ fold
-    syn match   veirlogStatement "\(typedef\s\+\)\@<=\<class\>"
+    syn match   verilogStatement "\(typedef\s\+\)\@<=\<class\>"
 else
     syn keyword verilogStatement class endclass
 endif
