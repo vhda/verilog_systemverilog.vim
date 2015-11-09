@@ -25,6 +25,9 @@ runtime! ftplugin/verilog.vim
 let oldcpo=&cpoptions
 set cpo-=C
 
+" Set 'comments' to format dashed lists in comments.
+setlocal comments=sr:/*,mb:*,ex:*/
+
 " Override matchit configurations
 if exists("loaded_matchit")
   let b:match_ignorecase=0
