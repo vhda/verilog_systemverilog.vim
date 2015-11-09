@@ -1,2 +1,2 @@
-set nocp
+set nocompatible
 filetype plugin indent on
