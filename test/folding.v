@@ -1,7 +1,7 @@
 function f;                                                   //<1>
 begin                                                         //<2>
                                                               //<2>
-end                                                           //<2>
+end                                                           //<2><1>
 endfunction : f                                               //<1>
                                                               //<0>
 task t;                                                       //<1>
@@ -9,7 +9,7 @@ task t;                                                       //<1>
 begin                                                         //<2>
     begin                                                     //<3>
     end                                                       //<3>
-end                                                           //<2>
+end                                                           //<2><1>
                                                               //<1>
 endtask : t                                                   //<1>
                                                               //<0>
@@ -158,4 +158,27 @@ reg test;                                                     //<1>
                                                               //<1>
   `endif                                                      //<1>
 */                                                            //<1>
-
+                                                              //<0>
+if (cond1) begin                                              //<1>
+    do1();                                                    //<1>
+end else if (cond2) begin                                     //<1>
+    do2();                                                    //<1>
+    do3();                                                    //<1>
+    do4();                                                    //<1>
+end else begin                                                //<1>
+    do5();                                                    //<1>
+end                                                           //<1><0>
+                                                              //<0>
+if (cond1)                                                    //<0>
+    do1();                                                    //<0>
+else if (cond2) begin                                         //<1>
+    do2();                                                    //<1>
+    begin                                                     //<2>
+    do2_1();                                                  //<2>
+    end                                                       //<2>
+    do3();                                                    //<1>
+    do4();                                                    //<1>
+end else begin                                                //<1>
+    do5();                                                    //<1>
+end                                                           //<1><0>
+// vi: set number norelativenumber :

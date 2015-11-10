@@ -1,11 +1,17 @@
-function! TestFold()
+function! TestFold(...)
     let fail = 0
     let fail_lines = ''
     let linenr = 0
     while linenr < line("$")
         let linenr += 1
         let line = getline(linenr)
-        let linelvl = substitute(line, '.*<\(\d*\)>.*', '\1', '')
+        let levels = substitute(line, '.\{-}<\(\d*\)>', '\1,', 'g')
+        let levels_list = split(levels, ',')
+        if (len(levels_list) > 1 && a:0 > 0)
+          let linelvl=levels_list[a:1]
+        else
+          let linelvl=levels_list[0]
+        endif
         let level = foldlevel(linenr)
         if (level != linelvl)
             let fail = 1
@@ -78,6 +84,12 @@ view test/folding.v
 
 " Verify folding
 let test_result=TestFold() || test_result
+echo ''
+
+" Test with "block_nested"
+let g:verilog_syntax_fold="all,block_nested"
+silent view!
+let test_result=TestFold(1) || test_result
 echo ''
 
 "-----------------------------------------------------------------------
