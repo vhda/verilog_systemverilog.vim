@@ -30,6 +30,7 @@ syn sync lines=1000
 "       SystemVerilog Syntax
 "##########################################################
 
+syn clear verilogLabel
 syn clear verilogStatement
 syn keyword verilogStatement   always and assign automatic buf
 syn keyword verilogStatement   bufif0 bufif1 cell cmos
@@ -37,7 +38,8 @@ syn keyword verilogStatement   config deassign defparam design
 syn keyword verilogStatement   disable edge endconfig
 syn keyword verilogStatement   endgenerate endmodule
 syn keyword verilogStatement   endprimitive endtable
-syn keyword verilogStatement   event force
+syn keyword verilogStatement   event force fork join
+syn keyword verilogStatement   join_any join_none forkjoin
 syn keyword verilogStatement   generate genvar highz0 highz1 ifnone
 syn keyword verilogStatement   incdir include initial inout input
 syn keyword verilogStatement   instance integer large liblist
@@ -92,17 +94,12 @@ syn keyword verilogStatement   s_always s_eventually s_nexttime s_until s_until_
 syn keyword verilogStatement   strong sync_accept_on sync_reject_on unique unique0
 syn keyword verilogStatement   until until_with untyped weak
 
-syn clear verilogLabel
-syn keyword verilogLabel       fork join
-
 syn keyword verilogTypeDef     typedef enum
 
 syn keyword verilogConditional iff
 
 syn keyword verilogRepeat      return break continue
 syn keyword verilogRepeat      do while foreach
-
-syn keyword verilogLabel       join_any join_none forkjoin
 
 syn match   verilogGlobal      "`begin_\w\+"
 syn match   verilogGlobal      "`end_\w\+"
@@ -117,7 +114,12 @@ syn keyword verilogNumber      1step
 syn keyword verilogMethod      new
 syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 
-syn match   verilogAssertion   "\<\w\+\>\s*:\s*\<assert\>\_.\{-});"
+syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<assert\>"
+if v:version >= 704
+    syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@20<=\<\k\+\>"
+else
+    syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@<=\<\k\+\>"
+endif
 
 syn keyword verilogObject      super
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
@@ -221,24 +223,24 @@ else
 endif
 if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
-        \ matchgroup=verilogLabel
+        \ matchgroup=verilogStatement
         \ start="\<specify\>"
         \ end="\<endspecify\>"
         \ transparent
         \ keepend
         \ fold
 else
-    syn keyword verilogLabel      specify endspecify
+    syn keyword verilogStatement  specify endspecify
 endif
 if index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
-        \ matchgroup=verilogLabel
+        \ matchgroup=verilogStatement
         \ start="\<begin\>"
         \ end="\<end\>"
         \ transparent
         \ fold
 else
-    syn keyword verilogLabel      begin end
+    syn keyword verilogStatement  begin end
 endif
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFoldIfContainer
@@ -299,10 +301,12 @@ if version >= 508 || !exists("did_verilog_syn_inits")
       command -nargs=+ HiLink hi def link <args>
    endif
 
+   " Override default verilogLabel link
+   highlight! default link verilogLabel Tag
+
    " The default highlighting.
    HiLink verilogMethod          Function
    HiLink verilogTypeDef         TypeDef
-   HiLink verilogAssertion       Include
    HiLink verilogObject          Type
 
    delcommand HiLink
