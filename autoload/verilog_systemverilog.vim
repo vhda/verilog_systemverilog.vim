@@ -246,8 +246,8 @@ function! s:GetInstanceInfo(linenr, column)
       let start -= 1
     endwhile
 
-    " Break search when both instance name and type were found
-    if ininsttype > 0 && ininstdecl > 0
+    " Break search when instance type is found
+    if ininsttype > 0
       break
     endif
 
@@ -340,12 +340,12 @@ function s:GetObjectParameterValue(object, parameter)
       let value = substitute(line, '.*\<type\s\+' . a:parameter . '\s*=\s*\(\w\+\).*', '\1', '')
       " TODO If type was not found search in the previous line
       call s:Verbose("Found variable initialization value: " . a:parameter . " = " . value)
-      call setpos(position)
+      call setpos(".", position)
       return value
     endif
   endif
   call s:Verbose("Initialization of " . a:parameter . " was not found in " . a:object . " declaration")
-  call setpos(position)
+  call setpos(".", position)
   return ""
 endfunction
 
