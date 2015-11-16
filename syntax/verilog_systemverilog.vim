@@ -317,4 +317,4 @@ let b:current_syntax = "verilog_systemverilog"
 " Restore cpoptions
 let &cpoptions=oldcpo
 
-" vim: ts=8
+" vim: sts=4 sw=4

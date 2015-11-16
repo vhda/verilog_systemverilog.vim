@@ -102,3 +102,5 @@ if &smartindent
     redraw
     echo "Option 'smartindent' should not be used in Verilog syntax, use 'autoindent' instead."
 endif
+
+" vi: sw=2 sts=2:

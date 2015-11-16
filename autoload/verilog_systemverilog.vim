@@ -563,4 +563,4 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
 endfunction
 " }}}
 
-" vi: sw=2 st=2 fdm=marker:
+" vi: sw=2 sts=2 fdm=marker:

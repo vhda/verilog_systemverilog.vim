@@ -313,4 +313,4 @@ function GetVerilog_SystemVerilogIndent()
   return ind
 endfunction
 
-" vim:sw=2
+" vi: sw=2 sts=2:
