@@ -120,6 +120,15 @@ class z;
     endfunction
     // End of copied code
 
+    // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/41
+    `uvm_info("TAG", "message", UVM_MEDIUM)
+
+    if (condition)
+        `uvm_info("TAG", "message1", UVM_MEDIUM)
+    else
+        `uvm_info("TAG", "message2", UVM_NONE)
+    // End of copied code
+
     // Oter tests
     task fork_test;
         fork
