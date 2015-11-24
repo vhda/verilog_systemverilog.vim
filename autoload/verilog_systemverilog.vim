@@ -42,7 +42,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         if line[start - 1] == '.'
           " Found separator
           let prefixpos = start
-        elseif line[start - 1] =~ '\(\s\|(\)'
+        elseif prefixpos >= 0 && line[start - 1] =~ '\(\s\|(\)'
           " Stop when a whitespace or an open parentheses are found
           break
         endif
