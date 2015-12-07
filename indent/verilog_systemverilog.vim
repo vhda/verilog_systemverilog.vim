@@ -103,7 +103,8 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
-    if last_line !~ '\(;\|\<end\>\)\s*' . vlog_comment . '*$' ||
+    if ( last_line !~ '\<end\>\s*' . vlog_comment . '*$' &&
+      \ last_line !~ '\(;\|`\h\w*\((.*)\)\?\)\s*' . vlog_comment . '*$' ) ||
       \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
       let ind = ind + offset
       if vverb
@@ -263,7 +264,7 @@ function GetVerilog_SystemVerilogIndent()
 
   " De-indent else of assert
   elseif curr_line =~ '\<else\>' &&
-    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)' . vlog_comment . '*$'
+    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<assert\(\s\+property\)\?\>\s*(.*)' . vlog_comment . '*$'
     let ind = ind - offset
     if vverb
       echom "De-indent else of assert"
