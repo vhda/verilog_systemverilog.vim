@@ -75,6 +75,10 @@ function GetVerilog_SystemVerilogIndent()
   let vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
   " Define the condition when the statement ends with a one-line comment
   let vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
+
+  let vlog_sens_list = '\(@\s*(.*)\)'
+  let vlog_always = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . vlog_sens_list . '\?'
+
   if exists('b:verilog_indent_verbose')
     let vverb = 1
   else
@@ -100,7 +104,7 @@ function GetVerilog_SystemVerilogIndent()
   " Indent after if/else/for/case/always/initial/specify/fork blocks
   if  last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
-    \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
+    \ last_line =~ '^\s*' . vlog_always ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
     if last_line !~ '\(;\|\<end\>\)\s*' . vlog_comment . '*$' ||
@@ -171,10 +175,10 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line =~ ';' . vlog_comment . '*$' ||
     \ last_line =~ '^\s*`\k\+'
     \ ) &&
-    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '*$' &&
-    \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
-    \ ( last_line2 !~ '\<\(begin\|assert\)\>' ||
-    \   last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
+    \ ( last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '\?$' ||
+    \ last_line2 =~ vlog_always . '\s*' . vlog_comment . '\?$' ) &&
+    \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '\?$' &&
+    \ last_line2 !~ '\(//\|/\*\).*' . vlog_always . '\s*' . vlog_comment . '\?$' 
     let ind = ind - offset
     if vverb
       echom "De-indent after the end of one-line statement:"
@@ -278,7 +282,8 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line !~ '^\s*\<\(property\|program\)\>' &&
       \ last_line !~ '^\s*\()*\s*;\|)\+\)\s*' . vlog_comment . '*$' && (
         \ last_line =~
-        \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
+        \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\||initial\|do\|foreach\|randcase\|final\)\>' ||
+        \ last_line =~ vlog_always . '\s*\(begin\)\@!' . vlog_comment . '\?$' ||
         \ last_line =~ ')\s*' . vlog_comment . '*$' ||
         \ last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
       let ind = ind - offset
