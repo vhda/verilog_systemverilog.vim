@@ -121,12 +121,29 @@ class z;
     // End of copied code
 
     // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/41
-    `uvm_info("TAG", "message", UVM_MEDIUM)
+    assert property (prop1)
+    else `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
+
+    assert property (prop1)
+    else
+        `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
 
     if (condition)
-        `uvm_info("TAG", "message1", UVM_MEDIUM)
+        something();
+    else `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
+
+    if (condition)
+        something();
     else
-        `uvm_info("TAG", "message2", UVM_NONE)
+        `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
     // End of copied code
 
     // Oter tests
