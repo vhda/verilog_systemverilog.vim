@@ -317,5 +317,92 @@ class a;
         dont_deindent_please();
     endfunction : hello
 endclass : a
+module a;
+(
+    input clk,
+    output x
+);
+
+always @ (posedge clk)
+begin
+end
+
+always
+    x <= 1;
+
+always
+begin
+    x <= 1;
+    statement();
+end
+
+always //
+begin
+    x <= 1;
+    statement();
+end
+
+always //
+    x <= 1;
+
+always @ (posedge clk) //
+    x <= 1;
+
+always @ (posedge clk)
+    x <= 1;
+
+always_ff // begin
+    x <= 1;
+
+always_comb
+    x <= 1;
+
+always_ff begin
+    begin
+        x <= 1;
+        statement();
+    end
+end
+
+always_ff
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+// always_ff
+// begin
+//     x <= 1;
+// end
+
+endmodule
+
+if (condition) begin
+    something();
+end
+else
+    `macro_call()
+
+always
+    `macro_call()
+
+begin
+    begin
+    end // always
+    `dont_indent()
+    dont_deindent();
+
+    begin
+    end // foreach()
+    dont_indent();
+    dont_deindent();
+
+    begin
+    end /* while() */
+    dont_indent();
+    dont_deindent();
+end
 
 // vim: set sts=4 sw=4 nofen:
