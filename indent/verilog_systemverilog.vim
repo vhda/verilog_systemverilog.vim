@@ -36,10 +36,10 @@ setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+==else
 
 let s:vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
-let s:vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
+let s:vlog_comment = '\(//.*\|/\*.*\*/\)'
 let s:vlog_block_delcaration = '\(\(if\|foreach\|assert\|for\)\s*(.*)\)\|else'
 let s:vlog_stop_condition = '\(function\|task\|always\|initial\|final\)'
-let s:vlog_macro = '^\s*`\k\+\((.*)\)\?$'
+let s:vlog_macro = '^`\k\+\((.*)\)\?$'
 let s:vlog_statement = '.*;$\|'. s:vlog_macro
 
 " Only define the function once.
@@ -49,152 +49,150 @@ endif
 
 set cpo-=C
 
+if exists('b:verilog_indent_width')
+  let s:offset = b:verilog_indent_width
+else
+  let s:offset = &sw
+endif
+
+if exists('b:verilog_s:indent_modules')
+  let s:indent_modules = s:offset
+else
+  let s:indent_modules = 0
+endif
+
+if exists('b:verilog_indent_verbose')
+  let s:vverb = 1
+else
+  let s:vverb = 0
+endif
+
 function! GetVerilog_SystemVerilogIndent()
 
-  if exists('b:verilog_indent_width')
-    let offset = b:verilog_indent_width
-  else
-    let offset = &sw
-  endif
-  if exists('b:verilog_indent_modules')
-    let indent_modules = offset
-  else
-    let indent_modules = 0
-  endif
-
   " Find a non-blank line above the current line.
-  let lnum = prevnonblank(v:lnum - 1)
+  let l:lnum = prevnonblank(v:lnum - 1)
 
   " At the start of the file use zero indent.
-  if lnum == 0
+  if l:lnum == 0
     return 0
   endif
 
-  let lnum2 = prevnonblank(lnum - 1)
-  let curr_line  = StripCommentsAndWS(getline(v:lnum))
-  let last_line  = StripCommentsAndWS(getline(lnum))
-  let last_line2 = StripCommentsAndWS(getline(lnum2))
-  let ind  = indent(lnum)
-  let ind2 = indent(lnum - 1)
-  let offset_comment1 = 1
-
-  if exists('b:verilog_indent_verbose')
-    let vverb = 1
-  else
-    let vverb = 0
-  endif
+  let l:lnum2      = prevnonblank(l:lnum - 1)
+  let l:curr_line  = StripCommentsAndWS(getline(v:lnum))
+  let l:last_line  = StripCommentsAndWS(getline(l:lnum))
+  let l:last_line2 = StripCommentsAndWS(getline(l:lnum2))
+  let l:ind        = indent(l:lnum)
 
   " Get new context line if it is fully commented out
-  while last_line2 =~ '^\s*/\(/\|\*.*\*/\s*$\)'
-    let lnum2 = prevnonblank(lnum2 - 1)
-    let last_line2 = getline(lnum2)
+  while l:last_line2 =~ '^\s*'.s:vlog_comment.'\s*$'
+    let l:lnum2 = prevnonblank(l:lnum2 - 1)
+    let l:last_line2 = StripCommentsAndWS(getline(l:lnum2))
   endwhile
 
   " Check if inside a comment
   if synIDattr(synID(v:lnum, 1, 0), "name") == "verilogComment"
-    if vverb
+    if s:vverb
       echom "In comment, returning same indent"
     endif
-    return ind
+    return l:ind
   endif
 
   " Indent after if/else/for/case/always/initial/specify/fork blocks
-  if  last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
-        \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
-        \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
-        \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
-        \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
-    if last_line !~ '\(;\|\<end\>\)$' ||
-          \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)$'
-      let ind = ind + offset
-      if vverb
+  if l:last_line =~ '^\(`\@<!\<\(if\|else\)\>\)' ||
+   \ l:last_line =~ '^\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
+   \ l:last_line =~ '^\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
+   \ l:last_line =~ '^\<\(initial\|specify\|fork\|final\)\>' ||
+   \ l:last_line =~ '^\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
+    if l:last_line !~ '\<end\>$' && 
+     \ l:last_line !~ s:vlog_statement ||
+     \ l:last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)$'
+      let l:ind = l:ind + s:offset
+      if s:vverb
         echom "Indent after a block statement:"
-        echom last_line
+        echom l:last_line
       endif
     endif
     " Indent after function/task/class/package/sequence/clocking/
     " interface/covergroup/property/program blocks
-  elseif last_line =~ '^\s*\(\<\(virtual\|static\|protected\|local\)\>\s\+\)\?\<\(function\|task\)\>' ||
-        \ last_line =~ '^\s*\(\<virtual\>\s\+\)\?\<\(class\|package\)\>' ||
-        \ last_line =~ '^\s*\<\(sequence\|clocking\|interface\)\>' ||
-        \ last_line =~ '^\s*\(\w\+\s*:\)\=\s*\<covergroup\>' ||
-        \ last_line =~ '^\s*\<\(property\|program\)\>'
-    if last_line !~ '\<end\>$' ||
-          \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)$'
-      let ind = ind + offset
-      if vverb
+  elseif l:last_line =~ '^\(\<\(virtual\|static\|protected\|local\)\>\s\+\)\?\<\(function\|task\)\>' ||
+       \ l:last_line =~ '^\(\<virtual\>\s\+\)\?\<\(class\|package\)\>' ||
+       \ l:last_line =~ '^\<\(sequence\|clocking\|interface\)\>' ||
+       \ l:last_line =~ '^\(\w\+\s*:\)\=\s*\<covergroup\>' ||
+       \ l:last_line =~ '^\<\(property\|program\)\>'
+    if l:last_line !~ '\<end\>$' ||
+     \ l:last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)$'
+      let l:ind = l:ind + s:offset
+      if s:vverb
         echom "Indent after function/task/class block statement:"
-        echom last_line
+        echom l:last_line
       endif
     endif
 
     " Indent after module/function/task/specify/fork blocks
-  elseif last_line =~ '^\s*\(\<extern\>\s*\)\=\<module\>'
-    let ind = ind + indent_modules
-    if vverb && indent_modules
+  elseif l:last_line =~ '^\(\<extern\>\s*\)\=\<module\>'
+    let l:ind = l:ind + s:indent_modules
+    if s:vverb && s:indent_modules
       echom "Indent after module statement."
     endif
-    if last_line =~ '[(,]$' &&
-          \ last_line !~ '\(//\|/\*\).*[(,]$'
-      let ind = ind + offset
-      if vverb
+    if l:last_line =~ '[(,]$' &&
+     \ l:last_line !~ '\(//\|/\*\).*[(,]$'
+      let l:ind = l:ind + s:offset
+      if s:vverb
         echom "Indent after a multiple-line module statement:"
-        echom last_line
+        echom l:last_line
       endif
     endif
 
     " Indent after a 'begin' statement
-  elseif last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*$' &&
-        \ last_line !~ '\(//\|/\*\).*\(\<begin\>\)' &&
-        \ ( last_line2 !~ s:vlog_openstat . '$' ||
-        \ last_line2 =~ '^\s*[^=!]\+\s*:$' )
-    let ind = ind + offset
-    if vverb
+  elseif l:last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*$' &&
+       \ l:last_line !~ '\(//\|/\*\).*\(\<begin\>\)' &&
+       \ ( l:last_line2 !~ s:vlog_openstat . '$' ||
+       \ l:last_line2 =~ '^[^=!]\+\s*:$' )
+    let l:ind = l:ind + s:offset
+    if s:vverb
       echom "Indent after begin statement:"
-      echom last_line
+      echom l:last_line
     endif
 
     " Indent after a '{' or a '('
-  elseif last_line =~ '[{(]$' &&
-        \ last_line !~ '\(//\|/\*\).*[{(]' &&
-        \ ( last_line2 !~ s:vlog_openstat . '$' ||
-        \ last_line2 =~ '^\s*[^=!]\+\s*:$' )
-    let ind = ind + offset
-    if vverb
+  elseif l:last_line =~ '[{(]$' &&
+       \ l:last_line !~ '\(//\|/\*\).*[{(]' &&
+       \ ( l:last_line2 !~ s:vlog_openstat . '$' ||
+       \ l:last_line2 =~ '^[^=!]\+\s*:$' )
+    let l:ind = l:ind + s:offset
+    if s:vverb
       echom "Indent after begin statement:"
-      echom last_line
+      echom l:last_line
     endif
-  elseif curr_line !~ 'else' && curr_line !~ '^\s*`\(ifdef\|elsif\|endif\)' &&
-        \ (last_line =~ '^\s*end$' ||
-        \ last_line =~ s:vlog_statement && 
-        \ last_line2 =~ s:vlog_block_delcaration)
-    let ind = DeindentAfterNested(ind, v:lnum)
+  elseif l:curr_line !~ 'else' && l:curr_line !~ '^`\(ifdef\|elsif\|endif\)' &&
+       \ ( l:last_line =~ '^end$' ||
+       \ l:last_line =~ s:vlog_statement && 
+       \ l:last_line2 =~ s:vlog_block_delcaration )
+    let l:ind = DeindentAfterNested(l:ind, v:lnum)
 
     " De-indent for the end of one-line block
     " Only de-indents if last line was an end of statement that ended with ;
     " or if it starts with a `define call, which might not require the ; end
-  elseif (
-        \ last_line =~ ';$' ||
-        \ last_line =~ '^\s*`\k\+' ) &&
-        \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?$' &&
-        \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
-        \ ( last_line2 !~ '\<\(begin\|assert\)\>' || last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
-    let ind = ind - offset
-    if vverb
+  elseif l:last_line =~ s:vlog_statement &&
+       \ l:last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?$' &&
+       \ l:last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
+       \ ( l:last_line2 !~ '\<\(begin\|assert\)\>' || l:last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent after the end of one-line statement:"
-      echom last_line2
+      echom l:last_line2
     endif
 
     " Multiple-line statement (including case statement)
     " Open statement
     "   Ident the first open line
-  elseif  last_line =~ s:vlog_openstat . '$' &&
-        \ last_line !~ '\(//\|/\*\).*' . s:vlog_openstat . '$' &&
-        \ last_line2 !~ s:vlog_openstat . '$'
-    let ind = ind + offset
-    if vverb
+  elseif  l:last_line =~ s:vlog_openstat . '$' &&
+        \ l:last_line !~ '\(//\|/\*\).*' . s:vlog_openstat . '$' &&
+        \ l:last_line2 !~ s:vlog_openstat . '$'
+    let l:ind = l:ind + s:offset
+    if s:vverb
       echom "Indent after an open statement:"
-      echom last_line
+      echom l:last_line
     endif
 
     " Close statement
@@ -202,127 +200,126 @@ function! GetVerilog_SystemVerilogIndent()
     "   if there exists precedent non-whitespace char
     "   Always de-indent if a close parenthesis and a semicolon are
     "   found alone in the previous line
-  elseif last_line =~ ')\s*;$' &&
-        \ last_line !~ '\(//\|/\*\).*\S)*\s*;$' &&
-        \ ( last_line2 =~ s:vlog_openstat . '$' &&
-        \ last_line2 !~ ';\s*//.*$') &&
-        \ last_line2 !~ '^' . s:vlog_comment . '$' ||
-        \ last_line =~ '^);'
-    let ind = ind - offset
-    if vverb
+  elseif l:last_line =~ ')\s*;$' &&
+       \ l:last_line !~ '\(//\|/\*\).*\S)*\s*;$' &&
+       \ ( l:last_line2 =~ s:vlog_openstat . '$' &&
+       \ l:last_line2 !~ ';\s*//.*$') &&
+       \ l:last_line2 !~ s:vlog_comment ||
+       \ l:last_line =~ '^);'
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent after a close statement:"
-      echom last_line
+      echom l:last_line
     endif
 
     " Close bracket
     "   Also de-indents a close bracket when preceded by a semicolon, but only
     "   if it is not commented out or alone in a line.
     "   "with" statements are treated exceptionally.
-  elseif last_line =~ ';\s*}' &&
-        \ ( last_line !~ '{[^}]\+}' ||
-        \   last_line =~ '}\s*)\s*;') &&
-        \ last_line !~ s:vlog_comment . '}' &&
-        \ last_line !~ '^}' &&
-        \ last_line !~ '\<with\s*{'
-    let ind = ind - offset
-    if vverb
+  elseif l:last_line =~ ';\s*}' &&
+       \ ( l:last_line !~ '{[^}]\+}' || l:last_line =~ '}\s*)\s*;') &&
+       \ l:last_line !~ s:vlog_comment &&
+       \ l:last_line !~ '^}' &&
+       \ l:last_line !~ '\<with\s*{'
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent after a closing bracket:"
-      echom last_line
+      echom l:last_line
     endif
 
     " `ifdef , `ifndef , `elsif , or `else
-  elseif last_line =~ '^`\<\(ifdef\|ifndef\|elsif\|else\)\>'
-    let ind = ind + offset
-    if vverb
+  elseif l:last_line =~ '^`\<\(ifdef\|ifndef\|elsif\|else\)\>'
+    let l:ind = l:ind + s:offset
+    if s:vverb
       echom "Indent after a `ifdef , `ifndef , `elsif or `else statement."
-      echom last_line
+      echom l:last_line
     endif
-
   endif
 
-  if curr_line =~ '^endfunction'
-    let ind = SearchBackForContextStart('function', lnum)
-    " Re-indent current line
+  if l:curr_line =~ '^endfunction'
+    let l:ind = SearchBackForContextStart('function', l:lnum)
 
-    " De-indent on the end of the block
-    " join/end/endcase/endfunction/endtask/endspecify
-  elseif 
-        \ curr_line =~ '^\<\(join\|join_any\|join_none\|end\|endcase\)\>' ||
-        \ curr_line =~ '^\<\(endfunction\|endtask\|endspecify\|endclass\)\>' ||
-        \ curr_line =~ '^\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
-        \ curr_line =~ '^\<\(endgroup\|endproperty\|endprogram\)\>' ||
-        \ curr_line =~ '^}'
-    let ind = ind - offset
-    if vverb
+  " Re-indent current line
+
+  " De-indent on the end of the block
+  " join/end/endcase/endfunction/endtask/endspecify
+  elseif l:curr_line =~ '^\<\(join\|join_any\|join_none\|end\|endcase\)\>' ||
+       \ l:curr_line =~ '^\<\(endfunction\|endtask\|endspecify\|endclass\)\>' ||
+       \ l:curr_line =~ '^\<\(endpackage\|endsequence\|endclocking\|endinterface\)\>' ||
+       \ l:curr_line =~ '^\<\(endgroup\|endproperty\|endprogram\)\>' ||
+       \ l:curr_line =~ '^}'
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent the end of a block:"
-      echom curr_line
+      echom l:curr_line
     endif
-  elseif curr_line =~ '^\<endmodule\>'
+
+  elseif l:curr_line =~ '^\<endmodule\>'
     if exists("g:verilog_dont_deindent_eos")
-      let ind = ind - offset
+      let l:ind = l:ind - s:offset
     else
-      let ind = ind - indent_modules
+      let l:ind = l:ind - s:indent_modules
     endif
-    if vverb && indent_modules
+    if s:vverb && s:indent_modules
       echom "De-indent the end of a module:"
-      echom curr_line
+      echom l:curr_line
     endif
 
-    " De-indent else of assert
-  elseif curr_line =~ '\<else\>' &&
-        \ last_line =~ '^\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)$'
-    let ind = ind - offset
-    if vverb
+  " De-indent else of assert
+  elseif l:curr_line =~ '\<else\>' &&
+       \ l:last_line =~ '^\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)$'
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent else of assert"
-      echom curr_line
+      echom l:curr_line
     endif
 
-    " De-indent on a stand-alone 'begin'
-  elseif curr_line =~ '^\s*\<begin\>'
-    if last_line !~ '^\s*\<\(fork\)\>' &&
-          \ last_line !~ '^\<\(function\|task\|specify\|module\|class\|package\)\>' &&
-          \ last_line !~ '^\<\(sequence\|clocking\|interface\|covergroup\)\>'  &&
-          \ last_line !~ '^\<\(property\|program\)\>' &&
-          \ last_line !~ '^\()*\s*;\|)\+\)$' && (
-          \ last_line =~
-          \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
-          \ last_line =~ ')$' ||
-          \ last_line =~ s:vlog_openstat . '$' )
-      let ind = ind - offset
-      if vverb
+  " De-indent on a stand-alone 'begin'
+  elseif l:curr_line =~ '^\<begin\>'
+    if l:last_line !~ '^\<\(fork\)\>' &&
+     \ l:last_line !~ '^\<\(function\|task\|specify\|module\|class\|package\)\>' &&
+     \ l:last_line !~ '^\<\(sequence\|clocking\|interface\|covergroup\)\>'  &&
+     \ l:last_line !~ '^\<\(property\|program\)\>' &&
+     \ l:last_line !~ '^\()*\s*;\|)\+\)$' && (
+     \ l:last_line =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
+     \ l:last_line =~ ')$' ||
+     \ l:last_line =~ s:vlog_openstat . '$' )
+      let l:ind = l:ind - s:offset
+      if s:vverb
         echom "De-indent a stand alone begin statement:"
-        echom last_line
+        echom l:last_line
       endif
     endif
 
-    " De-indent at the end of multiple-line statement
-  elseif !exists("g:verilog_dont_deindent_eos") && curr_line =~ '^);\?' &&
-        \ ( last_line =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' ||
-        \ last_line !~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' &&
-        \ last_line2 =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' )
-    let ind = ind - offset
-    if vverb
+  " De-indent at the end of multiple-line statement
+  elseif !exists("g:verilog_dont_deindent_eos") &&
+       \ l:curr_line =~ '^);\?' &&
+       \ ( l:last_line =~ s:vlog_openstat . '$' ||
+       \ l:last_line !~ s:vlog_openstat . '$' &&
+       \ l:last_line2 =~ s:vlog_openstat . '$' )
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent at the end of a multiple statement:"
-      echom last_line
+      echom l:last_line
     endif
 
-    " De-indent `else , `elsif , or `endif
-  elseif curr_line =~ '^`\<\(else\|elsif\|endif\)\>'
-    let ind = ind - offset
-    if vverb
+  " De-indent `else , `elsif , or `endif
+  elseif l:curr_line =~ '^`\<\(else\|elsif\|endif\)\>'
+    let l:ind = l:ind - s:offset
+    if s:vverb
       echom "De-indent `else , `elsif , or `endif statement:"
-      echom curr_line
+      echom l:curr_line
     endif
 
   endif
 
   " Return the indention
-  return ind
+  return l:ind
 endfunction
 
 function! StripCommentsAndWS(line)
   let l:temp = a:line
-  if l:temp !~ '^\s*'.s:vlog_comment.'$'
+  if l:temp !~ '^\s*'.s:vlog_comment.'\s*$'
     let l:temp = substitute(l:temp, '//.*', '', 'g')
     let l:temp = substitute(l:temp, '/\*.\{-}\*/', '', 'g')
   endif
@@ -372,10 +369,10 @@ function! DeindentAfterNested(current_indent, current_line_no)
     elseif l:last_line =~ '\<end\>.*\<begin\>'
       " do nothing
     elseif l:last_line =~ s:vlog_stop_condition
-      return indent(l:lnum) + &sw
+      return indent(l:lnum) + s:offset
     elseif l:last_line =~ '\<begin\>$'
       if l:ignore_begin == 0
-        return indent(l:lnum) + &sw
+        return indent(l:lnum) + s:offset
       else
         let l:ignore_begin -= 1
       endif
