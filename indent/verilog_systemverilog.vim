@@ -35,17 +35,15 @@ setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+==else
 
-let s:vlog_pre_label         = '^\(\k\w*\s*:\s*\)'
-let s:vlog_post_label        = '\(\s*:\s*\k\w*$\)'
 let s:vlog_openstat          = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
 let s:vlog_comment           = '\(//.*\|/\*.*\*/\)'
-let s:vlog_block_delcaration = '\(\(if\|foreach\|assert\|for\)\s*(.*)\)\|else'
-let s:vlog_stop_condition    = '\(function\|task\|always\|initial\|final\)'
 let s:vlog_macro             = '`\k\+\((.*)\)\?$'
 let s:vlog_statement         = '.*;$\|'. s:vlog_macro
-let s:vlog_assert            = s:vlog_pre_label . '\?\<assert\>\(\s\+property\)\?\s*(.*)' . s:vlog_post_label . '\?'
+let s:vlog_assert            = '\<assert\>\(\s\+property\)\?\s*(.*)' 
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
+let s:vlog_block_delcaration = '\(\(if\|foreach\|' . s:vlog_assert . '\|for\)\s*(.*)\)\|else'
+let s:vlog_stop_condition    = '\(function\|task\|initial\|final\|' . s:vlog_always . '\)'
 
 " Only define the function once.
 if exists("*GetVerilog_SystemVerilogIndent")
@@ -172,6 +170,7 @@ function! GetVerilog_SystemVerilogIndent()
     endif
   elseif l:curr_line !~ 'else' &&
        \ l:curr_line !~ '^`\(ifdef\|elsif\|endif\)' &&
+       \ l:curr_line !~ '^join\(_all\|_none\)\?' &&
        \ l:curr_line !~ s:vlog_always &&
        \ ( l:last_line =~ '^end$' ||
        \ l:last_line =~ s:vlog_statement && 
@@ -340,6 +339,7 @@ function! StripCommentsAndWS(line)
     let l:temp = substitute(l:temp, '//.*', '', 'g')
     let l:temp = substitute(l:temp, '/\*.\{-}\*/', '', 'g')
   endif
+
   let l:temp = substitute(l:temp, '\s*$', '', 'g')
   let l:temp = substitute(l:temp, '^\s*', '', 'g')
   return l:temp

@@ -327,7 +327,7 @@ always @ (posedge clk)
 begin
 end
 
-always
+always 
     x <= 1;
 
 always
@@ -342,7 +342,7 @@ begin
     statement();
 end
 
-always //
+label : always //
     x <= 1;
 
 always @ (posedge clk) //
@@ -357,7 +357,7 @@ always_ff // begin
 always_comb
     x <= 1;
 
-always_ff begin
+label : always_ff begin
     begin
         x <= 1;
         statement();
@@ -385,7 +385,7 @@ end
 else
     `macro_call()
 
-always
+always : label
     `macro_call()
 
 begin
