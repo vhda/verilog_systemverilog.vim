@@ -330,8 +330,6 @@ function! StripCommentsAndWS(line)
 endfunction
 
 function! DeindentAfterNested(current_indent, current_line_no)
-  let l:ignore_block_decl = 0
-  let l:indent = a:current_indent
   let l:ignore_begin = 0
   let l:lnum = a:current_line_no
   let l:iteration = 0
@@ -340,7 +338,7 @@ function! DeindentAfterNested(current_indent, current_line_no)
 
     if l:iteration == 100
       " Timeout
-      return l:indent
+      return l:lnum
     else 
       let l:iteration += 1
     endif
@@ -355,16 +353,12 @@ function! DeindentAfterNested(current_indent, current_line_no)
       " do nothing
     elseif l:last_line =~ s:vlog_stop_condition
       return indent(l:lnum) + &sw
-    elseif l:last_line =~ s:vlog_statement
-      " do nothing
     elseif l:last_line =~ '\<begin\>$'
       if l:ignore_begin == 0
         return indent(l:lnum) + &sw
       else
         let l:ignore_begin -= 1
       endif
-    elseif l:ignore_begin != 0
-      " do nothing
     endif
 
   endwhile
