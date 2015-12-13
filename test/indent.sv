@@ -270,4 +270,52 @@ device d1 (
 
 endmodule
 
+class a;
+    function void hello();
+        foreach (element[i])
+            if (hi)
+                if (hi) /* comment */ begin /* comment */
+                    if (hi) begin
+                        foreach (element[i])
+                            if (condition0) 
+                                if (condition1) begin
+                                    var0 <= 0;
+                                end
+                                else begin
+                                    if (1) begin
+                                        var1 <= 1;
+                                        something();
+                                        if (1)
+                                            if (1) begin
+                                                something();
+                                            end
+                                            else
+                                                if (1)
+                                                    if (1) begin
+                                                        if (1)
+                                                            something();
+                                                        else begin
+                                                            something();
+                                                        end
+                                                    end
+                                                    else if (1)
+                                                        something();
+
+                                        if (1)
+                                            something();
+
+                                        something();
+                                        something();
+                                    end
+                                end
+                        deindent_x2_please();
+                        dont_deindent_please();
+                    end
+                    deindent_please();
+                end
+        deindent_please();
+        dont_deindent_please();
+    endfunction : hello
+endclass : a
+
 // vim: set sts=4 sw=4 nofen:

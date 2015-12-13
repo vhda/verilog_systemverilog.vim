@@ -9,12 +9,10 @@
 "   Last maintainer: Amit Sethi <amitrajsethi@yahoo.com>
 "
 " Buffer Variables:
-"     b:verilog_indent_modules    : indenting after the declaration
-"                                   of module blocks
-"     b:verilog_indent_width      : indenting width
-"     b:verilog_indent_verbose    : verbose to each indenting
-"     b:verilog_dont_deindent_eos : don't de-indent the ); line in
-"                                   port lists and instances
+"     b:verilog_indent_modules : indenting after the declaration
+"				 of module blocks
+"     b:verilog_indent_width   : indenting width
+"     b:verilog_indent_verbose : verbose to each indenting
 "
 " Revision Comments:
 "     Amit Sethi - Wed Jun 28 18:20:44 IST 2006
@@ -37,6 +35,13 @@ setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+==else
 
+let s:vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
+let s:vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
+let s:vlog_block_delcaration = '\(\(if\|foreach\|assert\|for\)\s*(.*)\)\|else'
+let s:vlog_stop_condition = '\(function\|task\|always\|initial\|final\)'
+let s:vlog_macro = '^\s*`\k\+\((.*)\)\?$'
+let s:vlog_statement = '.*;$\|'. s:vlog_macro
+
 " Only define the function once.
 if exists("*GetVerilog_SystemVerilogIndent")
   finish
@@ -44,7 +49,7 @@ endif
 
 set cpo-=C
 
-function GetVerilog_SystemVerilogIndent()
+function! GetVerilog_SystemVerilogIndent()
 
   if exists('b:verilog_indent_width')
     let offset = b:verilog_indent_width
@@ -55,13 +60,6 @@ function GetVerilog_SystemVerilogIndent()
     let indent_modules = offset
   else
     let indent_modules = 0
-  endif
-  if exists('b:verilog_dont_deindent_eos')
-    let dont_deindent_eos = 1
-  elseif exists('g:verilog_dont_deindent_eos')
-    let dont_deindent_eos = 1
-  else
-    let dont_deindent_eos = 0
   endif
 
   " Find a non-blank line above the current line.
@@ -79,11 +77,7 @@ function GetVerilog_SystemVerilogIndent()
   let ind  = indent(lnum)
   let ind2 = indent(lnum - 1)
   let offset_comment1 = 1
-  " Define the condition of an open statement
-  "   Exclude the match of //, /* or */
-  let vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
-  " Define the condition when the statement ends with a one-line comment
-  let vlog_comment = '\(//.*\|/\*.*\*/\s*\)'
+
   if exists('b:verilog_indent_verbose')
     let vverb = 1
   else
@@ -104,16 +98,14 @@ function GetVerilog_SystemVerilogIndent()
     return ind
   endif
 
-  " Indent accoding to last line
-
   " Indent after if/else/for/case/always/initial/specify/fork blocks
   if  last_line =~ '^\s*\(`\@<!\<\(if\|else\)\>\)' ||
     \ last_line =~ '^\s*\<\(for\|while\|case\%[[zx]]\|do\|foreach\|randcase\)\>' ||
     \ last_line =~ '^\s*\<\(always\|always_comb\|always_ff\|always_latch\)\>' ||
     \ last_line =~ '^\s*\<\(initial\|specify\|fork\|final\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\|assume\|cover\)\>'
-    if last_line !~ '\(;\|\<end\>\)\s*' . vlog_comment . '*$' ||
-      \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
+    if last_line !~ '\(;\|\<end\>\)\s*' . s:vlog_comment . '*$' ||
+      \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . s:vlog_comment . '*$'
       let ind = ind + offset
       if vverb
         echom "Indent after a block statement:"
@@ -127,8 +119,8 @@ function GetVerilog_SystemVerilogIndent()
     \ last_line =~ '^\s*\<\(sequence\|clocking\|interface\)\>' ||
     \ last_line =~ '^\s*\(\w\+\s*:\)\=\s*\<covergroup\>' ||
     \ last_line =~ '^\s*\<\(property\|program\)\>'
-    if last_line !~ '\<end\>\s*' . vlog_comment . '*$' ||
-      \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . vlog_comment . '*$'
+    if last_line !~ '\<end\>\s*' . s:vlog_comment . '*$' ||
+      \ last_line =~ '\(//\|/\*\).*\(;\|\<end\>\)\s*' . s:vlog_comment . '*$'
       let ind = ind + offset
       if vverb
         echom "Indent after function/task/class block statement:"
@@ -142,8 +134,8 @@ function GetVerilog_SystemVerilogIndent()
     if vverb && indent_modules
       echom "Indent after module statement."
     endif
-    if last_line =~ '[(,]\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '\(//\|/\*\).*[(,]\s*' . vlog_comment . '*$'
+    if last_line =~ '[(,]\s*' . s:vlog_comment . '*$' &&
+      \ last_line !~ '\(//\|/\*\).*[(,]\s*' . s:vlog_comment . '*$'
       let ind = ind + offset
       if vverb
         echom "Indent after a multiple-line module statement:"
@@ -152,10 +144,10 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " Indent after a 'begin' statement
-  elseif last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*\s*' . vlog_comment . '*$' &&
+  elseif last_line =~ '\(\<begin\>\)\(\s*:\s*\w\+\)*\s*' . s:vlog_comment . '*$' &&
     \ last_line !~ '\(//\|/\*\).*\(\<begin\>\)' &&
-    \ ( last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
-    \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . vlog_comment . '*$' )
+    \ ( last_line2 !~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' ||
+    \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . s:vlog_comment . '*$' )
     let ind = ind + offset
     if vverb
       echom "Indent after begin statement:"
@@ -163,27 +155,30 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " Indent after a '{' or a '('
-  elseif last_line =~ '[{(]' . vlog_comment . '*$' &&
+  elseif last_line =~ '[{(]' . s:vlog_comment . '*$' &&
     \ last_line !~ '\(//\|/\*\).*[{(]' &&
-    \ ( last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
-    \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . vlog_comment . '*$' )
+    \ ( last_line2 !~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' ||
+    \ last_line2 =~ '^\s*[^=!]\+\s*:\s*' . s:vlog_comment . '*$' )
     let ind = ind + offset
     if vverb
       echom "Indent after begin statement:"
       echom last_line
     endif
+  elseif curr_line !~ 'else' && curr_line !~ '^\s*`\(ifdef\|elsif\|endif\)' &&
+          \ (last_line =~ '^\s*end$' ||
+          \ last_line =~ s:vlog_statement && 
+          \ last_line2 =~ s:vlog_block_delcaration)
+      let ind = DeindentAfterNested(ind, v:lnum)
 
   " De-indent for the end of one-line block
   " Only de-indents if last line was an end of statement that ended with ;
   " or if it starts with a `define call, which might not require the ; end
   elseif (
-    \ last_line =~ ';' . vlog_comment . '*$' ||
-    \ last_line =~ '^\s*`\k\+'
-    \ ) &&
-    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . vlog_comment . '*$' &&
+    \ last_line =~ ';' . s:vlog_comment . '*$' ||
+    \ last_line =~ '^\s*`\k\+' ) &&
+    \ last_line2 =~ '\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>\(\s*(.*)\)\?\s*' . s:vlog_comment . '*$' &&
     \ last_line2 !~ '\(//\|/\*\).*\<\(`\@<!if\|`\@<!else\|for\|while\|always\|initial\|do\|foreach\|final\)\>' &&
-    \ ( last_line2 !~ '\<\(begin\|assert\)\>' ||
-    \   last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
+    \ ( last_line2 !~ '\<\(begin\|assert\)\>' || last_line2 =~ '\(//\|/\*\).*\<\(begin\|assert\)\>' )
     let ind = ind - offset
     if vverb
       echom "De-indent after the end of one-line statement:"
@@ -193,9 +188,9 @@ function GetVerilog_SystemVerilogIndent()
     " Multiple-line statement (including case statement)
     " Open statement
     "   Ident the first open line
-    elseif  last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '\(//\|/\*\).*' . vlog_openstat . '\s*$' &&
-      \ last_line2 !~ vlog_openstat . '\s*' . vlog_comment . '*$'
+    elseif  last_line =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' &&
+      \ last_line !~ '\(//\|/\*\).*' . s:vlog_openstat . '\s*$' &&
+      \ last_line2 !~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$'
       let ind = ind + offset
       if vverb
         echom "Indent after an open statement:"
@@ -207,11 +202,11 @@ function GetVerilog_SystemVerilogIndent()
     "   if there exists precedent non-whitespace char
     "   Always de-indent if a close parenthesis and a semicolon are
     "   found alone in the previous line
-    elseif last_line =~ ')\s*;\s*' . vlog_comment . '*$' &&
-      \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . vlog_comment . '*$' &&
-      \ ( last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
+    elseif last_line =~ ')\s*;\s*' . s:vlog_comment . '*$' &&
+      \ last_line !~ '\(//\|/\*\).*\S)*\s*;\s*' . s:vlog_comment . '*$' &&
+      \ ( last_line2 =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' &&
       \ last_line2 !~ ';\s*//.*$') &&
-      \ last_line2 !~ '^\s*' . vlog_comment . '$' ||
+      \ last_line2 !~ '^\s*' . s:vlog_comment . '$' ||
       \ last_line =~ '^\s*)\s*;'
       let ind = ind - offset
       if vverb
@@ -226,7 +221,7 @@ function GetVerilog_SystemVerilogIndent()
   elseif last_line =~ ';\s*}' &&
         \ ( last_line !~ '{[^}]\+}' ||
         \   last_line =~ '}\s*)\s*;') &&
-        \ last_line !~ vlog_comment . '}' &&
+        \ last_line !~ s:vlog_comment . '}' &&
         \ last_line !~ '^\s*}' &&
         \ last_line !~ '\<with\s*{'
     let ind = ind - offset
@@ -260,7 +255,7 @@ function GetVerilog_SystemVerilogIndent()
       echom curr_line
     endif
   elseif curr_line =~ '^\s*\<endmodule\>'
-    if dont_deindent_eos
+    if exists("g:verilog_dont_deindent_eos")
       let ind = ind - offset
     else
       let ind = ind - indent_modules
@@ -272,7 +267,7 @@ function GetVerilog_SystemVerilogIndent()
 
   " De-indent else of assert
   elseif curr_line =~ '\<else\>' &&
-    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)' . vlog_comment . '*$'
+    \ last_line =~ '^\s*\(\w\+\s*:\s*\)\?\<\(assert\)\>\s*(.*)' . s:vlog_comment . '*$'
     let ind = ind - offset
     if vverb
       echom "De-indent else of assert"
@@ -285,11 +280,11 @@ function GetVerilog_SystemVerilogIndent()
       \ last_line !~ '^\s*\<\(function\|task\|specify\|module\|class\|package\)\>' &&
       \ last_line !~ '^\s*\<\(sequence\|clocking\|interface\|covergroup\)\>'  &&
       \ last_line !~ '^\s*\<\(property\|program\)\>' &&
-      \ last_line !~ '^\s*\()*\s*;\|)\+\)\s*' . vlog_comment . '*$' && (
+      \ last_line !~ '^\s*\()*\s*;\|)\+\)\s*' . s:vlog_comment . '*$' && (
         \ last_line =~
         \ '\<\(`\@<!if\|`\@<!else\|for\|while\|case\%[[zx]]\|always\|initial\|do\|foreach\|randcase\|final\)\>' ||
-        \ last_line =~ ')\s*' . vlog_comment . '*$' ||
-        \ last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
+        \ last_line =~ ')\s*' . s:vlog_comment . '*$' ||
+        \ last_line =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' )
       let ind = ind - offset
       if vverb
         echom "De-indent a stand alone begin statement:"
@@ -298,10 +293,10 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " De-indent at the end of multiple-line statement
-  elseif !dont_deindent_eos && curr_line =~ '^\s*)' &&
-    \ ( last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
-    \ last_line !~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
-    \ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' )
+  elseif !exists("g:verilog_dont_deindent_eos") && curr_line =~ '^\s*)' &&
+    \ ( last_line =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' ||
+    \ last_line !~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' &&
+    \ last_line2 =~ s:vlog_openstat . '\s*' . s:vlog_comment . '*$' )
     let ind = ind - offset
     if vverb
       echom "De-indent at the end of a multiple statement:"
@@ -318,8 +313,61 @@ function GetVerilog_SystemVerilogIndent()
 
   endif
 
+  " if curr_line =~ '^\s*else' && last_line =~ s:vlog_statement && last_line !~ '\<if\>\s*(.*)'
+  "   let ind = ind - offset
+  " endif
+
   " Return the indention
   return ind
+endfunction
+
+function! StripCommentsAndWS(line)
+  let l:temp = substitute(a:line, '//.*', '', 'g')
+  let l:temp = substitute(l:temp, '/\*.\{-}\*/', '', 'g')
+  let l:temp = substitute(l:temp, '\s*$', '', 'g')
+  let l:temp = substitute(l:temp, '^\s*', '', 'g')
+  return l:temp
+endfunction
+
+function! DeindentAfterNested(current_indent, current_line_no)
+  let l:ignore_block_decl = 0
+  let l:indent = a:current_indent
+  let l:ignore_begin = 0
+  let l:lnum = a:current_line_no
+  let l:iteration = 0
+
+  while 1
+
+    if l:iteration == 100
+      " Timeout
+      return l:indent
+    else 
+      let l:iteration += 1
+    endif
+
+    let l:lnum = prevnonblank(l:lnum - 1)
+    let l:last_line = StripCommentsAndWS(getline(l:lnum))
+    " echom "DEBUG: line: ". l:lnum . ': ' . l:last_line
+
+    if l:last_line =~ 'end$'
+      let l:ignore_begin += 1
+    elseif l:last_line =~ '\<end\>.*\<begin\>'
+      " do nothing
+    elseif l:last_line =~ s:vlog_stop_condition
+      return indent(l:lnum) + &sw
+    elseif l:last_line =~ s:vlog_statement
+      " do nothing
+    elseif l:last_line =~ '\<begin\>$'
+      if l:ignore_begin == 0
+        return indent(l:lnum) + &sw
+      else
+        let l:ignore_begin -= 1
+      endif
+    elseif l:ignore_begin != 0
+      " do nothing
+    endif
+
+  endwhile
 endfunction
 
 " vi: sw=2 sts=2:
