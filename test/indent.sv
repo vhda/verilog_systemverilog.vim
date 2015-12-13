@@ -405,4 +405,36 @@ begin
     dont_deindent();
 end
 
+class a extends b;
+    function void hello();
+        if (1)
+            fork
+                something();
+                something();
+                begin
+                    something();
+                end
+                begin
+                    fork
+                        if (1)
+                            if (1)
+                                if (1) begin
+                                    something();
+                                end
+                        something();
+                    join
+                end
+                if (1)
+                    foreach (objects[i])
+                        if (1)
+                            if (1) begin
+                                something();
+                            end
+                something();
+            join_none
+    endfunction : hello
+endclass : a
+
+
+
 // vim: set sts=4 sw=4 nofen:
