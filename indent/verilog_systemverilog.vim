@@ -35,12 +35,15 @@ setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+==else
 
-let s:vlog_openstat = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
-let s:vlog_comment = '\(//.*\|/\*.*\*/\)'
+let s:vlog_pre_label         = '^\(\k\w*\s*:\s*\)'
+let s:vlog_post_label        = '\(\s*:\s*\k\w*$\)'
+let s:vlog_openstat          = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\)\@!\)'
+let s:vlog_comment           = '\(//.*\|/\*.*\*/\)'
 let s:vlog_block_delcaration = '\(\(if\|foreach\|assert\|for\)\s*(.*)\)\|else'
-let s:vlog_stop_condition = '\(function\|task\|always\|initial\|final\)'
-let s:vlog_macro = '^`\k\+\((.*)\)\?$'
-let s:vlog_statement = '.*;$\|'. s:vlog_macro
+let s:vlog_stop_condition    = '\(function\|task\|always\|initial\|final\)'
+let s:vlog_macro             = '^`\k\+\((.*)\)\?$'
+let s:vlog_statement         = '.*;$\|'. s:vlog_macro
+" let s:vlog_assert            = s:vlog_pre_label . '\?' . '\<assert'
 
 " Only define the function once.
 if exists("*GetVerilog_SystemVerilogIndent")
@@ -49,25 +52,25 @@ endif
 
 set cpo-=C
 
-if exists('b:verilog_indent_width')
-  let s:offset = b:verilog_indent_width
-else
-  let s:offset = &sw
-endif
-
-if exists('b:verilog_s:indent_modules')
-  let s:indent_modules = s:offset
-else
-  let s:indent_modules = 0
-endif
-
-if exists('b:verilog_indent_verbose')
-  let s:vverb = 1
-else
-  let s:vverb = 0
-endif
-
 function! GetVerilog_SystemVerilogIndent()
+
+  if exists('b:verilog_s:indent_modules')
+    let s:indent_modules = s:offset
+  else
+    let s:indent_modules = 0
+  endif
+
+  if exists('b:verilog_indent_verbose')
+    let s:vverb = 1
+  else
+    let s:vverb = 0
+  endif
+
+  if exists('b:verilog_indent_width')
+    let s:offset = b:verilog_indent_width
+  else
+    let s:offset = &sw
+  endif
 
   " Find a non-blank line above the current line.
   let l:lnum = prevnonblank(v:lnum - 1)
