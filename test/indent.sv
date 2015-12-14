@@ -433,6 +433,11 @@ class a extends b;
                 something();
             join_none
     endfunction : hello
+
+    local static function void hello();
+        something();
+    endfunction
+
 endclass : a
 
 
