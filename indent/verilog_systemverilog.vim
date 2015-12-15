@@ -39,7 +39,7 @@ let s:vlog_openstat          = '\(\<or\>\|\([*/]\)\@<![*(,{><+-/%^&|!=?:]\([*/]\
 let s:vlog_comment           = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro             = '`\k\+\((.*)\)\?$'
 let s:vlog_statement         = '.*;$\|'. s:vlog_macro
-let s:vlog_assert            = '\<\(assert\|assume\|cover\)\>\(\s\+property\)\?\s*(.*)' 
+let s:vlog_assert            = '\<\(assert\|assume\|cover\)\>\(\s\+property\)\?\s*(.*)'
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
 let s:vlog_block_delcaration = '\(\(if\|foreach\|for\|' . s:vlog_assert . '\)\s*(.*)\)\|else'
@@ -107,8 +107,8 @@ function! GetVerilog_SystemVerilogIndent()
    \ l:last_line =~ s:vlog_always ||
    \ l:last_line =~ '^\<\(initial\|specify\|fork\|final\)\>' ||
    \ l:last_line =~ s:vlog_assert
-    if l:last_line !~ '\<end\>$' && 
-     \ l:last_line !~ s:vlog_statement 
+    if l:last_line !~ '\<end\>$' &&
+     \ l:last_line !~ s:vlog_statement
       let l:ind = l:ind + s:offset
       if s:vverb
         echom "Indent after a block statement:"
@@ -136,7 +136,7 @@ function! GetVerilog_SystemVerilogIndent()
     if s:vverb && s:indent_modules
       echom "Indent after module statement."
     endif
-    if l:last_line =~ '[(,]$' 
+    if l:last_line =~ '[(,]$'
       let l:ind = l:ind + s:offset
       if s:vverb
         echom "Indent after a multiple-line module statement:"
@@ -160,9 +160,9 @@ function! GetVerilog_SystemVerilogIndent()
        \ l:curr_line !~ '^`\(ifdef\|elsif\|endif\)' &&
        \ l:curr_line !~ s:vlog_always &&
        \ ( l:last_line =~ '^end$' ||
-       \ l:last_line =~ s:vlog_statement && 
+       \ l:last_line =~ s:vlog_statement &&
        \ l:last_line2 =~ s:vlog_block_delcaration )
-    let l:ind = DeindentAfterNested(l:ind, v:lnum)
+    let l:ind = GetContextIndent(l:ind, v:lnum)
     if s:vverb
       echom "De-indent after a chain of one line block statments."
       echom l:last_line2
@@ -345,36 +345,28 @@ function! SearchBackForContextStart(keyword, current_line_no)
     if l:iteration == 100
       " Timeout
       return l:lnum
-    else 
+    else
       let l:iteration += 1
     endif
     let l:lnum = prevnonblank(l:lnum - 1)
     let l:last_line = StripCommentsAndWS(getline(l:lnum))
-    if l:last_line =~ a:keyword 
+    if l:last_line =~ a:keyword
       return indent(l:lnum)
     endif
   endwhile
 endfunction
 
-function! DeindentAfterNested(current_indent, current_line_no)
+function! GetContextIndent(current_indent, current_line_no)
   let l:ignore_begin = 0
   let l:ignore_fork  = 0
   let l:lnum = a:current_line_no
-  let l:iteration = 0
 
-  while 1
-
-    if l:iteration == 1000
-      " Timeout
-      return l:lnum
-    else 
-      let l:iteration += 1
-    endif
+  while l:lnum > 1
 
     let l:lnum = prevnonblank(l:lnum - 1)
     let l:last_line = StripCommentsAndWS(getline(l:lnum))
     " echom "DEBUG: line: ". l:lnum . ': ' . l:last_line
-  
+
     if l:last_line =~ s:vlog_join
       let l:ignore_fork += 1
     elseif l:last_line =~ '^fork$'
