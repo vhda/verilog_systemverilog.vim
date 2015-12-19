@@ -44,7 +44,7 @@ class z;
         assert(
             my_seq.randomize() with
             {Nr==6; Time==8;}
-            );
+        );
         my_seq.start(low_sequencer_h);
 
         // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/5
@@ -141,6 +141,7 @@ class z;
     task while_one_line;
         while (1)
             do_something();
+
     endtask
 
     task while_block;
@@ -166,13 +167,22 @@ class z;
         while (1) begin
             do_something();
         end
+
+        do
+            do_something();
+        while (1);
+
+        do begin
+            do_something();
+        end while (1);
+
     endfunction
 
     //function old_style_function_with_var(
     //    input a
     //);
     //reg test;
-    //begin 
+    //begin
     //    do_something1();
     //    do_something2();
     //    begin
@@ -252,20 +262,37 @@ device d1 (
     .port (port[1]),
     // .port1(), comment
     /**/.port2(), // comment
-    /*.port3(), */   
+    /*.port3(), */
     // .port4(), comment
     .portA(port[2])
 );
 
+`define VALUE 3
+
 `ifdef V95
     device d2 ( out, portA, portB );
+    device d2 ( out, portA, portB );
+    `ifdef V95
+        device d2 ( out, portA, portB );
+        device d2 ( out, portA, portB );
+    `endif
 `elsif V2K
     device d2 ( .out(out), .* );
+    device d2 ( out, portA, portB );
+    `ifndef SWAP
+        device d3 ( .out(out), .* );
+        device d2 ( .out(out), .* );
+    `else
+        device d3 ( .out(out), .portA(portB), .portB(portA) );
+        device d2 ( .out(out), .* );
+    `endif
 `endif
 `ifndef SWAP
     device d3 ( .out(out), .* );
+    device d2 ( .out(out), .* );
 `else
     device d3 ( .out(out), .portA(portB), .portB(portA) );
+    device d2 ( .out(out), .* );
 `endif
 
 endmodule
@@ -277,7 +304,7 @@ class a;
                 if (hi) /* comment */ begin /* comment */
                     if (hi) begin
                         foreach (element[i])
-                            if (condition0) 
+                            if (condition0)
                                 if (condition1) begin
                                     var0 <= 0;
                                 end
@@ -300,6 +327,26 @@ class a;
                                                     end
                                                     else if (1)
                                                         something();
+                                                    else
+                                                        something();
+
+                                        if (1)
+                                            something();
+
+                                        if (1)
+                                            // Nested case
+                                            case(value)
+                                                0,
+                                                1:
+                                                    case(value) inside
+                                                        [0:20]:;
+                                                        21: something();
+                                                        22:;
+                                                        default: something();
+                                                    endcase
+                                                2:;
+                                                3:;
+                                            endcase
 
                                         if (1)
                                             something();
@@ -317,6 +364,7 @@ class a;
         dont_deindent_please();
     endfunction : hello
 endclass : a
+
 module a;
 (
     input clk,
@@ -327,7 +375,7 @@ always @ (posedge clk)
 begin
 end
 
-always 
+always
     x <= 1;
 
 always
@@ -420,9 +468,17 @@ class a extends b;
                             if (1)
                                 if (1) begin
                                     something();
+                                    if (1) begin
+                                    end
+                                    something();
                                 end
                         something();
                     join
+                    if (1)
+                        do
+                            something();
+                        while(1);
+                    something();
                 end
                 if (1)
                     foreach (objects[i])
@@ -435,10 +491,23 @@ class a extends b;
     endfunction : hello
 
     local static function void hello();
+
         something();
     endfunction
 
+    constraint l1 {
+        y == 1;
+    }
+
+    constraint l1
+    {
+        y == 1;
+    }
+
 endclass : a
+
+extern module counter (input clk,enable,reset,
+    output logic [3:0] data);
 
 
 
