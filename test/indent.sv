@@ -509,6 +509,67 @@ endclass : a
 extern module counter (input clk,enable,reset,
     output logic [3:0] data);
 
+class a;
 
+    local static function void hello();
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE &&
+            object_t.field_t && variable0;
+
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE
+            && object_t.field_t && variable0;
+
+        const bit variable2 =
+            object_t.field_t && object_t.field_t.source == ENUM_VALUE;
+
+        bit variable3;
+
+        // Multi-line if with no begin
+        if (variable && variable && variable &&
+                variable)
+            indent();
+
+        de_indent();
+
+        // Multi-line if with begin with a line starting with &&
+        if (variable && variable && variable
+                && variable
+                && variable) begin
+                    indent();
+                    stay();
+                end
+
+        de_indent();
+
+        variable = variable
+            || vairable || variable;
+
+        variable = variable ||
+            vairable || variable;
+
+        if (1) begin
+            if (1
+                    && 1)
+                something();
+        end
+
+    endfunction
+
+    function void function_with_multiline_proto(
+        object_type object);
+        indent();
+    endfunction
+
+    function void function_with_multiline_proto(
+        object_type object0,
+        object_type object1,
+        object_type object2,
+        object_type object3
+    );
+        indent();
+    endfunction
+
+endclass
 
 // vim: set sts=4 sw=4 nofen:

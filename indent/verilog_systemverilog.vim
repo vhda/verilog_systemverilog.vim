@@ -32,7 +32,7 @@ let s:vlog_macro             = '`\k\+\((.*)\)\?$'
 let s:vlog_statement         = '.*;$\|'. s:vlog_macro
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
-let s:vlog_block_delcaration = '\(\(\<while\>\|\<if\>\|\<foreach\>\|\<for\>\)\s*(.*)\)\|\<else\>\|\<do\>\|' . s:vlog_always
+let s:vlog_block_delcaration = '\(\(\<while\>\|\<if\>\|\<foreach\>\|\<for\>\)\s*(\)\|\<else\>\|\<do\>\|' . s:vlog_always
 let s:vlog_method            = '^\(pure\s\+virtual\|extern\)\@!.*\(function\|task\)\s\+\w\+'
 
 let s:vlog_block_start       = '\<\(begin\|case\|fork\)\>\|{\|('
@@ -161,15 +161,20 @@ function! SearchBackForNestableContextStart(start_wd, end_wd, current_line_no)
 endfunction
 
 function! GetContextIndent(current_line_no)
-  let l:context_level = 0
+  let l:block_level     = 0
+  let l:bracket_level   = 0
+  let l:cbracket_level  = 0
+  let l:fork_level      = 0
+  let l:case_level      = 0
+
   let l:lnum = a:current_line_no
   let l:curr_line = StripCommentsAndWS(getline(a:current_line_no))
   let l:offset = 0
   let l:oneline_mode = 1
-  let l:look_for_open_statment = 1
+  let l:look_for_open_statement = 1
 
-  let l:curr_line_level  = len(split(l:curr_line, s:vlog_block_end,   1)) - 1
-  let l:curr_line_level -= len(split(l:curr_line, s:vlog_block_start, 1)) - 1
+  let l:curr_line_level  = CountMatches(l:curr_line, s:vlog_block_end)
+  let l:curr_line_level -= CountMatches(l:curr_line, s:vlog_block_start)
 
   if l:curr_line_level == 1 &&
         \ l:curr_line !~ s:vlog_comment &&
@@ -190,26 +195,39 @@ function! GetContextIndent(current_line_no)
       continue
     endif
 
-    if l:look_for_open_statment == 1
-      if l:line =~ s:vlog_open_statement . '$'
+    if l:look_for_open_statement == 1
+      if l:line =~ s:vlog_open_statement . '$' ||
+            \ (l:curr_line =~ '^' . s:vlog_open_statement &&
+            \ l:curr_line !~ s:vlog_comment)
         call Debug("Increasing indent for an open statment.")
         let l:offset += s:offset
       endif
     endif
 
-    let l:look_for_open_statment = 0
+    let l:look_for_open_statement = 0
 
-    let l:context_level += len(split(l:line, s:vlog_block_end  , 1)) - 1
-    let l:context_level -= len(split(l:line, s:vlog_block_start, 1)) - 1
+    let l:block_level    += CountMatches(l:line, '\<end\>'                  )
+    let l:block_level    -= CountMatches(l:line, '\<begin\>'                )
+    let l:bracket_level  += CountMatches(l:line, ')'                        )
+    let l:bracket_level  -= CountMatches(l:line, '('                        )
+    let l:cbracket_level += CountMatches(l:line, '}'                        )
+    let l:cbracket_level -= CountMatches(l:line, '{'                        )
+    let l:fork_level     += CountMatches(l:line, '\<join\(_all\|_none\)\?\>')
+    let l:fork_level     -= CountMatches(l:line, '\<fork\>'                 )
+    let l:case_level     += CountMatches(l:line, '\<endcase\>'              )
+    let l:case_level     -= CountMatches(l:line, '\<case\>\s*(.*)'          )
 
-    if l:line =~ s:vlog_statement ||
-          \ l:line =~ '\<end\(case\)\?\>'
+    if l:line =~ s:vlog_statement || l:line =~ '\<end\(case\)\?\>'
       let l:oneline_mode = 0
-    elseif l:oneline_mode == 1 &&
-          \ l:line =~ s:vlog_block_delcaration
-      if l:curr_line =~ '^\<begin\>\|^{\|^(' &&
-            \ l:context_level == 0
+    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_delcaration
+      if l:curr_line =~ '^\<begin\>' && l:block_level == 0
         call Debug("Standalone 'begin' after block declaration.")
+        return indent(l:lnum)
+      elseif l:curr_line =~ '^{' && l:cbracket_level == 0
+        call Debug("Standalone '{' after block declaration.")
+        return indent(l:lnum)
+      elseif l:curr_line =~ '^(' && l:bracket_level == 0
+        call Debug("Standalone '(' after block declaration.")
         return indent(l:lnum)
       else
         call Debug("Indenting a single line block.")
@@ -217,13 +235,25 @@ function! GetContextIndent(current_line_no)
       endif
     elseif l:curr_line =~ '^else' &&
           \ l:line =~ '\<\(if\|assert\)\>\s*(.*)' &&
-          \ l:context_level == 0
+          \ l:block_level == 0
       call Debug("'else' of 'if' or 'assert'.")
       return indent(l:lnum)
     endif
 
-    if l:context_level < 0
-      call Debug("Inside a block.")
+    if l:block_level < 0
+      call Debug("Inside a 'begin end' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:bracket_level < 0
+      call Debug("Inside a '()' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:cbracket_level < 0
+      call Debug("Inside a '{}' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:fork_level < 0
+      call Debug("Inside a 'fork join' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:case_level < 0
+      call Debug("Inside a 'case endcase' block.")
       return indent(l:lnum) + l:offset
     elseif l:line =~ s:vlog_context_start
       if l:line =~ s:vlog_module
@@ -239,6 +269,10 @@ function! GetContextIndent(current_line_no)
     endif
 
   endwhile
+endfunction
+
+function! CountMatches(line, pattern)
+  return len(split(a:line, a:pattern, 1)) - 1
 endfunction
 
 function! Debug(msg)
