@@ -579,4 +579,4 @@ class a;
 
 endclass
 
-// vim: set sts=4 sw=4 nofen:
+// vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
