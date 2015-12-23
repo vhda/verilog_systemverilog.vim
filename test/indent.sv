@@ -351,11 +351,15 @@ class a;
                                         if (1)
                                             something();
 
+                                        /* end */
+
                                         something();
+                                        /* end */
                                         something();
                                     end
                                 end
                         deindent_x2_please();
+                        /* end */
                         dont_deindent_please();
                     end
                     deindent_please();
@@ -464,9 +468,9 @@ class a extends b;
                 end
                 begin
                     fork
-                        if (1)
+                        if (1) // begin
                             if (1)
-                                if (1) begin
+                                if (1) begin // comment
                                     something();
                                     if (1) begin
                                     end
@@ -485,6 +489,9 @@ class a extends b;
                         if (1)
                             if (1) begin
                                 something();
+                                fork begin
+                                    something();
+                                end join
                             end
                 something();
             join_none
