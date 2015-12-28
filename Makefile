@@ -9,7 +9,9 @@ SILENT_1 =
 all: test
 
 test:
-	$(SILENT) vim -T dumb -E -c 'source test/run_test.vim'
+	$(SILENT) vim -T dumb -E \
+		-c 'source test/functions.vim' \
+		-c 'source test/run_test.vim'
 
 performance:
 	$(SILENT) time vim -T dumb -E \
@@ -21,6 +23,7 @@ profile:
 	$(SILENT) vim -T dumb -E \
 		--cmd 'profile start verilog_profile.result' \
 		--cmd 'profile! file indent/verilog_systemverilog.vim' \
+		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim'
 
 help:
