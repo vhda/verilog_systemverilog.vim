@@ -516,7 +516,10 @@ endclass : a
 extern module counter (input clk,enable,reset,
     output logic [3:0] data);
 
-class a;
+class a implements
+    b,
+    c,
+    d;
 
     local static function void hello();
         const bit variable1 =
