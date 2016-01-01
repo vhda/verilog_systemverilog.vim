@@ -32,19 +32,22 @@ let s:vlog_macro             = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement         = '.*;\s*$\|'. s:vlog_macro
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
-let s:vlog_block_delcaration = '\(\(\<while\>\|\<if\>\|\<foreach\>\|\<for\>\)\s*(\)\|\<else\>\|\<do\>\|' . s:vlog_always
-let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\(function\|task\)\s\+\w\+'
+let s:vlog_block_delcaration = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always
+let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\w\+'
 
 let s:vlog_block_start       = '\<\(begin\|case\|fork\)\>\|{\|('
-let s:vlog_block_end         = '\(\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)\)'
+let s:vlog_block_end         = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
-let s:vlog_module            = '\<\(extern\s\+\)\@!module\>'
-let s:vlog_property          = '\(\(assert\|assume\|cover\)\s\+\)\@<!property'
-let s:vlog_case              = '\<case[zx]\?\>\s*(.*)'
+let s:vlog_module            = '\<\(extern\s\+\)\@<!module\>'
+let s:vlog_class             = '\<\(typedef\s\+\)\@<!class\>'
+let s:vlog_property          = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
+let s:vlog_case              = '\<case[zx]\?\>\s*('
 let s:vlog_join              = '\<join\(_all\|_none\)\?\>'
 
-let s:vlog_context_start     = '^\s*`ifn\?def\|\<\(package\|covergroup\|class\|program\|sequence\|interface\|' . s:vlog_module . '\|' . s:vlog_property . '\)\>\|' . s:vlog_method
-let s:vlog_context_end       = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|^\s*`endif'
+let s:vlog_context_start     = '^\s*`ifn\?def\>\|\<\(package\|covergroup\|program\|sequence\|interface\)\>\|'.
+                              \ s:vlog_class .'\|'. s:vlog_module .'\|'. s:vlog_property .'\|'. s:vlog_method
+
+let s:vlog_context_end       = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")

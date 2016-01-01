@@ -1,3 +1,5 @@
+typedef class a;
+
 // Code based on: https://github.com/vhda/verilog_systemverilog.vim/issues/2
 class z;
 
@@ -236,6 +238,16 @@ class z;
 
 endclass
 
+class a;
+    class nested;
+    endclass
+endclass
+
+// TODO: Unsupported
+// class a;
+//     typedef class a;
+// endclass
+
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/14
 virtual class base;
 
@@ -248,6 +260,14 @@ virtual class base;
 
 endclass;
 // End of copied code
+
+interface class base;
+
+    pure virtual function void a(input int unsigned N, ref t Data);
+    pure virtual function void b(input int unsigned N, ref t Data);
+    pure virtual function void c(input int unsigned N, ref t Data);
+
+endclass;
 
 module m (
     portA,
@@ -526,6 +546,8 @@ endclass : a
 extern module counter (input clk,enable,reset,
     output logic [3:0] data);
 
+extern module counter2;
+
 class a implements
     b,
     c,
@@ -615,5 +637,14 @@ package a;
     endclass
 
 endpackage
+
+sequence acknowledge
+    ##[1:2] Ack;
+endsequence
+
+property handshake;
+    @(posedge Clock)
+    request |-> acknowledge;
+endproperty
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
