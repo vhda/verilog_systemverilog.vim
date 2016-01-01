@@ -142,6 +142,16 @@ class z;
         while (1)
             do_something();
 
+        (* full_case=1 *)
+        (* parallel_case=1 *)
+        case (a)
+        endcase
+
+        (* full_case,
+            parallel_case=1 *)
+        case (a)
+        endcase
+
     endtask
 
     task while_block;
@@ -592,5 +602,18 @@ covergroup c1_cg (ref bit x);
     }
 
 endgroup
+
+package a;
+
+    class b;
+    endclass
+
+    class c;
+    endclass
+
+    class d;
+    endclass
+
+endpackage
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
