@@ -45,8 +45,8 @@ let s:vlog_property          = '\(\(assert\|assume\|cover\)\s\+\)\@<!property'
 let s:vlog_case              = '\<case[zx]\?\>\s*(.*)'
 let s:vlog_join              = '\<join\(_all\|_none\)\?\>'
 
-let s:vlog_context_start     = '^\s*`ifn\?def\|\<\(class\|program\|sequence\|interface\|' . s:vlog_module . '\|' . s:vlog_property . '\)\>\|' . s:vlog_method
-let s:vlog_context_end       = '\<end\(function\|class\|' . s:vlog_module . '\|programm\|property\|sequence\|interface\|task\)\>\|^\s*`endif'
+let s:vlog_context_start     = '^\s*`ifn\?def\|\<\(covergroup\|class\|program\|sequence\|interface\|' . s:vlog_module . '\|' . s:vlog_property . '\)\>\|' . s:vlog_method
+let s:vlog_context_end       = '\<end\(function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|^\s*`endif'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
