@@ -54,6 +54,13 @@ function GetVerilog_SystemVerilogIndent()
   else
     let indent_modules = 0
   endif
+  if exists('b:verilog_dont_deindent_eos')
+    let dont_deindent_eos = 1
+  elseif exists('g:verilog_dont_deindent_eos')
+    let dont_deindent_eos = 1
+  else
+    let dont_deindent_eos = 0
+  endif
 
   " Find a non-blank line above the current line.
   let lnum = prevnonblank(v:lnum - 1)
@@ -251,7 +258,7 @@ function GetVerilog_SystemVerilogIndent()
       echom curr_line
     endif
   elseif curr_line =~ '^\s*\<endmodule\>'
-    if exists("g:verilog_dont_deindent_eos")
+    if dont_deindent_eos
       let ind = ind - offset
     else
       let ind = ind - indent_modules
@@ -289,7 +296,7 @@ function GetVerilog_SystemVerilogIndent()
     endif
 
   " De-indent at the end of multiple-line statement
-  elseif !exists("g:verilog_dont_deindent_eos") && curr_line =~ '^\s*)' &&
+  elseif !dont_deindent_eos && curr_line =~ '^\s*)' &&
     \ ( last_line =~ vlog_openstat . '\s*' . vlog_comment . '*$' ||
     \ last_line !~ vlog_openstat . '\s*' . vlog_comment . '*$' &&
     \ last_line2 =~ vlog_openstat . '\s*' . vlog_comment . '*$' )

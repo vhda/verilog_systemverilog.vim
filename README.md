@@ -170,7 +170,7 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 
 * __`b:verilog_indent_width`__ - Use this variable to override the option `&shiftwidth`.
 * __`b:verilog_indent_modules`__ - Indent code after module declaration.
-* __`g:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
+* __`b:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
 
 ### Syntax options
 
