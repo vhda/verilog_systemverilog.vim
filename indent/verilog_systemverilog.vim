@@ -9,10 +9,12 @@
 "   Last maintainer: Amit Sethi <amitrajsethi@yahoo.com>
 "
 " Buffer Variables:
-"     b:verilog_indent_modules : indenting after the declaration
-"				 of module blocks
-"     b:verilog_indent_width   : indenting width
-"     b:verilog_indent_verbose : verbose to each indenting
+"     b:verilog_indent_modules    : indenting after the declaration
+"                                   of module blocks
+"     b:verilog_indent_width      : indenting width
+"     b:verilog_indent_verbose    : verbose to each indenting
+"     b:verilog_dont_deindent_eos : don't de-indent the ); line in
+"                                   port lists and instances
 "
 " Revision Comments:
 "     Amit Sethi - Wed Jun 28 18:20:44 IST 2006
