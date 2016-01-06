@@ -399,7 +399,7 @@ class a;
     endfunction : hello
 endclass : a
 
-module a;
+module a import some_pkg::*;
 (
     input clk,
     output x
