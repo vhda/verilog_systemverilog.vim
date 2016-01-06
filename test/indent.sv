@@ -1,7 +1,7 @@
 typedef class a;
 
 // Code based on: https://github.com/vhda/verilog_systemverilog.vim/issues/2
-class z;
+class z;          
 
     // this is a comment
     // -----------------
@@ -193,7 +193,7 @@ class z;
     //function old_style_function_with_var(
     //    input a
     //);
-    //reg test;
+    //reg test;    
     //begin
     //    do_something1();
     //    do_something2();
@@ -292,20 +292,20 @@ device d1 (
     .port (port[1]),
     // .port1(), comment
     /**/.port2(), // comment
-    /*.port3(), */
+    /*.port3(), */     
     // .port4(), comment
     .portA(port[2])
 );
 
 `define VALUE 3
 
-`ifdef V95
+`ifdef V95     
     device d2 ( out, portA, portB );
     device d2 ( out, portA, portB );
     `ifdef V95
         device d2 ( out, portA, portB );
         device d2 ( out, portA, portB );
-    `endif
+    `endif    
 `elsif V2K
     device d2 ( .out(out), .* );
     device d2 ( out, portA, portB );
@@ -329,10 +329,10 @@ endmodule
 
 class a;
     function void hello();
-        foreach (element[i])
+        foreach (element[i])    
             if (hi)
                 if (hi) /* comment */ begin /* comment */
-                    if (hi) begin
+                    if (hi) begin     
                         foreach (element[i])
                             if (condition0)
                                 if (condition1) begin
