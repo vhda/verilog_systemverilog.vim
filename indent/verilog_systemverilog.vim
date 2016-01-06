@@ -8,9 +8,11 @@
 "       Chih-Tsun Huang <cthuang@larc.ee.nthu.edu.tw>
 "
 " Buffer Variables:
-"     b:verilog_indent_modules : Indentation within module blocks.
-"     b:verilog_indent_width   : Indenting width.
-"     b:verilog_indent_verbose : Print debug info for each indent.
+"     b:verilog_indent_modules    : Indentation within module blocks.
+"     b:verilog_indent_width      : Indenting width.
+"     b:verilog_indent_verbose    : Print debug info for each indent.
+"     b:verilog_dont_deindent_eos : Don't de-indent the ); line in port lists
+"                                   and instances.
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
@@ -73,7 +75,12 @@ function! GetVerilogSystemVerilogIndent()
   let s:curr_line = getline(v:lnum)
 
   if s:curr_line =~ '^\s*)'
-    return indent(s:SearchForBlockStart('(', '', ')', v:lnum))
+    let l:offset = 0
+    if s:curr_line =~ '^\s*);\s*$' &&
+          \ (exists('b:verilog_dont_deindent_eos') || exists('g:verilog_dont_deindent_eos'))
+      let l:offset = s:offset
+    endif
+    return indent(s:SearchForBlockStart('(', '', ')', v:lnum)) + l:offset
   elseif s:curr_line =~ '^\s*}'
     return indent(s:SearchForBlockStart('{', '', '}', v:lnum))
   endif
