@@ -662,4 +662,14 @@ always
     else
         {var0, var1} <= 2'b00;
 
+always
+    if (0) begin
+        var0 <= 1'b0;
+    end else if(0) begin
+        var0 <= 1'b1;
+    end
+
+// comment
+
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

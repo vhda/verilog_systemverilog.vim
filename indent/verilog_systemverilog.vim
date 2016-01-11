@@ -51,6 +51,7 @@ let s:vlog_context_start     = '^\s*`ifn\?def\>\|\<\(package\|covergroup\|progra
 
 let s:vlog_context_end       = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
+
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
   finish
@@ -163,14 +164,21 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no)
   call cursor(a:current_line_no, 1)
 
   if a:mid_wd == ''
-    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . "\\)'"
+    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(".a:start_wd.'\|'.a:end_wd.'\)\|'.a:end_wd.'.*'.a:start_wd."'"
   else
-    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . '\|' . a:mid_wd . "\\)'"
+    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(".a:start_wd.'\|'.a:end_wd.'\|'.a:mid_wd."\\)'"
   endif
+
+  " if a:mid_wd == ''
+  "   let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . "\\)'"
+  " else
+  "   let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . '\|' . a:mid_wd . "\\)'"
+  " endif
 
   " This works but is alot slower than the above. Use this if there are problems.
   " let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
 
+  " echom 'DEBUG: '.searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
   return searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
 endfunction
 
@@ -213,7 +221,7 @@ function! s:GetContextIndent(current_line_no)
     endif
 
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
-    if l:line =~ '\<end\>'
+    if l:line =~ '\<end\>' && l:line !~ '\<begin\>\s*$'
       let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum)
       let l:oneline_mode = 0
       let l:block_level = 1
