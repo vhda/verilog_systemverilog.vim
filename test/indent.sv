@@ -269,6 +269,14 @@ interface class base;
 
 endclass;
 
+module m #(1)
+(
+    portA,
+    portB
+);
+
+endmodule
+
 module m (
     portA,
     portB
@@ -646,5 +654,12 @@ property handshake;
     @(posedge Clock)
     request |-> acknowledge;
 endproperty
+
+always
+    if(1) begin
+    end
+    // comment
+    else
+        {var0, var1} <= 2'b00;
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

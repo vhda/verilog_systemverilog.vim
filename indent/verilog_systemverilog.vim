@@ -33,7 +33,6 @@ let s:vlog_macro             = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement         = '.*;\s*$\|'. s:vlog_macro
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
-let s:vlog_block_delcaration = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always
 let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\w\+'
 
 let s:vlog_block_start       = '\<\(begin\|case\|fork\)\>\|{\|('
@@ -44,6 +43,8 @@ let s:vlog_class             = '\<\(typedef\s\+\)\@<!class\>'
 let s:vlog_property          = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
 let s:vlog_case              = '\<case[zx]\?\>\s*('
 let s:vlog_join              = '\<join\(_all\|_none\)\?\>'
+
+let s:vlog_block_delcaration = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
 
 let s:vlog_context_start     = '^\s*`ifn\?def\>\|\<\(package\|covergroup\|program\|sequence\|interface\)\>\|'.
                               \ s:vlog_class .'\|'. s:vlog_module .'\|'. s:vlog_property .'\|'. s:vlog_method
@@ -122,6 +123,10 @@ function! GetVerilogSystemVerilogIndent()
     return indent(s:SearchForBlockStart('`ifn\?def', '`else\|`elsif', '`endif', v:lnum))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
     return indent(s:SearchForBlockStart('\<fork\>', '', s:vlog_join, v:lnum))
+  endif
+
+  if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' && getline(v:lnum + 1) =~ '^\s*else'
+    return indent(v:lnum + 1)
   endif
 
   return s:GetContextIndent(v:lnum)
@@ -264,10 +269,10 @@ function! s:GetContextIndent(current_line_no)
       if s:curr_line =~ '^\s*\<begin\>' && l:block_level == 0
         call s:Verbose("Standalone 'begin' after block declaration.")
         return indent(l:lnum)
-      elseif s:curr_line =~ '^\s*{' && l:cbracket_level == 0
+      elseif s:curr_line =~ '^\s*{\s*$' && l:cbracket_level == 0
         call s:Verbose("Standalone '{' after block declaration.")
         return indent(l:lnum)
-      elseif s:curr_line =~ '^\s*(' && l:bracket_level == 0
+      elseif s:curr_line =~ '^\s*(\s*$' && l:bracket_level == 0
         call s:Verbose("Standalone '(' after block declaration.")
         return indent(l:lnum)
       else
