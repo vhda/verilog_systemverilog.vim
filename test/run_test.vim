@@ -31,7 +31,9 @@ echo ''
 " Open syntax indent test file in read-only mode
 silent edit test/indent.sv
 
-" Verify folding
+let b:verilog_indent_preproc=1
+
+" Verify indent
 let test_result=TestIndent() || test_result
 echo ''
 

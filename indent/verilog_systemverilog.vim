@@ -13,6 +13,7 @@
 "     b:verilog_indent_verbose    : Print debug info for each indent.
 "     b:verilog_dont_deindent_eos : Don't de-indent the ); line in port lists
 "                                   and instances.
+"     b:verilog_indent_preproc    : Indent preprocessor statements.
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
@@ -50,6 +51,9 @@ let s:vlog_context_start     = '^\s*`ifn\?def\>\|\<\(package\|covergroup\|progra
                               \ s:vlog_class .'\|'. s:vlog_module .'\|'. s:vlog_property .'\|'. s:vlog_method
 
 let s:vlog_context_end       = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
+
+let s:vlog_preproc_start     = '^\s*`ifn\?def\>'
+let s:vlog_preproc_end       = '^\s*`endif\>'
 
 
 " Only define the function once.
@@ -297,13 +301,23 @@ function! s:GetContextIndent()
         else
           return indent(l:lnum)
         endif
+      elseif l:line =~ s:vlog_preproc_start
+        if exists('b:verilog_indent_preproc')
+          return indent(l:lnum) + l:offset
+        endif
       else
         call s:Verbose("Inside a context (".l:lnum.":".l:offset.")")
         return indent(l:lnum) + l:offset
       endif
     elseif l:line =~ s:vlog_context_end
-      call s:Verbose("After the end of a context.")
-      return indent(l:lnum)
+      if l:line =~ s:vlog_preproc_end
+        if exists('b:verilog_indent_preproc')
+          return indent(l:lnum)
+        endif
+      else
+        call s:Verbose("After the end of a context.")
+        return indent(l:lnum)
+      endif
     endif
 
   endwhile
