@@ -130,7 +130,7 @@ function! GetVerilogSystemVerilogIndent()
     return indent(v:lnum + 1)
   endif
 
-  return s:GetContextIndent(v:lnum)
+  return s:GetContextIndent()
 
 endfunction
 
@@ -169,27 +169,20 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no)
     let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(".a:start_wd.'\|'.a:end_wd.'\|'.a:mid_wd."\\)'"
   endif
 
-  " if a:mid_wd == ''
-  "   let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . "\\)'"
-  " else
-  "   let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(" . a:start_wd . '\|' . a:end_wd . '\|' . a:mid_wd . "\\)'"
-  " endif
-
   " This works but is alot slower than the above. Use this if there are problems.
   " let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
 
-  " echom 'DEBUG: '.searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
   return searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
 endfunction
 
-function! s:GetContextIndent(current_line_no)
+function! s:GetContextIndent()
   let l:block_level    = 0
   let l:bracket_level  = 0
   let l:cbracket_level = 0
   let l:fork_level     = 0
   let l:case_level     = 0
 
-  let l:lnum = a:current_line_no
+  let l:lnum = v:lnum
   let l:oneline_mode = 1
   let l:look_for_open_statement = 1
   let l:offset = s:offset
@@ -211,9 +204,11 @@ function! s:GetContextIndent(current_line_no)
     call s:Verbose("GetContextIndent:" . l:lnum . ": " . l:line)
 
     if l:look_for_open_statement == 1
-      if l:line =~ s:vlog_open_statement . '\s*$' ||
+      if (l:line =~ s:vlog_open_statement . '\s*$' &&
+            \ l:line !~ '/\*\s*$' && !s:IsComment(l:lnum)) ||
             \ (s:curr_line =~ '^\s*' . s:vlog_open_statement &&
-            \ s:curr_line !~ s:vlog_comment)
+            \ s:curr_line !~ '^\s*/\*' &&
+            \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum))
         let l:offset += s:offset
         call s:Verbose("Increasing indent for an open statment.")
       endif
@@ -303,7 +298,7 @@ function! s:GetContextIndent(current_line_no)
           return indent(l:lnum)
         endif
       else
-        call s:Verbose("Inside a context.")
+        call s:Verbose("Inside a context (".l:lnum.":".l:offset.")")
         return indent(l:lnum) + l:offset
       endif
     elseif l:line =~ s:vlog_context_end
@@ -321,6 +316,14 @@ endfunction
 function! s:Verbose(msg)
   if s:vverb
     echom a:msg
+  endif
+endfunction
+
+function! s:IsComment(lnum)
+  if synIDattr(synID(a:lnum, 1, 0), "name") == "verilogComment"
+    return 1
+  else
+    return 0
   endif
 endfunction
 

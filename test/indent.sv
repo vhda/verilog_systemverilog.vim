@@ -671,5 +671,21 @@ always
 
 // comment
 
+virtual class DataTypes_packer#(type T, int L, int W, int I);
+
+    extern static function void unpack(const ref bit [L-1:0] in, ref T out[]);
+    extern static function void unpack5(const ref bit [L-1:0] in, ref t5#(W,I) out[], input int n_MSB2ignore=0);
+
+    /*
+    // packing functions
+    extern static function void pack(const ref T in[], ref bit [L-1:0] out);
+    extern static function void pack2(const ref t2#(W,I) in[], ref bit [L-1:0] out);
+    */
+
+    // unpack functions:
+    extern static function void unpack(const ref bit [L-1:0] in, ref T out[]);
+    extern static function void unpack5(const ref bit [L-1:0] in, ref t5#(W,I) out[], input int n_MSB2ignore=0);
+
+endclass
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
