@@ -101,8 +101,6 @@ function! GetVerilogSystemVerilogIndent()
       return indent(s:SearchBackForPattern('\<clocking\>'  , v:lnum))
     elseif s:curr_line =~ '^\s*\<endpackage\>'
       return indent(s:SearchBackForPattern('\<package\>'   , v:lnum))
-    elseif s:curr_line =~ '^\s*\<endmodule\>'
-      return indent(s:SearchBackForPattern('\<module\>'    , v:lnum))
     elseif s:curr_line =~ '^\s*\<endinterface\>'
       return indent(s:SearchBackForPattern('\<interface\>' , v:lnum))
     elseif s:curr_line =~ '^\s*\<endproperty\>'
@@ -113,6 +111,8 @@ function! GetVerilogSystemVerilogIndent()
       return indent(s:SearchBackForPattern('\<specify\>'   , v:lnum))
     elseif s:curr_line =~ '^\s*\<endsequence\>'
       return indent(s:SearchBackForPattern('\<sequence\>'  , v:lnum))
+    elseif s:curr_line =~ '^\s*\<endmodule\>'
+      return indent(s:SearchForBlockStart('\<module\>', '', '\<endmodule\>', v:lnum))
     elseif s:curr_line =~ '^\s*\<endclass\>'
       return indent(s:SearchForBlockStart('\<class\>', '', '\<endclass\>', v:lnum))
     elseif s:curr_line =~ '^\s*\<end\>'

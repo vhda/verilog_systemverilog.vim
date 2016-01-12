@@ -275,6 +275,9 @@ module m #(1)
     portB
 );
 
+module a;
+endmodule
+
 endmodule
 
 module m (
