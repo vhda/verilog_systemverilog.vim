@@ -114,7 +114,7 @@ syn keyword verilogNumber      1step
 syn keyword verilogMethod      new
 syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
 
-syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<assert\>"
+syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<assert\|coverpoint\|cross\>"
 if v:version >= 704
     syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@20<=\<\k\+\>"
 else
