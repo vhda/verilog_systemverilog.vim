@@ -305,6 +305,7 @@ function! s:GetContextIndent()
         endif
       elseif l:line =~ s:vlog_preproc_start
         if exists('b:verilog_indent_preproc')
+          call s:Verbose("After preproc start.")
           return indent(l:lnum) + l:offset
         endif
       else
@@ -314,7 +315,9 @@ function! s:GetContextIndent()
     elseif l:line =~ s:vlog_context_end
       if l:line =~ s:vlog_preproc_end
         if exists('b:verilog_indent_preproc')
-          return indent(l:lnum)
+          call s:Verbose("After preproc end.")
+          let l:offset -= s:offset
+          return indent(l:lnum) + l:offset
         endif
       else
         call s:Verbose("After the end of a context.")

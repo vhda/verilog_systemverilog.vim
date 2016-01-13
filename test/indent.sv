@@ -716,4 +716,12 @@ assert_value: assert property (@(posedge clk) disable iff (~reset_n)
     var0 |-> var1 == var2
 );
 
+`ifdef NOTHING
+`endif
+
+wire signal = 
+    !var0 && (
+        var2
+    );
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
