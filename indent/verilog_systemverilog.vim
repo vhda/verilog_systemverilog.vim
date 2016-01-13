@@ -86,9 +86,11 @@ function! GetVerilogSystemVerilogIndent()
           \ (exists('b:verilog_dont_deindent_eos') || exists('g:verilog_dont_deindent_eos'))
       let l:offset = s:offset
     endif
-    return indent(s:SearchForBlockStart('(', '', ')', v:lnum)) + l:offset
+    call s:Verbose("Indenting )")
+    return indent(s:SearchForBlockStart('(', '', ')', v:lnum, 0)) + l:offset
   elseif s:curr_line =~ '^\s*}'
-    return indent(s:SearchForBlockStart('{', '', '}', v:lnum))
+    call s:Verbose("Indenting }")
+    return indent(s:SearchForBlockStart('{', '', '}', v:lnum, 0))
   endif
 
   " Reset indent for end blocks.
@@ -112,22 +114,22 @@ function! GetVerilogSystemVerilogIndent()
     elseif s:curr_line =~ '^\s*\<endsequence\>'
       return indent(s:SearchBackForPattern('\<sequence\>'  , v:lnum))
     elseif s:curr_line =~ '^\s*\<endmodule\>'
-      return indent(s:SearchForBlockStart('\<module\>', '', '\<endmodule\>', v:lnum))
+      return indent(s:SearchForBlockStart('\<module\>', '', '\<endmodule\>', v:lnum, 0))
     elseif s:curr_line =~ '^\s*\<endclass\>'
-      return indent(s:SearchForBlockStart('\<class\>', '', '\<endclass\>', v:lnum))
+      return indent(s:SearchForBlockStart('\<class\>', '', '\<endclass\>'  , v:lnum, 0))
     elseif s:curr_line =~ '^\s*\<end\>'
-      return indent(s:SearchForBlockStart('\<begin\>', '', '\<end\>'     , v:lnum))
+      return indent(s:SearchForBlockStart('\<begin\>', '', '\<end\>'       , v:lnum, 1))
     elseif s:curr_line =~ '^\s*\<endcase\>'
-      return indent(s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>' , v:lnum))
+      return indent(s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>'   , v:lnum, 0))
     endif
   endif
 
   if s:curr_line =~ '^\s*\<while\>\s*(.*);'
-    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*);', v:lnum))
+    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*);', v:lnum, 1))
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
-    return indent(s:SearchForBlockStart('`ifn\?def', '`else\|`elsif', '`endif', v:lnum))
+    return indent(s:SearchForBlockStart('`ifn\?def', '`else\|`elsif', '`endif', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
-    return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum))
+    return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum, 1))
   endif
 
   if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' && getline(v:lnum + 1) =~ '^\s*else'
@@ -164,14 +166,19 @@ endfunction
 
 " For any kind of block with a provided end pattern and start pattern, return the
 " line of the start of the block.
-function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no)
+function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no, skip_start_end)
   call cursor(a:current_line_no, 1)
 
-  let l:skip_arg = "getline('.') =~ '".a:end_wd.'.*'.a:start_wd."'"
+  " Detect whether the cursor is on a comment.
+  let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
 
-  let l:skip_arg = l:skip_arg.' || '.'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
+  if a:skip_start_end == 1
+    let l:skip_arg = l:skip_arg." || getline('.') =~ '".a:end_wd.'.\{-}'.a:start_wd."'"
+  endif
 
-  return searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
+  let l:lnum = searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
+  call s:Verbose('SearchForBlockStart: returning l:lnum ' . l:lnum)
+  return l:lnum
 endfunction
 
 function! s:GetContextIndent()
@@ -216,21 +223,21 @@ function! s:GetContextIndent()
 
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
     if l:line =~ '\<end\>' && l:line !~ '\<begin\>\s*$'
-      let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum)
+      let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum, 1)
       let l:oneline_mode = 0
       let l:block_level = 1
       let l:line = s:StripComments(l:lnum)
     endif
 
     if l:line =~ s:vlog_join
-      let l:lnum = s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, l:lnum)
+      let l:lnum = s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, l:lnum, 1)
       let l:oneline_mode = 0
       let l:fork_level = 1
       let l:line = s:StripComments(l:lnum)
     endif
 
     if l:line =~ '\<endcase\>'
-      let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum)
+      let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 1)
       let l:oneline_mode = 0
       let l:case_level = 1
       let l:line = s:StripComments(l:lnum)
