@@ -691,4 +691,25 @@ virtual class DataTypes_packer#(type T, int L, int W, int I);
 
 endclass
 
+fork
+    begin
+
+        for(int i=0;i<5;i++) begin
+            automatic int idx=i;
+            fork
+                begin
+                    $display("%fns: %0d start",$realtime/1ns,idx);
+                    my_seq[idx].go();
+                end
+            join_none
+        end
+
+        // wait for all forks to end
+        wait fork;
+        $display("%fns: all done",$realtime/1ns);
+    end
+join
+
+$display("hi");
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

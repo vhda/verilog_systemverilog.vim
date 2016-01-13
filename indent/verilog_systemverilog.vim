@@ -36,7 +36,7 @@ let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
 let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\w\+'
 
-let s:vlog_block_start       = '\<\(begin\|case\|fork\)\>\|{\|('
+let s:vlog_block_start       = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
 let s:vlog_block_end         = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
 let s:vlog_module            = '\<\(extern\s\+\)\@<!module\>'
@@ -127,7 +127,7 @@ function! GetVerilogSystemVerilogIndent()
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
     return indent(s:SearchForBlockStart('`ifn\?def', '`else\|`elsif', '`endif', v:lnum))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
-    return indent(s:SearchForBlockStart('\<fork\>', '', s:vlog_join, v:lnum))
+    return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum))
   endif
 
   if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' && getline(v:lnum + 1) =~ '^\s*else'
@@ -167,14 +167,9 @@ endfunction
 function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no)
   call cursor(a:current_line_no, 1)
 
-  if a:mid_wd == ''
-    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(".a:start_wd.'\|'.a:end_wd.'\)\|'.a:end_wd.'.*'.a:start_wd."'"
-  else
-    let l:skip_arg = "getline('.') =~ '/[/*]\\s*\\(".a:start_wd.'\|'.a:end_wd.'\|'.a:mid_wd."\\)'"
-  endif
+  let l:skip_arg = "getline('.') =~ '".a:end_wd.'.*'.a:start_wd."'"
 
-  " This works but is alot slower than the above. Use this if there are problems.
-  " let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
+  let l:skip_arg = l:skip_arg.' || '.'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
 
   return searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
 endfunction
@@ -228,7 +223,7 @@ function! s:GetContextIndent()
     endif
 
     if l:line =~ s:vlog_join
-      let l:lnum = s:SearchForBlockStart('\<fork\>', '', s:vlog_join, l:lnum)
+      let l:lnum = s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, l:lnum)
       let l:oneline_mode = 0
       let l:fork_level = 1
       let l:line = s:StripComments(l:lnum)
@@ -242,7 +237,7 @@ function! s:GetContextIndent()
     endif
 
     let l:block_level -= l:line =~ '\<begin\>'
-    let l:fork_level  -= l:line =~ '\<fork\>'
+    let l:fork_level  -= l:line =~ '^\s*\<fork\>'
     let l:case_level  -= l:line =~ s:vlog_case
 
     if l:line =~ '[()]'
