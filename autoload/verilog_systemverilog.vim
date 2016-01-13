@@ -186,6 +186,7 @@ function! s:GetInstanceInfo(linenr, column)
   let ininstdecl = 0
   let ininsttype = 0
   let p = 0
+  let b = 0
 
   call s:Verbose("Searching for instance info, starting on line " . linenr)
   while linenr > 0
@@ -206,6 +207,23 @@ function! s:GetInstanceInfo(linenr, column)
             let p -= 1
             if p == 0
               call s:Verbose("Skipping parentheses, ended on line " . linenr)
+              break
+            endif
+          endif
+          let start -= 1
+        endwhile
+      " Skip over [...]
+      elseif line[start - 1] == ']' || b > 0
+        if line[start - 1] == ']'
+          call s:Verbose("Skipping brackets, started on line " . linenr)
+        endif
+        while start > 0
+          if line[start - 1] == ']'
+            let b += 1
+          elseif line[start - 1] == '['
+            let b -= 1
+            if b == 0
+              call s:Verbose("Skipping brackets, ended on line " . linenr)
               break
             endif
           endif
