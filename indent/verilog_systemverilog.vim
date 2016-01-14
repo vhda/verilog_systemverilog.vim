@@ -34,7 +34,7 @@ let s:vlog_macro             = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement         = '.*;\s*$\|'. s:vlog_macro
 let s:vlog_sens_list         = '\(@\s*(.*)\)'
 let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
-let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\w\+'
+let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\(\[.*\]\s*\)\?\w\+'
 
 let s:vlog_block_start       = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
 let s:vlog_block_end         = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
@@ -326,6 +326,7 @@ function! s:GetContextIndent()
     endif
 
   endwhile
+  return l:offset - s:offset
 endfunction
 
 function! s:CountMatches(line, pattern)
