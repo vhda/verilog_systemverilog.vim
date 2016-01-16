@@ -28,33 +28,33 @@ setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
 setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
 
-let s:vlog_open_statement    = '\(\<or\>\|[<>:!=?&|^%/*+-]\)'
-let s:vlog_comment           = '\(//.*\|/\*.*\*/\)'
-let s:vlog_macro             = '`\k\+\((.*)\)\?\s*$'
-let s:vlog_statement         = '.*;\s*$\|'. s:vlog_macro
-let s:vlog_sens_list         = '\(@\s*(.*)\)'
-let s:vlog_always            = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
-let s:vlog_method            = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\(\[.*\]\s*\)\?\w\+'
+let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+-]\)'
+let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
+let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
+let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
+let s:vlog_sens_list      = '\(@\s*(.*)\)'
+let s:vlog_always         = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
+let s:vlog_method         = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\(\[.*\]\s*\)\?\w\+'
 
-let s:vlog_block_start       = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
-let s:vlog_block_end         = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
+let s:vlog_block_start    = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
+let s:vlog_block_end      = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
-let s:vlog_module            = '\<\(extern\s\+\)\@<!module\>'
-let s:vlog_class             = '\<\(typedef\s\+\)\@<!class\>'
-let s:vlog_property          = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
-let s:vlog_case              = '\<case[zx]\?\>\s*('
-let s:vlog_join              = '\<join\(_all\|_none\)\?\>'
+let s:vlog_module         = '\<\(extern\s\+\)\@<!module\>'
+let s:vlog_class          = '\<\(typedef\s\+\)\@<!class\>'
+let s:vlog_property       = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
+let s:vlog_case           = '\<case[zx]\?\>\s*('
+let s:vlog_join           = '\<join\(_all\|_none\)\?\>'
 
-let s:vlog_block_delcaration = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
+let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
 
-let s:vlog_context_start     = '^\s*`ifn\?def\>\|\<\(package\|covergroup\|program\|sequence\|interface\)\>\|'.
-                              \ s:vlog_class .'\|'. s:vlog_module .'\|'. s:vlog_property .'\|'. s:vlog_method
+let s:vlog_context_start  = '\<\(package\|covergroup\|program\|sequence\|interface\)\>\|'.
+                           \ s:vlog_class .'\|'. s:vlog_property .'\|'.
+                           \ s:vlog_method
 
-let s:vlog_context_end       = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
+let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
-let s:vlog_preproc_start     = '^\s*`ifn\?def\>'
-let s:vlog_preproc_end       = '^\s*`endif\>'
-
+let s:vlog_preproc_start  = '^\s*`ifn\?def\>'
+let s:vlog_preproc_end    = '^\s*`endif\>'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
@@ -83,7 +83,8 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*)'
     let l:offset = 0
     if s:curr_line =~ '^\s*);\s*$' &&
-          \ (exists('b:verilog_dont_deindent_eos') || exists('g:verilog_dont_deindent_eos'))
+          \ (exists('b:verilog_dont_deindent_eos') ||
+          \ exists('g:verilog_dont_deindent_eos'))
       let l:offset = s:offset
     endif
     call s:Verbose("Indenting )")
@@ -116,23 +117,24 @@ function! GetVerilogSystemVerilogIndent()
     elseif s:curr_line =~ '^\s*\<endmodule\>'
       return indent(s:SearchForBlockStart('\<module\>', '', '\<endmodule\>', v:lnum, 0))
     elseif s:curr_line =~ '^\s*\<endclass\>'
-      return indent(s:SearchForBlockStart('\<class\>', '', '\<endclass\>'  , v:lnum, 0))
+      return indent(s:SearchForBlockStart('\<class\>' , '', '\<endclass\>' , v:lnum, 0))
     elseif s:curr_line =~ '^\s*\<end\>'
-      return indent(s:SearchForBlockStart('\<begin\>', '', '\<end\>'       , v:lnum, 1))
+      return indent(s:SearchForBlockStart('\<begin\>' , '', '\<end\>'      , v:lnum, 1))
     elseif s:curr_line =~ '^\s*\<endcase\>'
-      return indent(s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>'   , v:lnum, 0))
+      return indent(s:SearchForBlockStart(s:vlog_case , '', '\<endcase\>'  , v:lnum, 0))
     endif
   endif
 
   if s:curr_line =~ '^\s*\<while\>\s*(.*);'
     return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*);', v:lnum, 1))
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
-    return indent(s:SearchForBlockStart('`ifn\?def', '`else\|`elsif', '`endif', v:lnum, 1))
+    return indent(s:SearchForBlockStart(s:vlog_preproc_start, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
     return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum, 1))
   endif
 
-  if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' && getline(v:lnum + 1) =~ '^\s*else'
+  if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' &&
+        \ getline(v:lnum + 1) =~ '^\s*else'
     return indent(v:lnum + 1)
   endif
 
@@ -173,7 +175,8 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no, skip_
   let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
 
   if a:skip_start_end == 1
-    let l:skip_arg = l:skip_arg." || getline('.') =~ '".a:end_wd.'.\{-}'.a:start_wd."'"
+    let l:skip_arg =
+          \ l:skip_arg." || getline('.') =~ '".a:end_wd.'.\{-}'.a:start_wd."'"
   endif
 
   let l:lnum = searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
@@ -182,11 +185,8 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no, skip_
 endfunction
 
 function! s:GetContextIndent()
-  let l:block_level    = 0
   let l:bracket_level  = 0
   let l:cbracket_level = 0
-  let l:fork_level     = 0
-  let l:case_level     = 0
 
   let l:lnum = v:lnum
   let l:oneline_mode = 1
@@ -210,72 +210,69 @@ function! s:GetContextIndent()
     call s:Verbose("GetContextIndent:" . l:lnum . ": " . l:line)
 
     if l:look_for_open_statement == 1
-      if (l:line =~ s:vlog_open_statement . '\s*$' &&
-            \ l:line !~ '/\*\s*$' && !s:IsComment(l:lnum)) ||
-            \ (s:curr_line =~ '^\s*' . s:vlog_open_statement &&
+      if l:line =~ s:vlog_open_statement . '\s*$' &&
+            \ l:line !~ '/\*\s*$' && !s:IsComment(l:lnum) ||
+            \ s:curr_line =~ '^\s*' . s:vlog_open_statement &&
             \ s:curr_line !~ '^\s*/\*' &&
-            \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum))
+            \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
         let l:offset += s:offset
         call s:Verbose("Increasing indent for an open statment.")
       endif
       let l:look_for_open_statement = 0
     endif
 
+    if l:line =~ '\<begin\>'
+      call s:Verbose("Inside a 'begin end' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:line =~ '^\s*\<fork\>'
+      call s:Verbose("Inside a 'fork join' block.")
+      return indent(l:lnum) + l:offset
+    elseif l:line =~ s:vlog_case
+      call s:Verbose("Inside a 'case' block.")
+      return indent(l:lnum) + l:offset
+    endif
+
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
     if l:line =~ '\<end\>' && l:line !~ '\<begin\>\s*$'
       let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum, 1)
       let l:oneline_mode = 0
-      let l:block_level = 1
       let l:line = s:StripComments(l:lnum)
     endif
 
     if l:line =~ s:vlog_join
       let l:lnum = s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, l:lnum, 1)
       let l:oneline_mode = 0
-      let l:fork_level = 1
       let l:line = s:StripComments(l:lnum)
     endif
 
     if l:line =~ '\<endcase\>'
       let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 1)
       let l:oneline_mode = 0
-      let l:case_level = 1
       let l:line = s:StripComments(l:lnum)
     endif
 
-    let l:block_level -= l:line =~ '\<begin\>'
-    let l:fork_level  -= l:line =~ '^\s*\<fork\>'
-    let l:case_level  -= l:line =~ s:vlog_case
-
     if l:line =~ '[()]'
-      let l:bracket_level  += s:CountMatches(l:line, ')') - s:CountMatches(l:line, '(')
+      let l:bracket_level +=
+            \ s:CountMatches(l:line, ')') - s:CountMatches(l:line, '(')
+      if l:bracket_level < 0
+        call s:Verbose("Inside a '()' block.")
+        return indent(l:lnum) + l:offset
+      endif
     endif
 
     if l:line =~ '[{}]'
-      let l:cbracket_level += s:CountMatches(l:line, '}') - s:CountMatches(l:line, '{')
-    endif
-
-    if l:block_level < 0
-      call s:Verbose("Inside a 'begin end' block.")
-      return indent(l:lnum) + l:offset
-    elseif l:bracket_level < 0
-      call s:Verbose("Inside a '()' block.")
-      return indent(l:lnum) + l:offset
-    elseif l:cbracket_level < 0
-      call s:Verbose("Inside a '{}' block.")
-      return indent(l:lnum) + l:offset
-    elseif l:fork_level < 0
-      call s:Verbose("Inside a 'fork join' block.")
-      return indent(l:lnum) + l:offset
-    elseif l:case_level < 0
-      call s:Verbose("Inside a 'case endcase' block.")
-      return indent(l:lnum) + l:offset
+      let l:cbracket_level +=
+            \ s:CountMatches(l:line, '}') - s:CountMatches(l:line, '{')
+      if l:cbracket_level < 0
+        call s:Verbose("Inside a '{}' block.")
+        return indent(l:lnum) + l:offset
+      endif
     endif
 
     if l:oneline_mode == 1 && l:line =~ s:vlog_statement
       let l:oneline_mode = 0
-    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_delcaration
-      if s:curr_line =~ '^\s*\<begin\>' && l:block_level == 0
+    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl
+      if s:curr_line =~ '^\s*\<begin\>'
         call s:Verbose("Standalone 'begin' after block declaration.")
         return indent(l:lnum)
       elseif s:curr_line =~ '^\s*{\s*$' && l:cbracket_level == 0
@@ -288,30 +285,25 @@ function! s:GetContextIndent()
         call s:Verbose("Indenting a single line block.")
         return indent(l:lnum) + l:offset
       endif
-    elseif s:curr_line =~ '^\s*else' &&
-          \ l:line =~ '\<\(if\|assert\)\>\s*(.*)' &&
-          \ l:block_level == 0
+    elseif s:curr_line =~ '^\s*else' && l:line =~ '\<\(if\|assert\)\>\s*(.*)'
       call s:Verbose("'else' of 'if' or 'assert'.")
       return indent(l:lnum)
     endif
 
-    if l:line =~ s:vlog_context_start
-      if l:line =~ s:vlog_module
-        call s:Verbose("Inside a module.")
-        if exists('b:verilog_indent_modules')
-          return indent(l:lnum) + l:offset
-        else
-          return indent(l:lnum)
-        endif
-      elseif l:line =~ s:vlog_preproc_start
-        if exists('b:verilog_indent_preproc')
-          call s:Verbose("After preproc start.")
-          return indent(l:lnum) + l:offset
-        endif
-      else
-        call s:Verbose("Inside a context (".l:lnum.":".l:offset.")")
+    if l:line =~ s:vlog_module
+      call s:Verbose("Inside a module.")
+      if !exists('b:verilog_indent_modules') || b:verilog_indent_modules == 0
+        let l:offset = 0
+      endif
+      return indent(l:lnum) + l:offset
+    elseif l:line =~ s:vlog_preproc_start
+      if exists('b:verilog_indent_preproc') && b:verilog_indent_preproc == 1
+        call s:Verbose("After preproc start.")
         return indent(l:lnum) + l:offset
       endif
+    elseif l:line =~ s:vlog_context_start
+      call s:Verbose("Inside a context (".l:lnum.":".l:offset.")")
+      return indent(l:lnum) + l:offset
     elseif l:line =~ s:vlog_context_end
       if l:line =~ s:vlog_preproc_end
         if exists('b:verilog_indent_preproc')
@@ -340,11 +332,7 @@ function! s:Verbose(msg)
 endfunction
 
 function! s:IsComment(lnum)
-  if synIDattr(synID(a:lnum, 1, 0), "name") == "verilogComment"
-    return 1
-  else
-    return 0
-  endif
+  return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogComment"
 endfunction
 
 " vi: sw=2 sts=2:

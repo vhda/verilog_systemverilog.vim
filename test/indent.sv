@@ -236,10 +236,165 @@ class z;
     //end
     //endfunction
 
+    function void hello();
+        foreach (element[i])    
+            if (hi)
+                if (hi) /* comment */ begin /* comment */
+                    if (hi) begin     
+                        foreach (element[i])
+                            if (condition0)
+                                if (condition1) begin
+                                    var0 <= 0;
+                                end
+                                else begin
+                                    if (1) begin
+                                        var1 <= 1;
+                                        something();
+                                        if (1)
+                                            if (1) begin
+                                                something();
+                                            end
+                                            else
+                                                if (1)
+                                                    if (1) begin
+                                                        if (1)
+                                                            something();
+                                                        else begin
+                                                            something();
+                                                        end
+                                                    end
+                                                    else if (1)
+                                                        something();
+                                                    else
+                                                        something();
+
+                                        if (1)
+                                            something();
+
+                                        if (1)
+                                            // Nested case
+                                            case(value)
+                                                0,
+                                                1:
+                                                    case(value) inside
+                                                        [0:20]:;
+                                                        21: something();
+                                                        22:;
+                                                        default: something();
+                                                    endcase
+                                                2:;
+                                                3:;
+                                            endcase
+
+                                        if (1)
+                                            something();
+
+                                        /* end */
+
+                                        something();
+                                        /* end */
+                                        something();
+                                    end
+                                end
+                        deindent_x2_please();
+                        /* end */
+                        dont_deindent_please();
+                    end
+                    deindent_please();
+                end
+        deindent_please();
+        dont_deindent_please();
+    endfunction : hello
+
+    function void hello();
+        if (1)
+            fork
+                something();
+                something();
+                begin
+                    something();
+                end
+                begin
+                    fork
+                        if (1) // begin
+                            if (1)
+                                if (1) begin // comment
+                                    something();
+                                    if (1) begin
+                                    end
+                                    something();
+                                end
+                        something();
+                    join
+                    if (1)
+                        do
+                            something();
+                        while(1);
+                    something();
+                end
+                if (1)
+                    foreach (objects[i])
+                        if (1)
+                            if (1) begin
+                                something();
+                                fork begin
+                                    something();
+                                end join
+                            end
+                something();
+            join_none
+    endfunction : hello
+
+    local static function void hello();
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE &&
+            object_t.field_t && variable0;
+
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE
+            && object_t.field_t && variable0;
+
+        const bit variable2 =
+            object_t.field_t && object_t.field_t.source == ENUM_VALUE;
+
+        bit variable3;
+
+        // Multi-line if with no begin
+        if (variable && variable && variable &&
+                variable)
+            indent();
+
+        de_indent();
+
+        // Multi-line if with begin with a line starting with &&
+        if (variable && variable && variable
+                && variable
+                && variable) begin
+                    indent();
+                    stay();
+                end
+
+        de_indent();
+
+        variable = variable
+            || vairable || variable;
+
+        variable = variable ||
+            vairable || variable;
+
+        if (1) begin
+            if (1
+                    && 1)
+                something();
+        end
+
+    endfunction
+
 endclass
 
 class a;
     class nested;
+        int b;
     endclass
 endclass
 
@@ -339,75 +494,6 @@ device d1 (
 endmodule
 
 class a;
-    function void hello();
-        foreach (element[i])    
-            if (hi)
-                if (hi) /* comment */ begin /* comment */
-                    if (hi) begin     
-                        foreach (element[i])
-                            if (condition0)
-                                if (condition1) begin
-                                    var0 <= 0;
-                                end
-                                else begin
-                                    if (1) begin
-                                        var1 <= 1;
-                                        something();
-                                        if (1)
-                                            if (1) begin
-                                                something();
-                                            end
-                                            else
-                                                if (1)
-                                                    if (1) begin
-                                                        if (1)
-                                                            something();
-                                                        else begin
-                                                            something();
-                                                        end
-                                                    end
-                                                    else if (1)
-                                                        something();
-                                                    else
-                                                        something();
-
-                                        if (1)
-                                            something();
-
-                                        if (1)
-                                            // Nested case
-                                            case(value)
-                                                0,
-                                                1:
-                                                    case(value) inside
-                                                        [0:20]:;
-                                                        21: something();
-                                                        22:;
-                                                        default: something();
-                                                    endcase
-                                                2:;
-                                                3:;
-                                            endcase
-
-                                        if (1)
-                                            something();
-
-                                        /* end */
-
-                                        something();
-                                        /* end */
-                                        something();
-                                    end
-                                end
-                        deindent_x2_please();
-                        /* end */
-                        dont_deindent_please();
-                    end
-                    deindent_please();
-                end
-        deindent_please();
-        dont_deindent_please();
-    endfunction : hello
 endclass : a
 
 module a import some_pkg::*;
@@ -457,7 +543,63 @@ label : always_ff begin
     end
 end
 
-always_ff
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
 begin
     x <= 1;
     statement();
@@ -499,44 +641,6 @@ begin
 end
 
 class a extends b;
-    function void hello();
-        if (1)
-            fork
-                something();
-                something();
-                begin
-                    something();
-                end
-                begin
-                    fork
-                        if (1) // begin
-                            if (1)
-                                if (1) begin // comment
-                                    something();
-                                    if (1) begin
-                                    end
-                                    something();
-                                end
-                        something();
-                    join
-                    if (1)
-                        do
-                            something();
-                        while(1);
-                    something();
-                end
-                if (1)
-                    foreach (objects[i])
-                        if (1)
-                            if (1) begin
-                                something();
-                                fork begin
-                                    something();
-                                end join
-                            end
-                something();
-            join_none
-    endfunction : hello
 
     local static function void hello();
 
@@ -563,51 +667,6 @@ class a implements
     b,
     c,
     d;
-
-    local static function void hello();
-        const bit variable1 =
-            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE &&
-            object_t.field_t && variable0;
-
-        const bit variable1 =
-            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE
-            && object_t.field_t && variable0;
-
-        const bit variable2 =
-            object_t.field_t && object_t.field_t.source == ENUM_VALUE;
-
-        bit variable3;
-
-        // Multi-line if with no begin
-        if (variable && variable && variable &&
-                variable)
-            indent();
-
-        de_indent();
-
-        // Multi-line if with begin with a line starting with &&
-        if (variable && variable && variable
-                && variable
-                && variable) begin
-                    indent();
-                    stay();
-                end
-
-        de_indent();
-
-        variable = variable
-            || vairable || variable;
-
-        variable = variable ||
-            vairable || variable;
-
-        if (1) begin
-            if (1
-                    && 1)
-                something();
-        end
-
-    endfunction
 
     function void function_with_multiline_proto(
         object_type object);
