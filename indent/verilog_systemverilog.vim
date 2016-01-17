@@ -138,6 +138,11 @@ function! GetVerilogSystemVerilogIndent()
     return indent(v:lnum + 1)
   endif
 
+  if s:curr_line =~ s:vlog_statement &&
+        \ getline(v:lnum - 1) =~ 'else\s*$'
+    return indent(v:lnum - 1) + s:offset
+  endif
+
   return s:GetContextIndent()
 
 endfunction

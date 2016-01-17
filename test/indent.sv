@@ -271,6 +271,16 @@ class z;
                                         if (1)
                                             something();
 
+                                        if (1) begin
+                                            something();
+                                        end else
+                                            something();
+
+                                        if (1) begin
+                                            something();
+                                        end else
+                                            something();
+
                                         if (1)
                                             // Nested case
                                             case(value)
