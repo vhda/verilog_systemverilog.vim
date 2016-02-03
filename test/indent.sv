@@ -793,4 +793,61 @@ wire signal =
         var2
     );
 
+task run_phase(uvm_phase phase);
+    int var0 = var1 +
+        var2 *
+        var3;
+
+    int var0 =
+        var1;
+
+    if (map.first(s))
+        do
+            $display("%s : %d\n", s, map[s]);
+        while (map.next(s));
+
+    label : assert(my_seq.randomize());
+    my_seq.start(low_sequencer_h);
+
+    assert(my_seq.randomize() with {Nr==6;});
+    my_seq.start(low_sequencer_h);
+
+    label : assert(my_seq.randomize() with
+        {Nr==6; Time==8;});
+    my_seq.start(low_sequencer_h);
+
+    assert(
+        my_seq.randomize() with
+    );
+
+    //task
+endtask
+
+function void sink_driver::build_phase(uvm_phase phase);
+
+    assert property (prop1)
+    else `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
+
+    assert property (prop1)
+    else
+        `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
+
+    if (condition)
+        something();
+    else `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
+
+    if (condition)
+        something();
+    else
+        `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
+endfunction
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
