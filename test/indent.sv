@@ -1,5 +1,7 @@
+typedef class a;
+
 // Code based on: https://github.com/vhda/verilog_systemverilog.vim/issues/2
-class z;
+class z;          
 
     // this is a comment
     // -----------------
@@ -44,7 +46,7 @@ class z;
         assert(
             my_seq.randomize() with
             {Nr==6; Time==8;}
-            );
+        );
         my_seq.start(low_sequencer_h);
 
         // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/5
@@ -141,6 +143,17 @@ class z;
     task while_one_line;
         while (1)
             do_something();
+
+        (* full_case=1 *)
+        (* parallel_case=1 *)
+        case (a)
+        endcase
+
+        (* full_case,
+            parallel_case=1 *)
+        case (a)
+        endcase
+
     endtask
 
     task while_block;
@@ -166,13 +179,22 @@ class z;
         while (1) begin
             do_something();
         end
+
+        do
+            do_something();
+        while (1);
+
+        do begin
+            do_something();
+        end while (1);
+
     endfunction
 
     //function old_style_function_with_var(
     //    input a
     //);
-    //reg test;
-    //begin 
+    //reg test;    
+    //begin
     //    do_something1();
     //    do_something2();
     //    begin
@@ -214,7 +236,182 @@ class z;
     //end
     //endfunction
 
+    function void hello();
+        foreach (element[i])    
+            if (hi)
+                if (hi) /* comment */ begin /* comment */
+                    if (hi) begin     
+                        foreach (element[i])
+                            if (condition0)
+                                if (condition1) begin
+                                    var0 <= 0;
+                                end
+                                else begin
+                                    if (1) begin
+                                        var1 <= 1;
+                                        something();
+                                        if (1)
+                                            if (1) begin
+                                                something();
+                                            end
+                                            else
+                                                if (1)
+                                                    if (1) begin
+                                                        if (1)
+                                                            something();
+                                                        else begin
+                                                            something();
+                                                        end
+                                                    end
+                                                    else if (1)
+                                                        something();
+                                                    else
+                                                        something();
+
+                                        if (1)
+                                            something();
+
+                                        if (1) begin
+                                            something();
+                                        end else
+                                            something();
+
+                                        if (1) begin
+                                            something();
+                                        end else
+                                            something();
+
+                                        if (1)
+                                            // Nested case
+                                            case(value)
+                                                0,
+                                                1:
+                                                    case(value) inside
+                                                        [0:20]:;
+                                                        21: something();
+                                                        22:;
+                                                        default: something();
+                                                    endcase
+                                                2:;
+                                                3:;
+                                            endcase
+
+                                        if (1)
+                                            something();
+
+                                        /* end */
+
+                                        something();
+                                        /* end */
+                                        something();
+                                    end
+                                end
+                        deindent_x2_please();
+                        /* end */
+                        dont_deindent_please();
+                    end
+                    deindent_please();
+                end
+        deindent_please();
+        dont_deindent_please();
+    endfunction : hello
+
+    function void hello();
+        if (1)
+            fork
+                something();
+                something();
+                begin
+                    something();
+                end
+                begin
+                    fork
+                        if (1) // begin
+                            if (1)
+                                if (1) begin // comment
+                                    something();
+                                    if (1) begin
+                                    end
+                                    something();
+                                end
+                        something();
+                    join
+                    if (1)
+                        do
+                            something();
+                        while(1);
+                    something();
+                end
+                if (1)
+                    foreach (objects[i])
+                        if (1)
+                            if (1) begin
+                                something();
+                                fork begin
+                                    something();
+                                end join
+                            end
+                something();
+            join_none
+    endfunction : hello
+
+    local static function void hello();
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE &&
+            object_t.field_t && variable0;
+
+        const bit variable1 =
+            func_call(object_t) && structue_t.field_t.source != ENUM_VALUE
+            && object_t.field_t && variable0;
+
+        const bit variable2 =
+            object_t.field_t && object_t.field_t.source == ENUM_VALUE;
+
+        bit variable3;
+
+        // Multi-line if with no begin
+        if (variable && variable && variable &&
+                variable)
+            indent();
+
+        de_indent();
+
+        // Multi-line if with begin with a line starting with &&
+        if (variable && variable && variable
+                && variable
+                && variable) begin
+                    indent();
+                    stay();
+                end
+
+        de_indent();
+
+        variable = variable
+            || vairable || variable;
+
+        variable = variable ||
+            vairable || variable;
+
+        if (1) begin
+            if (1
+                    && 1)
+                something();
+        end
+
+    endfunction
+
 endclass
+
+class a;
+    class nested;
+        int b;
+    endclass
+endclass
+
+// TODO: Unsupported
+// class a;
+//     typedef class a;
+// endclass
 
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/14
 virtual class base;
@@ -228,6 +425,25 @@ virtual class base;
 
 endclass;
 // End of copied code
+
+interface class base;
+
+    pure virtual function void a(input int unsigned N, ref t Data);
+    pure virtual function void b(input int unsigned N, ref t Data);
+    pure virtual function void c(input int unsigned N, ref t Data);
+
+endclass;
+
+module m #(1)
+(
+    portA,
+    portB
+);
+
+module a;
+endmodule
+
+endmodule
 
 module m (
     portA,
@@ -252,22 +468,386 @@ device d1 (
     .port (port[1]),
     // .port1(), comment
     /**/.port2(), // comment
-    /*.port3(), */   
+    /*.port3(), */     
     // .port4(), comment
     .portA(port[2])
 );
 
-`ifdef V95
+`define VALUE 3
+
+`ifdef V95     
     device d2 ( out, portA, portB );
+    device d2 ( out, portA, portB );
+    `ifdef V95
+        device d2 ( out, portA, portB );
+        device d2 ( out, portA, portB );
+    `endif    
 `elsif V2K
     device d2 ( .out(out), .* );
+    device d2 ( out, portA, portB );
+    `ifndef SWAP
+        device d3 ( .out(out), .* );
+        device d2 ( .out(out), .* );
+    `else
+        device d3 ( .out(out), .portA(portB), .portB(portA) );
+        device d2 ( .out(out), .* );
+    `endif
 `endif
 `ifndef SWAP
     device d3 ( .out(out), .* );
+    device d2 ( .out(out), .* );
 `else
     device d3 ( .out(out), .portA(portB), .portB(portA) );
+    device d2 ( .out(out), .* );
 `endif
 
 endmodule
 
-// vim: set sts=4 sw=4 nofen:
+class a;
+endclass : a
+
+module a import some_pkg::*;
+(
+    input clk,
+    output x
+);
+
+always @ (posedge clk)
+begin
+end
+
+always
+    x <= 1;
+
+always
+begin
+    x <= 1;
+    statement();
+end
+
+always //
+begin
+    x <= 1;
+    statement();
+end
+
+label : always //
+    x <= 1;
+
+always @ (posedge clk) //
+    x <= 1;
+
+always @ (posedge clk)
+    x <= 1;
+
+always_ff // begin
+    x <= 1;
+
+always_comb
+    x <= 1;
+
+label : always_ff begin
+    begin
+        x <= 1;
+        statement();
+    end
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+always_ff @ (posedge clk)
+begin
+    x <= 1;
+    statement();
+    foreach (object[i])
+        statement();
+end
+
+// always_ff
+// begin
+//     x <= 1;
+// end
+
+endmodule
+
+if (condition) begin
+    something();
+end
+else
+    `macro_call()
+
+always : label
+    `macro_call()
+
+begin
+    begin
+    end // always
+    `dont_indent()
+    dont_deindent();
+
+    begin
+    end // foreach()
+    dont_indent();
+    dont_deindent();
+
+    begin
+    end /* while() */
+    dont_indent();
+    dont_deindent();
+end
+
+class a extends b;
+
+    local static function void hello();
+
+        something();
+    endfunction
+
+    constraint l1 {
+        y == 1;
+    }
+
+    constraint l1
+    {
+        y == 1;
+    }
+
+endclass : a
+
+extern module counter (input clk,enable,reset,
+    output logic [3:0] data);
+
+extern module counter2;
+
+class a implements
+    b,
+    c,
+    d;
+
+    function void function_with_multiline_proto(
+        object_type object);
+        indent();
+    endfunction
+
+    function void function_with_multiline_proto(
+        object_type object0,
+        object_type object1,
+        object_type object2,
+        object_type object3
+    );
+        indent();
+    endfunction
+
+endclass
+
+covergroup c1_cg (ref bit x);
+    option.per_instance = 1;
+    type_option.merge_instances = 1;
+
+    x : coverpoint x {
+        bins _0 = {1'h0};
+        bins _1 = {1'h1};
+    }
+
+endgroup
+
+package a;
+
+    class b;
+    endclass
+
+    class c;
+    endclass
+
+    class d;
+    endclass
+
+endpackage
+
+sequence acknowledge
+    ##[1:2] Ack;
+endsequence
+
+property handshake;
+    @(posedge Clock)
+    request |-> acknowledge;
+endproperty
+
+always
+    if(1) begin
+    end
+    // comment
+    else
+        {var0, var1} <= 2'b00;
+
+always
+    if (0) begin
+        var0 <= 1'b0;
+    end else if(0) begin
+        var0 <= 1'b1;
+    end
+
+// comment
+
+virtual class DataTypes_packer#(type T, int L, int W, int I);
+
+    extern static function void unpack(const ref bit [L-1:0] in, ref T out[]);
+    extern static function void unpack5(const ref bit [L-1:0] in, ref t5#(W,I) out[], input int n_MSB2ignore=0);
+
+    /*
+    // packing functions
+    extern static function void pack(const ref T in[], ref bit [L-1:0] out);
+    extern static function void pack2(const ref t2#(W,I) in[], ref bit [L-1:0] out);
+    */
+
+    // unpack functions:
+    extern static function void unpack(const ref bit [L-1:0] in, ref T out[]);
+    extern static function void unpack5(const ref bit [L-1:0] in, ref t5#(W,I) out[], input int n_MSB2ignore=0);
+
+endclass
+
+fork
+    begin
+
+        for(int i=0;i<5;i++) begin
+            automatic int idx=i;
+            fork
+                begin
+                    $display("%fns: %0d start",$realtime/1ns,idx);
+                    my_seq[idx].go();
+                end
+            join_none
+        end
+
+        // wait for all forks to end
+        wait fork;
+        $display("%fns: all done",$realtime/1ns);
+    end
+join
+
+$display("hi");
+
+assert_value: assert property (@(posedge clk) disable iff (~reset_n)
+    var0 |-> var1 == var2
+);
+
+`ifdef NOTHING
+`endif
+
+wire signal = 
+    !var0 && (
+        var2
+    );
+
+task run_phase(uvm_phase phase);
+    int var0 = var1 +
+        var2 *
+        var3;
+
+    int var0 =
+        var1;
+
+    if (map.first(s))
+        do
+            $display("%s : %d\n", s, map[s]);
+        while (map.next(s));
+
+    label : assert(my_seq.randomize());
+    my_seq.start(low_sequencer_h);
+
+    assert(my_seq.randomize() with {Nr==6;});
+    my_seq.start(low_sequencer_h);
+
+    label : assert(my_seq.randomize() with
+        {Nr==6; Time==8;});
+    my_seq.start(low_sequencer_h);
+
+    assert(
+        my_seq.randomize() with
+    );
+
+    //task
+endtask
+
+function void sink_driver::build_phase(uvm_phase phase);
+
+    assert property (prop1)
+    else `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
+
+    assert property (prop1)
+    else
+        `uvm_fatal("TAG", "Assertion failed.")
+
+    do_something();
+
+    if (condition)
+        something();
+    else `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
+
+    if (condition)
+        something();
+    else
+        `uvm_fatal("TAG", "This is invalid.")
+
+    do_something();
+endfunction
+
+// vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
