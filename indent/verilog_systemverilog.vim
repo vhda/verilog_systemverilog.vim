@@ -126,8 +126,8 @@ function! GetVerilogSystemVerilogIndent()
     endif
   endif
 
-  if s:curr_line =~ '^\s*\<while\>\s*(.*);'
-    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*);', v:lnum, 1))
+  if s:curr_line =~ '^\s*\<while\>\s*(.*)\s*;'
+    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*)\s*;', v:lnum, 1))
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
     return indent(s:SearchForBlockStart(s:vlog_preproc_start, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join

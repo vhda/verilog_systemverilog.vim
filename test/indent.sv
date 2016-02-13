@@ -340,6 +340,10 @@ class z;
                         do
                             something();
                         while(1);
+                    else
+                        do
+                            something();
+                        while (1) ;
                     something();
                 end
                 if (1)
