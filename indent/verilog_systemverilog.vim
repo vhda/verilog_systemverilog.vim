@@ -14,6 +14,7 @@
 "     b:verilog_dont_deindent_eos : Don't de-indent the ); line in port lists
 "                                   and instances.
 "     b:verilog_indent_preproc    : Indent preprocessor statements.
+"     b:verilog_indent_assign_fix : Indent assignments by fixed amount.
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
@@ -202,6 +203,7 @@ function! s:GetContextIndent()
   let l:lnum = v:lnum
   let l:oneline_mode = 1
   let l:look_for_open_statement = 1
+  let l:look_for_open_assign = 0
   let l:extra_offset = 0
 
   " Loop that searches up the file to build a context and determine the correct
@@ -227,9 +229,29 @@ function! s:GetContextIndent()
             \ s:curr_line !~ '^\s*/\*' &&
             \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
         let l:extra_offset += s:offset
-        call s:Verbose("Increasing indent for an open statment.")
+        call s:Verbose("Increasing indent for an open statement.")
+        if (!exists("b:verilog_indent_assign_fix"))
+          let l:look_for_open_assign = 1
+        endif
       endif
       let l:look_for_open_statement = 0
+    endif
+
+    if l:look_for_open_assign == 1
+      " Search for assignments (=, <=) that don't end in ";"
+      if l:line =~ '[^=!]=[^=]\?' && l:line !~ ';\s*$'
+        let l:assign = substitute(l:line, '\(.*[^=!]=[^=]\s*\)\S.*', '\1', "")
+        if l:assign != l:line
+          " If there are values after the assignment, then use that column as the indentation of the open statement
+          let l:assign_offset = len(l:assign)
+          call s:Verbose("Increasing indent for an open assignment with values (by " . l:assign_offset .").")
+        else
+          " If the assignment is empty, simply increment the indent by one level
+          let l:assign_offset = indent(l:lnum) + s:offset
+          call s:Verbose("Increasing indent for an empty open assignment (by " . l:assign_offset .").")
+        endif
+        return l:assign_offset
+      endif
     endif
 
     if l:line =~ '\<begin\>'
