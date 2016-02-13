@@ -468,6 +468,7 @@ module m #(1)
     portB
 );
 
+// Nested modules (IEEE - 1800-2012, section 23.4)
 module a;
 endmodule
 
