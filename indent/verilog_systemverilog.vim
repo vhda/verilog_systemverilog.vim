@@ -298,7 +298,11 @@ function! s:GetContextIndent()
     if l:line =~ s:vlog_module
       call s:Verbose("Inside a module.")
       if !exists('b:verilog_indent_modules') || b:verilog_indent_modules == 0
-        let l:offset = 0
+        if l:offset < s:offset
+          let l:offset = 0
+        else
+          let l:offset -= s:offset
+        endif
       endif
       return indent(l:lnum) + l:offset
     elseif l:line =~ s:vlog_preproc_start

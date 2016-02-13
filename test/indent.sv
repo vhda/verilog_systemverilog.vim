@@ -426,6 +426,34 @@ virtual class base;
 endclass;
 // End of copied code
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/49
+module MyModule #(
+    parameter A = 1,
+    parameter B = 2
+)(
+    input I,
+    output O
+);
+
+
+wire Val_IP  = !In_Pkt_S_Bus_enf ||
+    ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
+
+wire Val_IP  =
+    !In_Pkt_S_Bus_enf ||
+    ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
+
+MyModule #(
+    .A (1),
+    .B (2)
+) Module_1 (
+    .I (wire1),
+    .O (wire2)
+);
+
+endmodule
+// End of copied code
+
 interface class base;
 
     pure virtual function void a(input int unsigned N, ref t Data);
