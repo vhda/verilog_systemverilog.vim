@@ -309,7 +309,7 @@ function! s:GetContextIndent()
         return indent(l:lnum) + s:offset + l:extra_offset
       endif
     elseif l:line =~ s:vlog_preproc_start
-      if exists('b:verilog_indent_preproc') && b:verilog_indent_preproc == 1
+      if exists('b:verilog_indent_preproc')
         call s:Verbose("After preproc start.")
         return indent(l:lnum) + s:offset + l:extra_offset
       endif
