@@ -40,7 +40,7 @@ following arguments:
 * `-n` - (Optional) Use line number instead of Ex: patterns to identify
   declaration.
 
-No tool alternative to [exuberant-ctags][e] was tested, but any tool should work
+No tool alternative to [universal-ctags][e] was tested, but any tool should work
 seemingly as long as it is able to generate a standard class qualified tags file.
 For more information on using omni completion please check the vim man page for
 [`i_CTRL-X_CTRL-O`][vim-omni] (the required option [`omnifunc`][vim-omnifunc] is
@@ -49,7 +49,7 @@ automatically defined for the supported file extensions).
 [comment]: TODO: Explain how gd works
 
 __Note__: Proper SystemVerilog tag generation requires development version of
-[exuberant-ctags][c].
+[universal-ctags][c].
 
 ### Syntax folding
 
@@ -243,17 +243,17 @@ completion to use depending on the current context.
 [Tagbar][t] allows browsing all variable, functions, tasks, etc within a file in
 a nice hierarchical view. SystemVerilog language and Verilog/SystemVerilog
 hierarchical browsing are only supported when used together with the development
-version of [exuberant-ctags][c].
+version of [universal-ctags][c].
 
 The required filetype related configuration for [Tagbar][t] is included
 within this addon.
 
 
-[c]: https://github.com/exuberant-ctags/ctags
+[c]: https://github.com/universal-ctags/ctags
 [p]: https://github.com/tpope/vim-pathogen
 [v]: https://github.com/gmarik/vundle
 [P]: https://github.com/junegunn/vim-plug
-[e]: http://ctags.sourceforge.net/
+[e]: https://ctags.io
 [t]: http://majutsushi.github.io/tagbar/
 [hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
 [supertab]:     https://github.com/ervandew/supertab
