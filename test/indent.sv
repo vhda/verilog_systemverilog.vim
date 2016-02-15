@@ -340,6 +340,10 @@ class z;
                         do
                             something();
                         while(1);
+                    else
+                        do
+                            something();
+                        while (1) ;
                     something();
                 end
                 if (1)
@@ -387,10 +391,32 @@ class z;
         de_indent();
 
         variable = variable
-            || vairable || variable;
+                   || variable || variable;
 
         variable = variable ||
-            vairable || variable;
+                   variable || variable;
+
+        variable = (variable == CONSTANT) &
+                   variable &
+                   variable;
+
+        wire var0 = a &
+                    b;
+
+        wire [1:0] var1 = a &
+                          b;
+
+        var2[0] = a &
+                  b;
+
+        {var0, var1} = a &
+                       b;
+
+        some_struct.field1 = a &
+                             b;
+
+        some_type #(params) some_object = cond0 ? a :
+                                          cond1 ? b : c;
 
         if (1) begin
             if (1
@@ -426,6 +452,34 @@ virtual class base;
 endclass;
 // End of copied code
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/49
+module MyModule #(
+    parameter A = 1,
+    parameter B = 2
+)(
+    input I,
+    output O
+);
+
+
+wire Val_IP  = !In_Pkt_S_Bus_enf ||
+               ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
+
+wire Val_IP  =
+    !In_Pkt_S_Bus_enf ||
+    ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
+
+MyModule #(
+    .A (1),
+    .B (2)
+) Module_1 (
+    .I (wire1),
+    .O (wire2)
+);
+
+endmodule
+// End of copied code
+
 interface class base;
 
     pure virtual function void a(input int unsigned N, ref t Data);
@@ -440,6 +494,7 @@ module m #(1)
     portB
 );
 
+// Nested modules (IEEE - 1800-2012, section 23.4)
 module a;
 endmodule
 
@@ -795,8 +850,8 @@ wire signal =
 
 task run_phase(uvm_phase phase);
     int var0 = var1 +
-        var2 *
-        var3;
+               var2 *
+               var3;
 
     int var0 =
         var1;
