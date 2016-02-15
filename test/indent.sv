@@ -517,6 +517,25 @@ device d1 (
     // .port2(), // comment
     .*
 );
+
+`ifdef DO_THIS
+    device d1 (
+        .port (port[1]),
+        /* comment line 1
+        * comment line2 */
+        .port2(),
+        .*
+    );
+`endif
+
+`ifdef DO_THIS
+    device2 d2 (
+        .out,
+        .a,
+        .b(B)/*,
+        TODO  .c(C) port not implemented yet */
+    );
+`endif
 // End of copied code
 
 device d1 (
