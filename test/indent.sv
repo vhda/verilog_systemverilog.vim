@@ -480,6 +480,15 @@ MyModule #(
 endmodule
 // End of copied code
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/51
+case (Signal)
+    2'd0: begin Result <= 0; end
+    2'd1: begin Result <= 1; end
+    2'd2: begin Result <= 2; end
+    default: begin Result <= 0; end
+endcase
+// End of copied code
+
 interface class base;
 
     pure virtual function void a(input int unsigned N, ref t Data);

@@ -254,7 +254,7 @@ function! s:GetContextIndent()
       endif
     endif
 
-    if l:line =~ '\<begin\>'
+    if l:line =~ '\<begin\>' && l:line !~ '\<begin\>.*\<end\>'
       call s:Verbose("Inside a 'begin end' block.")
       return indent(l:lnum) + s:offset + l:extra_offset
     elseif l:line =~ '^\s*\<fork\>'
@@ -266,7 +266,7 @@ function! s:GetContextIndent()
     endif
 
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
-    if l:line =~ '\<end\>' && l:line !~ '\<begin\>\s*$'
+    if l:line =~ '\<end\>' && l:line !~ '\<begin\>.*\<end\>' && l:line !~ '\<begin\>\s*$'
       let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum, 1)
       let l:oneline_mode = 0
       let l:line = s:StripComments(l:lnum)
