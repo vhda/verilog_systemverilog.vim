@@ -36,7 +36,12 @@ let b:verilog_indent_preproc=1
 " Verify indent
 let test_result=TestIndent() || test_result
 echo ''
+silent edit!
 
+" Test again with 'ignorecase' enabled
+setlocal ignorecase
+let test_result=TestIndent() || test_result
+echo ''
 silent edit!
 
 "-----------------------------------------------------------------------
