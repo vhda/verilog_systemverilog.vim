@@ -54,7 +54,8 @@ silent edit!
 " Check test results and exit accordingly
 "-----------------------------------------------------------------------
 if test_result
-  cquit
+    cquit
 else
-  quit
+    quit
 endif
+" vi: set expandtab softtabstop=4 shiftwidth=4:

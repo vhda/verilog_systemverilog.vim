@@ -44,3 +44,5 @@ let g:tagbar_type_verilog_systemverilog = {
         \ 'R' : 'property'
     \ },
 \ }
+
+" vi: set expandtab softtabstop=4 shiftwidth=4:

@@ -213,4 +213,4 @@ end else begin                                                //<1><1><0>
 end else begin:b3                                             //<1><1><1>
     do5();                                                    //<1><1><1>
 end                                                           //<1><0><0>
-// vi: set number norelativenumber :
+// vi: set number norelativenumber expandtab softtabstop=4 shiftwidth=4:

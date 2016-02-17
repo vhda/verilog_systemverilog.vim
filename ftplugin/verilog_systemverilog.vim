@@ -58,4 +58,4 @@ if &smartindent
     echo "Option 'smartindent' should not be used in Verilog syntax, use 'autoindent' instead."
 endif
 
-" vi: sw=2 sts=2:
+" vi: set expandtab softtabstop=2 shiftwidth=2:
