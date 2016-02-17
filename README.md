@@ -188,6 +188,8 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
   * sequence
   * property
   * block (`begin`, `end`)
+    * block_nested (like "block", but allows nesting)
+    * block_named (like "block", but allows nesting and only folds if `begin` is labelled)
   * comment (`/*..*/`)
   * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
   * all (enables all above options)

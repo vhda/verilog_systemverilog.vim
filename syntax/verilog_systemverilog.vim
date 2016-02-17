@@ -232,7 +232,7 @@ if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, 
 else
     syn keyword verilogStatement  specify endspecify
 endif
-if index(s:verilog_syntax_fold, "block_nested") >= 0
+if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
     syn region verilogFoldBlockContainer
         \ start="\<begin\>"
         \ end="\<end\>"
@@ -240,15 +240,32 @@ if index(s:verilog_syntax_fold, "block_nested") >= 0
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
-        \ contains=NONE
-    syn region  verilogFold
-        \ start="\<begin\>"
-        \ end="\<end\>"me=s-1
-        \ transparent
-        \ fold
-        \ contained containedin=verilogFoldBlockContainer
-        \ contains=TOP
-    syn match verilogLabel "\<begin\|end\>"
+        \ contains=verilogComment,verilogFold,verilogBlock
+    if index(s:verilog_syntax_fold, "block_nested") >= 0
+        syn region verilogFold
+            \ start="\<begin\>"
+            \ end="\<end\>"me=s-1
+            \ transparent
+            \ fold
+            \ contained containedin=verilogFoldBlockContainer
+            \ contains=TOP
+        syn match verilogStatement "\<begin\|end\>"
+    else "block_named
+        syn region verilogBlock
+            \ start="\<begin\>"
+            \ end="\<end\>"
+            \ transparent
+            \ contained containedin=verilogFoldBlockContainer
+            \ contains=TOP,verilogFold
+        syn region verilogFold
+            \ start="\<begin\>\ze\s*:\s*\z(\w\+\)"
+            \ end="\<end\>"me=s-1
+            \ transparent
+            \ fold
+            \ contained containedin=verilogBlock
+            \ contains=TOP
+        syn match verilogStatement "\<begin\|end\>"
+    endif
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
         \ matchgroup=verilogStatement

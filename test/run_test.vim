@@ -16,13 +16,19 @@ set noautochdir
 view test/folding.v
 
 " Verify folding
-let test_result=TestFold() || test_result
+let test_result=TestFold(0) || test_result
 echo ''
 
 " Test with "block_nested"
 let g:verilog_syntax_fold="all,block_nested"
 silent view!
 let test_result=TestFold(1) || test_result
+echo ''
+
+" Test with "block_named"
+let g:verilog_syntax_fold="all,block_named"
+silent view!
+let test_result=TestFold(2) || test_result
 echo ''
 
 "-----------------------------------------------------------------------
