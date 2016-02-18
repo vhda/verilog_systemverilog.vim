@@ -933,4 +933,13 @@ function void sink_driver::build_phase(uvm_phase phase);
     do_something();
 endfunction
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/51
+case (XfrState)
+    One_XFR : XfrState_str = "One";
+    Two_XFR : XfrState_str = "Two";
+    End_XFR : XfrState_str = "End";
+    default : XfrState_str = "N/A";
+endcase
+// End of copied code
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

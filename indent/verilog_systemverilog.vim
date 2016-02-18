@@ -148,15 +148,16 @@ function! GetVerilogSystemVerilogIndent()
 
 endfunction
 
-function! s:StripComments(lnum)
+function! s:GetLineStripped(lnum)
   let l:temp = getline(a:lnum)
 
-  " Remove inline comments
+  " Remove inline comments unless the whole line is a comment
   if l:temp !~ '^\s*'.s:vlog_comment.'\s*$'
     let l:temp = substitute(l:temp, '/\*.\{-}\*/\|//.*', '', 'g')
   endif
 
-  return l:temp
+  " Remove strings
+  return substitute(l:temp, '".\{-}"', '""', 'g')
 endfunction
 
 function! s:SearchBackForPattern(pattern, current_line_no)
@@ -218,7 +219,7 @@ function! s:GetContextIndent()
       continue
     endif
 
-    let l:line = s:StripComments(l:lnum)
+    let l:line = s:GetLineStripped(l:lnum)
 
     call s:Verbose("GetContextIndent:" . l:lnum . ": " . l:line)
 
@@ -269,19 +270,19 @@ function! s:GetContextIndent()
     if l:line =~ '\<end\>' && l:line !~ '\<begin\>.*\<end\>' && l:line !~ '\<begin\>\s*$'
       let l:lnum = s:SearchForBlockStart('\<begin\>', '', '\<end\>', l:lnum, 1)
       let l:oneline_mode = 0
-      let l:line = s:StripComments(l:lnum)
+      let l:line = s:GetLineStripped(l:lnum)
     endif
 
     if l:line =~ s:vlog_join
       let l:lnum = s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, l:lnum, 1)
       let l:oneline_mode = 0
-      let l:line = s:StripComments(l:lnum)
+      let l:line = s:GetLineStripped(l:lnum)
     endif
 
     if l:line =~ '\<endcase\>'
       let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 1)
       let l:oneline_mode = 0
-      let l:line = s:StripComments(l:lnum)
+      let l:line = s:GetLineStripped(l:lnum)
     endif
 
     if l:line =~ '[()]'
