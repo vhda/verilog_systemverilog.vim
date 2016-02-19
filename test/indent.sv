@@ -946,4 +946,10 @@ case (XfrState)
 endcase
 // End of copied code
 
+interface rx_if;
+logic        trans;
+logic [31:0] data ;
+logic [31:0] addr ;
+endinterface
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

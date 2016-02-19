@@ -169,10 +169,28 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 ### Indent options
 
 * __`b:verilog_indent_width`__ - Use this variable to override the option `&shiftwidth`.
-* __`b:verilog_indent_modules`__ - Indent code after module declaration.
-* __`b:verilog_indent_preproc`__ - Indent code after preprocessor statements.
+* __`b:verilog_indent_modules`__ - Indent code inside modules.
+* __`b:verilog_indent_preproc`__ - Indent code inside preprocessor blocks.
 * __`b:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
 * __`b:verilog_indent_assign_fix`__ - Indent assignments by fixed amount.
+* __`g:verilog_disable_indent`__ - Disable indenting for specific contexts.
+  String containing one or more of the following values, separated by comma:
+  * module
+  * interface
+  * class
+  * package
+  * covergroup
+  * program
+  * sequence
+  * property
+  * method
+  * preproc
+
+  For example:
+
+  ```VimL
+  let g:verilog_disable_indent = "module,interface"
+  ```
 
 ### Syntax options
 
