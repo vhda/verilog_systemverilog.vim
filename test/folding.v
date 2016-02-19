@@ -166,6 +166,32 @@ reg test;                                                     //<1><1><1>
   `endif                                                      //<1><1><1>
 */                                                            //<1><1><1>
                                                               //<0><0><0>
+   module_name #(                                             //<1><1><1>
+       .PARAM1 (VALUE1)                                       //<1><1><1>
+   )                                                          //<1><1><1>
+   instance_name(                                             //<1><1><1>
+       .port1 (net1),                                         //<1><1><1>
+       .port2 (net2)                                          //<1><1><1>
+   );                                                         //<1><1><1>
+                                                              //<0><0><0>
+module_name instance_name(                                    //<1><1><1>
+    .port1 (net1),                                            //<1><1><1>
+    .port2 (net2)                                             //<1><1><1>
+);                                                            //<1><1><1>
+                                                              //<0><0><0>
+module_name #(VALUE1) instance_name (                         //<1><1><1>
+    .port1 (net1),                                            //<1><1><1>
+    .port2 (net2)                                             //<1><1><1>
+);                                                            //<1><1><1>
+                                                              //<0><0><0>
+module_name #(VALUE1) instance_name                           //<1><1><1>
+(                                                             //<1><1><1>
+    .port1 (net1),                                            //<1><1><1>
+    .port2 (net2)                                             //<1><1><1>
+);                                                            //<1><1><1>
+                                                              //<0><0><0>
+uvm_blocking_put_port #(trans) out;                           //<0><0><0>
+                                                              //<0><0><0>
 if (cond1) begin                                              //<1><1><0>
     do1();                                                    //<1><1><0>
 end else if (cond2) begin                                     //<1><1><0>

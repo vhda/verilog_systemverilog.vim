@@ -312,6 +312,14 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
     " verilogGlobal keywords. This syntax match fixes that:
     syn match verilogGlobal "\<`\(ifn\?def\|e\(els\(e\|if\)\)\|ndif\)\>"
 endif
+if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogFold
+        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
+        \ end=")\s*;"
+        \ transparent
+        \ fold
+        \ keepend
+endif
 
 " Expand verilogComment
 if len(s:verilog_syntax_fold) > 0
