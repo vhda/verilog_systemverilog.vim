@@ -46,7 +46,7 @@ For more information on using omni completion please check the vim man page for
 [`i_CTRL-X_CTRL-O`][vim-omni] (the required option [`omnifunc`][vim-omnifunc] is
 automatically defined for the supported file extensions).
 
-[comment]: TODO: Explain how gd works
+[comment]: <http://> "TODO Explain how gd works"
 
 __Note__: Proper SystemVerilog tag generation requires development version of
 [universal-ctags][c].
@@ -212,7 +212,7 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 
 ### Matchit
 
-This addon allows using `%` to jump between matching keywords as Vim already
+This addon allows using <kbd>%</kbd> to jump between matching keywords as Vim already
 does for matching parentheses/brackets. Many syntax files include the definition
 of the matching keyword pairs for their supported languages.
 
