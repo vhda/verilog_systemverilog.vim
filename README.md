@@ -192,6 +192,7 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
     * block_named (like "block", but allows nesting and only folds if `begin` is labelled)
   * comment (`/*..*/`)
   * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
+  * instance
   * all (enables all above options)
 
   For example:
