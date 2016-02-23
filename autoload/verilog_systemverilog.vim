@@ -70,23 +70,23 @@ function! verilog_systemverilog#Complete(findstart, base)
   "------------------------------------------------------------------------
   " Phase 2: Search for type definition in tags file
   if exists("s:prefix") && s:prefix != ''
-    call s:Verbose("Prefix: " . s:prefix)
-    call s:Verbose("Word  : " . s:word)
+    call verilog_systemverilog#Verbose("Prefix: " . s:prefix)
+    call verilog_systemverilog#Verbose("Word  : " . s:word)
     if s:insttype != ''
       " Process an instance
-      call s:Verbose("Process instance")
+      call verilog_systemverilog#Verbose("Process instance")
       if exists("s:word")
         let tags = taglist('^' . s:insttype . '\.' . s:word)
       else
         let tags = taglist('^' . s:insttype . '\.')
       endif
-      call s:Verbose("Number of tags found: " . len(tags))
+      call verilog_systemverilog#Verbose("Number of tags found: " . len(tags))
       if s:instname != ''
         " In instances only return ports
         let tags = s:FilterPorts(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
-        call s:Verbose("Number of tags after filtering: " . len(tags))
+        call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
         call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
         if (v:version >= 704)
@@ -99,7 +99,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         let tags = s:FilterConstants(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
-        call s:Verbose("Number of tags after filtering: " . len(tags))
+        call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
         call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
         if (v:version >= 704)
@@ -110,7 +110,7 @@ function! verilog_systemverilog#Complete(findstart, base)
       endif
     elseif s:instname != ''
       " Process a function/task call
-      call s:Verbose("Searching for function")
+      call verilog_systemverilog#Verbose("Searching for function")
       let items = split(s:instname, '\.')
       if len(items) > 1
         let word_list = [s:GetVariableType(items[0])]
@@ -119,7 +119,7 @@ function! verilog_systemverilog#Complete(findstart, base)
       elseif len(items) == 1
         let base = s:instname
       endif
-      call s:Verbose("Searching tags starting with " . base)
+      call verilog_systemverilog#Verbose("Searching tags starting with " . base)
       let tags = s:FilterPortsOrConstants(taglist('^' . base . '\.'))
       call map(tags, 'strpart(v:val["name"], len(base . "."))')
       if (v:version >= 704)
@@ -129,7 +129,7 @@ function! verilog_systemverilog#Complete(findstart, base)
       endif
     else
       " Process an object
-      call s:Verbose("Process object")
+      call verilog_systemverilog#Verbose("Process object")
       let idx = match(s:prefix, '\.')
       if idx >= 0
         let object = strpart(s:prefix, 0, idx)
@@ -146,7 +146,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         endif
         " Search for inherited tags
         let tags = s:GetInheritanceTags(type, object)
-        call s:Verbose("Searching tags starting with " . type)
+        call verilog_systemverilog#Verbose("Searching tags starting with " . type)
         let localtags = taglist('^' . type . '\.' . s:word)
         let localtags = s:AppendSignature(localtags)
         " Filter out parameters
@@ -188,17 +188,17 @@ function! s:GetInstanceInfo(linenr, column)
   let p = 0
   let b = 0
 
-  call s:Verbose("Searching for instance info, starting on line " . linenr)
+  call verilog_systemverilog#Verbose("Searching for instance info, starting on line " . linenr)
   while linenr > 0
     while start > 0
       " Give up if a ; is found.
       if line[start - 1] == ';'
-        call s:Verbose("Giving up instance info search, on line " . linenr)
+        call verilog_systemverilog#Verbose("Giving up instance info search, on line " . linenr)
         break
       " Skip over (...)
       elseif line[start - 1] == ')' || p > 0
         if line[start - 1] == ')'
-          call s:Verbose("Skipping parentheses, started on line " . linenr)
+          call verilog_systemverilog#Verbose("Skipping parentheses, started on line " . linenr)
         endif
         while start > 0
           if line[start - 1] == ')'
@@ -206,7 +206,7 @@ function! s:GetInstanceInfo(linenr, column)
           elseif line[start - 1] == '('
             let p -= 1
             if p == 0
-              call s:Verbose("Skipping parentheses, ended on line " . linenr)
+              call verilog_systemverilog#Verbose("Skipping parentheses, ended on line " . linenr)
               break
             endif
           endif
@@ -215,7 +215,7 @@ function! s:GetInstanceInfo(linenr, column)
       " Skip over [...]
       elseif line[start - 1] == ']' || b > 0
         if line[start - 1] == ']'
-          call s:Verbose("Skipping brackets, started on line " . linenr)
+          call verilog_systemverilog#Verbose("Skipping brackets, started on line " . linenr)
         endif
         while start > 0
           if line[start - 1] == ']'
@@ -223,7 +223,7 @@ function! s:GetInstanceInfo(linenr, column)
           elseif line[start - 1] == '['
             let b -= 1
             if b == 0
-              call s:Verbose("Skipping brackets, ended on line " . linenr)
+              call verilog_systemverilog#Verbose("Skipping brackets, ended on line " . linenr)
               break
             endif
           endif
@@ -234,10 +234,10 @@ function! s:GetInstanceInfo(linenr, column)
       elseif line[start - 1] == '(' && p == 0
         if line[start - 2] == '#'
           let ininsttype = -1
-          call s:Verbose("Found instance parameter declaration on line " . linenr)
+          call verilog_systemverilog#Verbose("Found instance parameter declaration on line " . linenr)
         else
           let ininstdecl = -1
-          call s:Verbose("Found instance declaration name start, on line " . linenr)
+          call verilog_systemverilog#Verbose("Found instance declaration name start, on line " . linenr)
         endif
       elseif ininstdecl < 0 && line[start - 1] =~ '\w'
         let ininstdecl = start
@@ -247,7 +247,7 @@ function! s:GetInstanceInfo(linenr, column)
         else
           let instname = strpart(line, start, ininstdecl - start)
         endif
-        call s:Verbose("Found instance name \"" . instname . "\", on line " . linenr)
+        call verilog_systemverilog#Verbose("Found instance name \"" . instname . "\", on line " . linenr)
         let ininsttype = -1
       elseif ininsttype < 0 && line[start - 1] =~ '\w'
         let ininsttype = start
@@ -257,7 +257,7 @@ function! s:GetInstanceInfo(linenr, column)
         else
           let insttype = strpart(line, start, ininsttype - start)
         endif
-        call s:Verbose("Found instance type \"" . insttype . "\", on line " . linenr)
+        call verilog_systemverilog#Verbose("Found instance type \"" . insttype . "\", on line " . linenr)
         break
       endif
 
@@ -271,7 +271,7 @@ function! s:GetInstanceInfo(linenr, column)
 
     " Give up if a ; is found.
     if line[start - 1] == ';'
-      call s:Verbose("Giving up instance info search, on line " . linenr)
+      call verilog_systemverilog#Verbose("Giving up instance info search, on line " . linenr)
       break
     endif
 
@@ -281,7 +281,7 @@ function! s:GetInstanceInfo(linenr, column)
     let start = len(line)
   endwhile
 
-  call s:Verbose("Found instance. Name: »" . instname . "« Type: »" . insttype . "«")
+  call verilog_systemverilog#Verbose("Found instance. Name: »" . instname . "« Type: »" . insttype . "«")
   return [instname, insttype, linenr]
 endfunction
 
@@ -299,18 +299,18 @@ endfunction
 
 " Get list of inheritance tags
 function s:GetInheritanceTags(class, object)
-  call s:Verbose("Searching inheritance of " . a:object)
+  call verilog_systemverilog#Verbose("Searching inheritance of " . a:object)
   let tags = []
   let inheritance = a:class
   let classtag = taglist('^' . inheritance . '$')
   while exists('classtag[0]["inherits"]')
-    call s:Verbose("Following class " . a:class)
-    call s:Verbose(inheritance . " inherits " . classtag[0]["inherits"])
+    call verilog_systemverilog#Verbose("Following class " . a:class)
+    call verilog_systemverilog#Verbose(inheritance . " inherits " . classtag[0]["inherits"])
     let inheritance = classtag[0]["inherits"]
     " First check if inheritance is a parameter of the class
     let localtags = taglist('^' . a:class . '.' . inheritance . '$')
     if len(localtags) == 1 && localtags[0]["kind"] == "c"
-      call s:Verbose(a:class . " inherits from a parameter")
+      call verilog_systemverilog#Verbose(a:class . " inherits from a parameter")
       let parameter = inheritance
       " Search for parameter initialization in object declaration line
       let inheritance = s:GetObjectParameterValue(a:object, parameter)
@@ -318,11 +318,11 @@ function s:GetInheritanceTags(class, object)
         " Search for parameter default value in class declaration
         let inheritance = s:GetClassDefaultParameterValue(a:class, parameter)
         if inheritance == ""
-          call s:Verbose("No default inheritance found")
+          call verilog_systemverilog#Verbose("No default inheritance found")
           return tags
         endif
       endif
-      call s:Verbose(a:class . " inherits from " . inheritance)
+      call verilog_systemverilog#Verbose(a:class . " inherits from " . inheritance)
     endif
     " Get tags from inherited class
     let localtags = taglist('^' . inheritance . '.' . s:word)
@@ -342,7 +342,7 @@ function s:GetVariableType(word)
     let line = substitute(line, '\v^\s*(const|rand|randc)', '', '')
     let line = substitute(line, '\v^\s*(static|protected|local)', '', '')
     let type = split(line)[0]
-    call s:Verbose("Found declation for: " . a:word . " (" . type . ")")
+    call verilog_systemverilog#Verbose("Found declation for: " . a:word . " (" . type . ")")
     call setpos(".", position)
     return type
   endif
@@ -357,12 +357,12 @@ function s:GetObjectParameterValue(object, parameter)
     if match(line, 'type\s\+' . a:parameter . '\s*=\s*\w\+') >= 0
       let value = substitute(line, '.*\<type\s\+' . a:parameter . '\s*=\s*\(\w\+\).*', '\1', '')
       " TODO If type was not found search in the previous line
-      call s:Verbose("Found variable initialization value: " . a:parameter . " = " . value)
+      call verilog_systemverilog#Verbose("Found variable initialization value: " . a:parameter . " = " . value)
       call setpos(".", position)
       return value
     endif
   endif
-  call s:Verbose("Initialization of " . a:parameter . " was not found in " . a:object . " declaration")
+  call verilog_systemverilog#Verbose("Initialization of " . a:parameter . " was not found in " . a:object . " declaration")
   call setpos(".", position)
   return ""
 endfunction
@@ -370,11 +370,11 @@ endfunction
 " Searches for declaration of "class" and returns default "parameter" value
 function s:GetClassDefaultParameterValue(class, parameter)
   if a:class == ""
-    call s:Verbose("Search for default value of parameter " . a:parameter . " in current class")
+    call verilog_systemverilog#Verbose("Search for default value of parameter " . a:parameter . " in current class")
     let declaration = {'cmd': '/.*type\s\+' . a:parameter . '\s*='}
     let contents = readfile(@%)
   else
-    call s:Verbose("Search for default value of parameter " . a:parameter . " of class " . a:class)
+    call verilog_systemverilog#Verbose("Search for default value of parameter " . a:parameter . " of class " . a:class)
     let declaration = taglist('^' . a:class . '$')[0]
     let contents = readfile(declaration.filename)
   endif
@@ -392,7 +392,7 @@ function s:GetClassDefaultParameterValue(class, parameter)
       let match_idx += 1
     endwhile
     if contents[match_idx] !~ a:parameter
-      call s:Verbose("No declaration of " . a:parameter . " was found in class " . a:class)
+      call verilog_systemverilog#Verbose("No declaration of " . a:parameter . " was found in class " . a:class)
       return ""
     endif
     " Find value assignment in current line
@@ -404,11 +404,11 @@ function s:GetClassDefaultParameterValue(class, parameter)
       let result = substitute(split(result, '=')[1], '^\s*\(.\{-\}\)\(\s\|,\)*$', '\1', '')
       return result
     else
-      call s:Verbose("Found parameter " . a:parameter . "but failed to find assignment in the same line")
+      call verilog_systemverilog#Verbose("Found parameter " . a:parameter . "but failed to find assignment in the same line")
       return ""
     endif
   else
-    call s:Verbose("Parameter default value not found")
+    call verilog_systemverilog#Verbose("Parameter default value not found")
     return ""
   endif
 endfunction
@@ -433,11 +433,15 @@ function s:FilterPortsOrConstants(tags)
   call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" || v:val["kind"] == "c" : 1')
   return tags
 endfunction
+" }}}
 
+"------------------------------------------------------------------------
+" Common functions
+" {{{
 " Verbose messaging
-" Only displays messages if b:verilog_omni_verbose is defined
-function s:Verbose(message)
-  if exists("b:verilog_omni_verbose")
+" Only displays messages if b:verilog_verbose or g:verilog_verbose is defined
+function verilog_systemverilog#Verbose(message)
+  if exists("b:verilog_verbose") || exists("g:verilog_verbose")
     echom a:message
   endif
 endfunction
