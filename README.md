@@ -252,8 +252,17 @@ version of [universal-ctags][c].
 The required filetype related configuration for [Tagbar][t] is included
 within this addon.
 
+### FastFold
+
+Vim can become very slow in Insert mode when using [Syntax
+Folding][vim-synfold] and the folds extend across the complete file. The
+[FastFold][f] addon overcomes this limitation by automatically creating
+manual folds from the syntax generated ones. More information about this
+problem and on how to configure the addon can be found on its GitHub
+page.
 
 [c]: https://github.com/universal-ctags/ctags
+[f]: https://github.com/Konfekt/FastFold
 [p]: https://github.com/tpope/vim-pathogen
 [v]: https://github.com/gmarik/vundle
 [P]: https://github.com/junegunn/vim-plug
@@ -267,6 +276,7 @@ within this addon.
 [vim-errorformat]: http://vimdoc.sourceforge.net/htmldoc/options.html#'errorformat'
 [vim-makeprg]:  http://vimdoc.sourceforge.net/htmldoc/options.html#'makeprg'
 [vim-quickfix]: http://vimdoc.sourceforge.net/htmldoc/quickfix.html
+[vim-synfold]:  http://vimdoc.sourceforge.net/htmldoc/syntax.html#syntax
 
 
 <!-- Other links:
