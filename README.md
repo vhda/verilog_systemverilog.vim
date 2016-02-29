@@ -205,8 +205,7 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 
 ### Debug options
 
-* __`b:verilog_indent_verbose`__ - Verbose indenting (uses [`echom`][vim-echom]).
-* __`b:verilog_omni_verbose`__ - Verbose omni completion (uses [`echom`][vim-echom]).
+* __`b/g:verilog_verbose`__ - Verbose script execution (uses [`echom`][vim-echom]).
 
 ## Other Vim addons helpful for Verilog/SystemVerilog
 
