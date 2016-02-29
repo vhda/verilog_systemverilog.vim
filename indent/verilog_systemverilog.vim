@@ -237,7 +237,7 @@ function! s:GetContextIndent()
 
     if l:look_for_open_assign == 1
       " Search for assignments (=, <=) that don't end in ";"
-      if l:line =~ '[^=!]=[^=]\?' && l:line !~ ';\s*$'
+      if l:line =~ '[^=!]=\([^=]\|$\)' && l:line !~ ';\s*$'
         let l:assign = substitute(l:line, '\(.*[^=!]=[^=]\s*\)\S.*', '\1', "")
         if l:assign != l:line
           " If there are values after the assignment, then use that column as the indentation of the open statement

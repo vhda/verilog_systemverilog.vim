@@ -469,6 +469,10 @@ wire Val_IP  =
     !In_Pkt_S_Bus_enf ||
     ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
 
+wire Val_IP  = !In_Pkt_S_Bus_enf ?
+               ((Pls_Don || ResVal) && (Pls_Res == ResFnd)) :
+               ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
+
 MyModule #(
     .A (1),
     .B (2)
