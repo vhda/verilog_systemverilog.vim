@@ -40,30 +40,46 @@ let s:vlog_block_start    = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
 let s:vlog_block_end      = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
 let s:vlog_module         = '\<\(extern\s\+\)\@<!module\>'
+let s:vlog_interface      = '\<interface\>\s*\(\<class\>\)\@!\w\+'
+let s:vlog_package        = '\<package\>'
+let s:vlog_covergroup     = '\<covergroup\>'
+let s:vlog_program        = '\<program\>'
 let s:vlog_class          = '\<\(typedef\s\+\)\@<!class\>'
 let s:vlog_property       = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
+let s:vlog_sequence       = '\<sequence\>'
+let s:vlog_preproc        = '^\s*`ifn\?def\>'
+
 let s:vlog_case           = '\<case[zx]\?\>\s*('
 let s:vlog_join           = '\<join\(_all\|_none\)\?\>'
 
 let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
 
-let s:vlog_context_start  = '\<\(package\|covergroup\|program\|sequence\|interface\)\>\|'.
-                           \ s:vlog_class .'\|'. s:vlog_property .'\|'.
-                           \ s:vlog_method
-
 let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
-
-let s:vlog_preproc_start  = '^\s*`ifn\?def\>'
-let s:vlog_preproc_end    = '^\s*`endif\>'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
   finish
 endif
 
+if exists("g:verilog_disable_indent")
+  let s:verilog_disable_indent = split(g:verilog_disable_indent, ",")
+else
+  let s:verilog_disable_indent = []
+endif
+
 set cpo-=C
 
 function! GetVerilogSystemVerilogIndent()
+
+  if !exists('b:verilog_indent_modules') &&
+        \ index(s:verilog_disable_indent, 'module') < 0
+    let s:verilog_disable_indent += ['module']
+  endif
+
+  if !exists('b:verilog_indent_preproc') &&
+        \ index(s:verilog_disable_indent, 'preproc') < 0
+    let s:verilog_disable_indent += ['preproc']
+  endif
 
   if exists('b:verilog_indent_width')
     let s:offset = b:verilog_indent_width
@@ -126,7 +142,7 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*\<while\>\s*(.*)\s*;'
     return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*)\s*;', v:lnum, 1))
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
-    return indent(s:SearchForBlockStart(s:vlog_preproc_start, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
+    return indent(s:SearchForBlockStart(s:vlog_preproc, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
     return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum, 1))
   endif
@@ -322,36 +338,42 @@ function! s:GetContextIndent()
     endif
 
     if l:line =~ s:vlog_module
-      call verilog_systemverilog#Verbose("Inside a module.")
-      if !exists('b:verilog_indent_modules') || b:verilog_indent_modules == 0
-        return indent(l:lnum) + l:extra_offset
-      else
-        return indent(l:lnum) + s:offset + l:extra_offset
-      endif
-    elseif l:line =~ s:vlog_preproc_start
-      if exists('b:verilog_indent_preproc')
-        call verilog_systemverilog#Verbose("After preproc start.")
-        return indent(l:lnum) + s:offset + l:extra_offset
-      endif
-    elseif l:line =~ s:vlog_context_start
-      call verilog_systemverilog#Verbose("Inside a context (".l:lnum.":".l:extra_offset.")")
-      return indent(l:lnum) + s:offset + l:extra_offset
+      return s:GetContextStartIndent("module"    , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_interface
+      return s:GetContextStartIndent("interface" , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_class
+      return s:GetContextStartIndent("class"     , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_package
+      return s:GetContextStartIndent("package"   , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_covergroup
+      return s:GetContextStartIndent("covergroup", l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_program
+      return s:GetContextStartIndent("program"   , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_sequence
+      return s:GetContextStartIndent("sequence"  , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_property
+      return s:GetContextStartIndent("property"  , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_method
+      return s:GetContextStartIndent("method"    , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_preproc
+      return s:GetContextStartIndent("preproc"   , l:lnum) + l:extra_offset
     elseif l:line =~ s:vlog_context_end
-      if l:line =~ s:vlog_preproc_end
-        if exists('b:verilog_indent_preproc')
-          call verilog_systemverilog#Verbose("After preproc end.")
-          return indent(l:lnum) + l:extra_offset
-        endif
-      else
-        call verilog_systemverilog#Verbose("After the end of a context.")
-        return indent(l:lnum)
-      endif
+      call verilog_systemverilog#Verbose("After the end of a context.")
+      return indent(l:lnum)
     endif
 
   endwhile
 
   " Return any calculated extra offset if no indenting context was found
   return l:extra_offset
+endfunction
+
+function! s:GetContextStartIndent(name, lnum)
+  call verilog_systemverilog#Verbose("Inside a " . a:name . ".")
+  if index(s:verilog_disable_indent, a:name) >= 0
+    return indent(a:lnum)
+  else
+    return indent(a:lnum) + s:offset
 endfunction
 
 function! s:CountMatches(line, pattern)

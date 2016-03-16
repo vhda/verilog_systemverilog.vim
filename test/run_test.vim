@@ -2,6 +2,7 @@
 " Run tests
 "-----------------------------------------------------------------------
 unlet! g:verilog_dont_deindent_eos
+let g:verilog_disable_indent = "interface,module"
 let test_result=0
 
 "-----------------------------------------------------------------------
