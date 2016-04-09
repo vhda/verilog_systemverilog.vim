@@ -124,6 +124,8 @@ function! GetVerilogSystemVerilogIndent()
       return indent(s:SearchBackForPattern('\<property\>'  , v:lnum))
     elseif s:curr_line =~ '^\s*\<endgroup\>'
       return indent(s:SearchBackForPattern('\<covergroup\>', v:lnum))
+    elseif s:curr_line =~ '^\s*\<endprogram\>'
+      return indent(s:SearchBackForPattern('\<program\>', v:lnum))
     elseif s:curr_line =~ '^\s*\<endspecify\>'
       return indent(s:SearchBackForPattern('\<specify\>'   , v:lnum))
     elseif s:curr_line =~ '^\s*\<endsequence\>'

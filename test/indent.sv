@@ -952,4 +952,8 @@ logic [31:0] data ;
 logic [31:0] addr ;
 endinterface
 
+program u_prg;
+    logic clk;
+endprogram
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
