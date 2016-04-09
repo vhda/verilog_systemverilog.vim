@@ -952,4 +952,10 @@ logic [31:0] data ;
 logic [31:0] addr ;
 endinterface
 
+generate
+    for (int i = 0; i < 9; ++i) begin : gen_loop
+        dut u_dut(.in(i));
+    end
+endgenerate
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

@@ -44,6 +44,7 @@ let s:vlog_interface      = '\<interface\>\s*\(\<class\>\)\@!\w\+'
 let s:vlog_package        = '\<package\>'
 let s:vlog_covergroup     = '\<covergroup\>'
 let s:vlog_program        = '\<program\>'
+let s:vlog_generate       = '\<generate\>'
 let s:vlog_class          = '\<\(typedef\s\+\)\@<!class\>'
 let s:vlog_property       = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
 let s:vlog_sequence       = '\<sequence\>'
@@ -54,7 +55,7 @@ let s:vlog_join           = '\<join\(_all\|_none\)\?\>'
 
 let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
 
-let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
+let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
@@ -124,6 +125,8 @@ function! GetVerilogSystemVerilogIndent()
       return indent(s:SearchBackForPattern('\<property\>'  , v:lnum))
     elseif s:curr_line =~ '^\s*\<endgroup\>'
       return indent(s:SearchBackForPattern('\<covergroup\>', v:lnum))
+    elseif s:curr_line =~ '^\s*\<endgenerate\>'
+      return indent(s:SearchBackForPattern('\<generate\>', v:lnum))
     elseif s:curr_line =~ '^\s*\<endspecify\>'
       return indent(s:SearchBackForPattern('\<specify\>'   , v:lnum))
     elseif s:curr_line =~ '^\s*\<endsequence\>'
@@ -349,6 +352,8 @@ function! s:GetContextIndent()
       return s:GetContextStartIndent("covergroup", l:lnum) + l:extra_offset
     elseif l:line =~ s:vlog_program
       return s:GetContextStartIndent("program"   , l:lnum) + l:extra_offset
+    elseif l:line =~ s:vlog_generate
+      return s:GetContextStartIndent("generate"  , l:lnum) + l:extra_offset
     elseif l:line =~ s:vlog_sequence
       return s:GetContextStartIndent("sequence"  , l:lnum) + l:extra_offset
     elseif l:line =~ s:vlog_property
