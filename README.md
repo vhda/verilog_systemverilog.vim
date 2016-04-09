@@ -278,6 +278,43 @@ manual folds from the syntax generated ones. More information about this
 problem and on how to configure the addon can be found on its GitHub
 page.
 
+## FAQ
+
+### How do enable/disable indenting in modules?
+There are two config variables for this. `b:verilog_indent_modules` (which will
+be eventually deprecated) and the newer `g:verilog_disable_indent`. Because of
+the existence of `b:verilog_indent_modules`, indenting in modules is disabled by
+default. As well as this, because `b:verilog_indent_modules` is a buffer
+vairable, to ensure indenting in modules is always enabled you must add
+the following to your .vimrc:
+```VimL
+    augroup systemverilog_settings_1
+        au!
+        au Filetype verilog_systemverilog let b:verilog_indent_modules = 1
+    augroup END
+```
+The same also applies for `b:verilog_indent_preproc` (indentation of
+preprocessor statements).
+
+### Why is opening verilog/systemverilog files so slow?
+
+If you are working with files which are over thousands of lines in length, then
+having folding enabled can significantly slow down opening these files. A
+workaround is to add the following to your .vimrc (adjust variables as you see
+fit):
+```VimL
+    augroup systemverilog_settings_2
+        au!
+        " Enable folding for normal size files. Folding is really slow for large files.
+        au Filetype verilog_systemverilog if line('$') < 2000
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = "all"
+        au Filetype verilog_systemverilog     syntax enable "Trigger fold calculation
+        au Filetype verilog_systemverilog else
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = ""
+        au Filetype verilog_systemverilog endif
+    augroup END
+```
+
 [c]: https://github.com/universal-ctags/ctags
 [f]: https://github.com/Konfekt/FastFold
 [p]: https://github.com/tpope/vim-pathogen
