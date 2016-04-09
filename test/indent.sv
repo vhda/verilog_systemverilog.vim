@@ -952,4 +952,9 @@ logic [31:0] data ;
 logic [31:0] addr ;
 endinterface
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/71
+wire a = c <= d &
+         e = f;
+// End of copied code
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
