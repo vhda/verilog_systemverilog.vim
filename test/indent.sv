@@ -967,4 +967,17 @@ program u_prg;
     logic clk;
 endprogram
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/71
+wire a = c <= d &
+         e = f;
+// End of copied code
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/72
+function bit return_something();
+    return a &
+           b |
+           c;
+endfunction
+// End of copied code
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
