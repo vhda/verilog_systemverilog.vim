@@ -473,6 +473,11 @@ wire Val_IP  = !In_Pkt_S_Bus_enf ?
                ((Pls_Don || ResVal) && (Pls_Res == ResFnd)) :
                ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/71
+wire a = c <= d &
+         e = f;
+// End of copied code
+
 MyModule #(
     .A (1),
     .B (2)
