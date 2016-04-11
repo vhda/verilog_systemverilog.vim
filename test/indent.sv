@@ -958,4 +958,8 @@ generate
     end
 endgenerate
 
+program u_prg;
+    logic clk;
+endprogram
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
