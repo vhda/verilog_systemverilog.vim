@@ -258,16 +258,22 @@ function! s:GetContextIndent()
 
     if l:look_for_open_assign == 1
       " Search for assignments (=, <=) that don't end in ";"
-      if l:line =~ '[^=!]=\([^=]\|$\)' && l:line !~ ';\s*$'
-        let l:assign = substitute(l:line, '\(.\{-}[^=!]=[^=]\s*\)\S.*', '\1', "")
+      if l:line =~ '[^=!]=\([^=]\|$\)\|return' && l:line !~ ';\s*$'
+        let l:assign = substitute(l:line, '\(\(.\{-}[^=!]=[^=]\|return\)\s*\)\S.*', '\1', "")
         if l:assign != l:line
-          " If there are values after the assignment, then use that column as the indentation of the open statement
+          " If there are values after the assignment, then use that column as
+          " the indentation of the open statement.
           let l:assign_offset = len(l:assign)
-          call verilog_systemverilog#Verbose("Increasing indent for an open assignment with values (by " . l:assign_offset .").")
+          call verilog_systemverilog#Verbose(
+            "Increasing indent for an open assignment with values (by " . l:assign_offset .")."
+          )
         else
-          " If the assignment is empty, simply increment the indent by one level
+          " If the assignment is empty, simply increment the indent by one
+          " level.
           let l:assign_offset = indent(l:lnum) + s:offset
-          call verilog_systemverilog#Verbose("Increasing indent for an empty open assignment (by " . l:assign_offset .").")
+          call verilog_systemverilog#Verbose(
+            "Increasing indent for an empty open assignment (by " . l:assign_offset .")."
+          )
         endif
         return l:assign_offset
       endif
