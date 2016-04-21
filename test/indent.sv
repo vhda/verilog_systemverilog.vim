@@ -947,9 +947,9 @@ endcase
 // End of copied code
 
 interface rx_if;
-logic        trans;
-logic [31:0] data ;
-logic [31:0] addr ;
+    logic        trans;
+    logic [31:0] data ;
+    logic [31:0] addr ;
 endinterface
 
 generate
@@ -980,6 +980,15 @@ endfunction
 * function text
 * text
 */
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/51
+module dut_wrapper (
+    interface source_IF,
+    interface sink_IF,
+    interface ctrl_IF
+);
+
+endmodule
 // End of copied code
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

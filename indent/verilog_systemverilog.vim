@@ -40,7 +40,7 @@ let s:vlog_block_start    = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
 let s:vlog_block_end      = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
 let s:vlog_module         = '\<\(extern\s\+\)\@<!module\>'
-let s:vlog_interface      = '\<interface\>\s*\(\<class\>\)\@!\w\+'
+let s:vlog_interface      = '\<interface\>\s*\(\<class\>\)\@!\w\+.*[^,]$'
 let s:vlog_package        = '\<package\>'
 let s:vlog_covergroup     = '\<covergroup\>'
 let s:vlog_program        = '\<program\>'
