@@ -167,6 +167,10 @@ function! GetVerilogSystemVerilogIndent()
 endfunction
 
 function! s:GetLineStripped(lnum)
+  if s:IsComment(a:lnum)
+    return ""
+  endif
+
   let l:temp = getline(a:lnum)
 
   " Remove inline comments unless the whole line is a comment
@@ -239,11 +243,15 @@ function! s:GetContextIndent()
 
     let l:line = s:GetLineStripped(l:lnum)
 
+    if l:line == ""
+      continue
+    endif
+
     call verilog_systemverilog#Verbose("GetContextIndent:" . l:lnum . ": " . l:line)
 
     if l:look_for_open_statement == 1
       if l:line =~ s:vlog_open_statement . '\s*$' &&
-            \ l:line !~ '/\*\s*$' && !s:IsComment(l:lnum) ||
+            \ l:line !~ '/\*\s*$' ||
             \ s:curr_line =~ '^\s*' . s:vlog_open_statement &&
             \ s:curr_line !~ '^\s*/\*' &&
             \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
