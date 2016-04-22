@@ -375,18 +375,18 @@ class z;
 
         // Multi-line if with no begin
         if (variable && variable && variable &&
-                variable)
+            variable)
             indent();
 
         de_indent();
 
         // Multi-line if with begin with a line starting with &&
         if (variable && variable && variable
-                && variable
-                && variable) begin
-                    indent();
-                    stay();
-                end
+            && variable
+            && variable) begin
+                indent();
+                stay();
+            end
 
         de_indent();
 
@@ -420,7 +420,7 @@ class z;
 
         if (1) begin
             if (1
-                    && 1)
+                && 1)
                 something();
         end
 
@@ -989,6 +989,14 @@ module dut_wrapper (
 );
 
 endmodule
+// End of copied code
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/81
+cover property (
+    a &&
+    b &&
+    c
+);
 // End of copied code
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
