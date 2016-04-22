@@ -217,7 +217,7 @@ endfunction
 "
 " It checks all lines before the current and when it finds an indenting
 " context adds an s:offset to its indent value. Extra indent offset
-" related with open statement, for example, are stored in l:extra_offset
+" related with open statement, for example, are stored in l:open_offset
 " to caculate the final indent value.
 function! s:GetContextIndent()
   let l:bracket_level  = 0
@@ -227,7 +227,7 @@ function! s:GetContextIndent()
   let l:oneline_mode = 1
   let l:look_for_open_statement = 1
   let l:look_for_open_assign = 0
-  let l:extra_offset = 0
+  let l:open_offset = 0
 
   " Loop that searches up the file to build a context and determine the correct
   " indentation.
@@ -255,7 +255,7 @@ function! s:GetContextIndent()
             \ s:curr_line =~ '^\s*' . s:vlog_open_statement &&
             \ s:curr_line !~ '^\s*/\*' &&
             \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
-        let l:extra_offset += s:offset
+        let l:open_offset = s:offset
         call verilog_systemverilog#Verbose("Increasing indent for an open statement.")
         if (!exists("b:verilog_indent_assign_fix"))
           let l:look_for_open_assign = 1
@@ -289,13 +289,13 @@ function! s:GetContextIndent()
 
     if l:line =~ '\<begin\>' && l:line !~ '\<begin\>.*\<end\>'
       call verilog_systemverilog#Verbose("Inside a 'begin end' block.")
-      return indent(l:lnum) + s:offset + l:extra_offset
+      return indent(l:lnum) + s:offset + l:open_offset
     elseif l:line =~ '^\s*\<fork\>'
       call verilog_systemverilog#Verbose("Inside a 'fork join' block.")
-      return indent(l:lnum) + s:offset + l:extra_offset
+      return indent(l:lnum) + s:offset + l:open_offset
     elseif l:line =~ s:vlog_case
       call verilog_systemverilog#Verbose("Inside a 'case' block.")
-      return indent(l:lnum) + s:offset + l:extra_offset
+      return indent(l:lnum) + s:offset + l:open_offset
     endif
 
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
@@ -322,7 +322,7 @@ function! s:GetContextIndent()
             \ s:CountMatches(l:line, ')') - s:CountMatches(l:line, '(')
       if l:bracket_level < 0
         call verilog_systemverilog#Verbose("Inside a '()' block.")
-        return indent(l:lnum) + s:offset + l:extra_offset
+        return indent(l:lnum) + s:offset
       endif
     endif
 
@@ -331,7 +331,7 @@ function! s:GetContextIndent()
             \ s:CountMatches(l:line, '}') - s:CountMatches(l:line, '{')
       if l:cbracket_level < 0
         call verilog_systemverilog#Verbose("Inside a '{}' block.")
-        return indent(l:lnum) + s:offset + l:extra_offset
+        return indent(l:lnum) + s:offset + l:open_offset
       endif
     endif
 
@@ -349,7 +349,7 @@ function! s:GetContextIndent()
         return indent(l:lnum)
       else
         call verilog_systemverilog#Verbose("Indenting a single line block.")
-        return indent(l:lnum) + s:offset + l:extra_offset
+        return indent(l:lnum) + s:offset + l:open_offset
       endif
     elseif s:curr_line =~ '^\s*else' && l:line =~ '\<\(if\|assert\)\>\s*(.*)'
       call verilog_systemverilog#Verbose("'else' of 'if' or 'assert'.")
@@ -357,27 +357,27 @@ function! s:GetContextIndent()
     endif
 
     if l:line =~ s:vlog_module
-      return s:GetContextStartIndent("module"    , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("module"    , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_interface
-      return s:GetContextStartIndent("interface" , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("interface" , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_class
-      return s:GetContextStartIndent("class"     , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("class"     , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_package
-      return s:GetContextStartIndent("package"   , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("package"   , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_covergroup
-      return s:GetContextStartIndent("covergroup", l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("covergroup", l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_program
-      return s:GetContextStartIndent("program"   , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("program"   , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_generate
-      return s:GetContextStartIndent("generate"  , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("generate"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_sequence
-      return s:GetContextStartIndent("sequence"  , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("sequence"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_property
-      return s:GetContextStartIndent("property"  , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("property"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_method
-      return s:GetContextStartIndent("method"    , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("method"    , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_preproc
-      return s:GetContextStartIndent("preproc"   , l:lnum) + l:extra_offset
+      return s:GetContextStartIndent("preproc"   , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_context_end
       call verilog_systemverilog#Verbose("After the end of a context.")
       return indent(l:lnum)
@@ -386,7 +386,7 @@ function! s:GetContextIndent()
   endwhile
 
   " Return any calculated extra offset if no indenting context was found
-  return l:extra_offset
+  return l:open_offset
 endfunction
 
 function! s:GetContextStartIndent(name, lnum)
