@@ -999,6 +999,12 @@ cover property (
 );
 // End of copied code
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/84
+assign out = cond0 ? a :
+             cond1 ? b :
+                     c ;
+// End of copied code
+
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/85
 assert_label: assert property (
     precondition |-> a &&
