@@ -57,6 +57,8 @@ let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|
 
 let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
+let s:vlog_assign         = '\([^=!]=\([^=]\|$\)\|return\||[-=]>\)'
+
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
   finish
@@ -266,11 +268,11 @@ function! s:GetContextIndent()
 
     if l:look_for_open_assign == 1
       " Search for assignments (=, <=) that don't end in ";"
-      if l:line =~ '[^=!]=\([^=]\|$\)\|return' && l:line !~ ';\s*$'
-        let l:assign = substitute(l:line, '\(\(.\{-}[^=!]=[^=]\|return\)\s*\)\S.*', '\1', "")
-        if l:assign != l:line
+      if l:line =~ s:vlog_assign . '[^;]*$'
+        if l:line !~ s:vlog_assign . '\s*$'
           " If there are values after the assignment, then use that column as
           " the indentation of the open statement.
+          let l:assign = substitute(l:line, s:vlog_assign .'\s*\zs.*', '', "")
           let l:assign_offset = len(l:assign)
           call verilog_systemverilog#Verbose(
             "Increasing indent for an open assignment with values (by " . l:assign_offset .")."

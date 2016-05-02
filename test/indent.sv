@@ -875,7 +875,7 @@ assert_value: assert property (@(posedge clk) disable iff (~reset_n)
 `ifdef NOTHING
 `endif
 
-wire signal = 
+wire signal =    
     !var0 && (
         var2
     );
@@ -885,7 +885,7 @@ task run_phase(uvm_phase phase);
                var2 *
                var3;
 
-    int var0 =
+    int var0 =   
         var1;
 
     if (map.first(s))
@@ -969,7 +969,7 @@ wire a = c <= d &
 
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/72
 function bit return_something();
-    return a &
+    return a &     
            b |
            c;
 endfunction
@@ -996,6 +996,19 @@ cover property (
     a &&
     b &&
     c
+);
+// End of copied code
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/85
+assert_label: assert property (
+    precondition |-> a &&
+                     b &&
+                     c
+);
+assert_label: assert property (
+    precondition |=> a &&
+                     b &&
+                     c
 );
 // End of copied code
 
