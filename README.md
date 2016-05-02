@@ -181,15 +181,28 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
   * package
   * covergroup
   * program
+  * generate
   * sequence
   * property
   * method
   * preproc
+  * conditional
 
   For example:
 
   ```VimL
   let g:verilog_disable_indent = "module,interface"
+  ```
+
+  Disabling indentation of `conditional` will change the following:
+  ```systemverilog
+  // Default indent
+  assign a = cond ? b :
+                    c ;
+
+  // Disabling 'conditional'
+  assign a = cond ? b :
+             c ;
   ```
 
 ### Syntax options

@@ -58,6 +58,7 @@ let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|
 let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
 
 let s:vlog_assign         = '\([^=!]=\([^=]\|$\)\|return\||[-=]>\)'
+let s:vlog_conditional    = '?.*:.*$'
 
 " Only define the function once.
 if exists("*GetVerilogSystemVerilogIndent")
@@ -267,6 +268,13 @@ function! s:GetContextIndent()
     endif
 
     if l:look_for_open_assign == 1
+      if s:curr_line !~ s:vlog_conditional &&
+            \ l:line =~ s:vlog_conditional &&
+            \ index(s:verilog_disable_indent, 'conditional') < 0
+        " Return the length of the last line up to the first character after the
+        " first '?'
+        return len(substitute(l:line, '?\s*\zs.*', '', ""))
+      endif
       " Search for assignments (=, <=) that don't end in ";"
       if l:line =~ s:vlog_assign . '[^;]*$'
         if l:line !~ s:vlog_assign . '\s*$'
