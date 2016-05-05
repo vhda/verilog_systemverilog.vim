@@ -77,6 +77,8 @@ function! RunTestEfm()
 
     set nomore "Disable pager to avoid issues with Travis
 
+    let g:verilog_efm_quickfix_clean = 1
+
     for check_uvm in [0, 1]
         if check_uvm
             let g:verilog_efm_uvm_lst = 'all'

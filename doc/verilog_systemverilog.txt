@@ -472,6 +472,32 @@ Example:
     Note: The commands |:VerilogErrorUVMAdd| and |:VerilogErrorUVMRemove| are
     provided to allow an easier management of this variable.
 
+                                                *g:verilog_efm_quickfix_clean*
+g:verilog_efm_quickfix_clean~
+Default: undefined
+
+    When enabled, appends global matching string to |'errorformat'| such that
+    any message that does not match any preceding rule will not appear in the
+    |quickfix| window.
+
+Example:
+
+>
+    let g:verilog_efm_quickfix_clean = 1
+<
+
+                                                        *g:verilog_efm_custom*
+g:verilog_efm_custom~
+Default: undefined
+
+    Allows appending custom |'errorformat'| rules.
+
+Example:
+
+>
+    let g:verilog_efm_custom = %t:\ %m
+<
+
 ------------------------------------------------------------------------------
 GENERAL CONFIGURATION                                 *verilog-config-general*
 

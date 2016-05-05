@@ -762,6 +762,14 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       set errorformat+=UVM_%tATAL\ %f(%l)\ %m
     endif
   endif
+  " Append any user-defined efm entries
+  if (exists("g:verilog_efm_custom"))
+    set errorformat+=g:verilog_efm_custom
+  endif
+  " Remove all unmatched lines from the quickfix window
+  if (exists("g:verilog_efm_quickfix_clean"))
+    set errorformat+=%-G%.%#
+  endif
 endfunction
 " }}}
 
