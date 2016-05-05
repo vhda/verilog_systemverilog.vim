@@ -66,15 +66,15 @@ if exists("*GetVerilogSystemVerilogIndent")
   finish
 endif
 
-if exists("g:verilog_disable_indent")
-  let s:verilog_disable_indent = split(g:verilog_disable_indent, ",")
-else
-  let s:verilog_disable_indent = []
-endif
-
 set cpo-=C
 
 function! GetVerilogSystemVerilogIndent()
+
+  if exists("g:verilog_disable_indent")
+    let s:verilog_disable_indent = split(g:verilog_disable_indent, ",")
+  else
+    let s:verilog_disable_indent = []
+  endif
 
   if !exists('b:verilog_indent_modules') &&
         \ index(s:verilog_disable_indent, 'module') < 0
