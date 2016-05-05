@@ -249,11 +249,12 @@ COMMANDS                                                    *verilog-commands*
     and, if the tool supports it, the level of errors to identify in the log.
 
     Values supported for {tool}:
-      vcs      - Synopsys VCS
-      msim     - Mentor Modelsim
-      iverilog - Icarus Verilog
-      cver     - GPL Cver
-      leda     - Synopsys Leda
+      vcs       - Synopsys VCS
+      msim      - Mentor Modelsim
+      iverilog  - Icarus Verilog
+      cver      - GPL Cver
+      leda      - Synopsys Leda
+      ncverilog - Cadence NCVerilog
 
     Values supported for {level}:
       1 - Mark all messages

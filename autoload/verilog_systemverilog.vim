@@ -649,6 +649,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"4. cver",
           \"5. Leda",
           \"6. verilator",
+          \"7. NCVerilog",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -663,6 +664,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       let l:tool = "leda"
     elseif (l:tool == 6)
       let l:tool = "verilator"
+    elseif (l:tool == 7)
+      let l:tool = "ncverilog"
     else
       let l:tool = "iverilog"
     endif
@@ -682,17 +685,22 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     elseif (
       \ l:tool == "msim" ||
       \ l:tool == "cver" ||
-      \ l:tool == "verilator"
+      \ l:tool == "verilator" ||
+      \ l:tool == "ncverilog"
       \ )
       let l:mode = inputlist([
             \"1. check all",
             \"2. ignore warnings"
             \])
       echo "\n"
+    else
+      let l:mode = 1
     endif
   else
     let l:mode = a:2
   endif
+
+  call verilog_systemverilog#Verbose("Configuring errorformat with: tool=" . l:tool . "; mode=" . l:mode)
 
   if (l:tool == "vcs")
     " Error messages
@@ -757,6 +765,18 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     "elseif (l:mode <= 1)
     endif
     echo "Selected Verilator errorformat"
+  endif
+  if (l:tool == "ncverilog")
+    " Based on https://github.com/vhda/verilog_systemverilog.vim/issues/88
+    set errorformat =%.%#:\ *%t\\,%.%#\ %#\(%f\\,%l\|%c\):\ %m
+    set errorformat+=%.%#:\ *%t\\,%.%#\ %#\(%f\\,%l\):\ %m
+    " Multi-line error messages
+    set errorformat+=%A%.%#\ *%t\\,%.%#:\ %m,%ZFile:\ %f\\,\ line\ =\ %l\\,\ pos\ =\ %c
+    if (l:mode > 1)
+      " Ignore warnings
+      set errorformat^=%-G%.%#\ *W\\,%.%#:\ %m
+    endif
+    echo "Selected NCVerilog errorformat"
   endif
   " Append UVM errorformat if enabled
   if (exists("g:verilog_efm_uvm_lst"))
