@@ -16,10 +16,9 @@ Besides some bug corrections, the following features were added to this set of s
 
 * Omni completion.
 * Configurable syntax folding.
-* Updated matchit configurations to properly support Verilog 2001 and SystemVerilog.
+* Matchit settings to support Verilog 2001 and SystemVerilog.
 * Error format definitions for common Verilog tools.
-* Commands for following instances.
-* Automatically enabled for the following file extensions: .v.vh.sv.svi.svh
+* Commands for code navigation.
 
 ### Omni Completion
 
@@ -30,7 +29,7 @@ contexts are supported:
 
 1. Module instantiation port names.
 2. Function/task arguments.
-3. Object methods and attrtibutes.
+3. Object methods and atttributes.
 
 In order to use omni completion a tags file must be generated using the
 following arguments:
@@ -115,7 +114,7 @@ nnoremap <leader>i :VerilogFollowInstance<CR>
 nnoremap <leader>I :VerilogFollowPort<CR>
 ```
 
-### Go to current instance declaration
+### Jump to start of current instance
 
 The command `:VerilogGotoInstanceStart` is provided to move the cursor
 to the start of the first module instantiation that precedes the current
@@ -163,80 +162,6 @@ nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 $ cd ~/.vim/bundle
 $ git clone https://github.com/vhda/verilog_systemverilog.vim
 ```
-
-## Configuration
-
-### Indent options
-
-* __`b:verilog_indent_width`__ - Use this variable to override the option `&shiftwidth`.
-* __`b:verilog_indent_modules`__ - Indent code inside modules.
-* __`b:verilog_indent_preproc`__ - Indent code inside preprocessor blocks.
-* __`b:verilog_dont_deindent_eos`__ - Keep last `)` of module port declaration indented.
-* __`b:verilog_indent_assign_fix`__ - Indent assignments by fixed amount.
-* __`g:verilog_disable_indent`__ - Disable indenting for specific contexts.
-  String containing one or more of the following values, separated by comma:
-  * module
-  * interface
-  * class
-  * package
-  * covergroup
-  * program
-  * generate
-  * sequence
-  * property
-  * method
-  * preproc
-  * conditional
-
-  For example:
-
-  ```VimL
-  let g:verilog_disable_indent = "module,interface"
-  ```
-
-  Disabling indentation of `conditional` will change the following:
-  ```systemverilog
-  // Default indent
-  assign a = cond ? b :
-                    c ;
-
-  // Disabling 'conditional'
-  assign a = cond ? b :
-             c ;
-  ```
-
-### Syntax options
-
-* __`g:verilog_syntax_fold`__ - Enable verilog syntax folding.
-  String containing one or more of the following values, separated by comma:
-  * class
-  * function
-  * task
-  * specify
-  * interface
-  * clocking
-  * covergroup
-  * sequence
-  * property
-  * block (`begin`, `end`)
-    * block_nested (like "block", but allows nesting)
-    * block_named (like "block", but allows nesting and only folds if `begin` is labelled)
-  * comment (`/*..*/`)
-  * define (`` `ifdef ``,`` `ifndef ``, `` `elsif ``, `` `else ``, `` `endif ``)
-  * instance
-  * all (enables all above options)
-
-  For example:
-
-  ```VimL
-  let g:verilog_syntax_fold = "function,task"
-  ```
-
-  Set to an empty string to disable syntax folding.
-
-### Debug options
-
-* __`b/g:verilog_verbose`__ - Verbose script execution (uses [`echom`][vim-echom]).
 
 ## Other Vim addons helpful for Verilog/SystemVerilog
 
@@ -290,43 +215,6 @@ Folding][vim-synfold] and the folds extend across the complete file. The
 manual folds from the syntax generated ones. More information about this
 problem and on how to configure the addon can be found on its GitHub
 page.
-
-## FAQ
-
-### How do enable/disable indenting in modules?
-There are two config variables for this. `b:verilog_indent_modules` (which will
-be eventually deprecated) and the newer `g:verilog_disable_indent`. Because of
-the existence of `b:verilog_indent_modules`, indenting in modules is disabled by
-default. As well as this, because `b:verilog_indent_modules` is a buffer
-vairable, to ensure indenting in modules is always enabled you must add
-the following to your .vimrc:
-```VimL
-    augroup systemverilog_settings_1
-        au!
-        au Filetype verilog_systemverilog let b:verilog_indent_modules = 1
-    augroup END
-```
-The same also applies for `b:verilog_indent_preproc` (indentation of
-preprocessor statements).
-
-### Why is opening verilog/systemverilog files so slow?
-
-If you are working with files which are over thousands of lines in length, then
-having folding enabled can significantly slow down opening these files. A
-workaround is to add the following to your .vimrc (adjust variables as you see
-fit):
-```VimL
-    augroup systemverilog_settings_2
-        au!
-        " Enable folding for normal size files. Folding is really slow for large files.
-        au Filetype verilog_systemverilog if line('$') < 2000
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = "all"
-        au Filetype verilog_systemverilog     syntax enable "Trigger fold calculation
-        au Filetype verilog_systemverilog else
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = ""
-        au Filetype verilog_systemverilog endif
-    augroup END
-```
 
 [c]: https://github.com/universal-ctags/ctags
 [f]: https://github.com/Konfekt/FastFold
