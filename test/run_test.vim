@@ -71,4 +71,22 @@ function! RunTestIndent()
     endif
 endfunction
 
+"-----------------------------------------------------------------------
+" Error format test
+"-----------------------------------------------------------------------
+function! RunTestEfm()
+    let test_result=0
+
+    silent view test/errorformat.txt
+    let test_result=TestEfm('iverilog', 1) || test_result
+    echo ''
+
+    " Check test results and exit accordingly
+    if test_result
+        cquit
+    else
+        qall!
+    endif
+endfunction
+
 " vi: set expandtab softtabstop=4 shiftwidth=4:

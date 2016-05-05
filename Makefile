@@ -4,11 +4,11 @@ SILENT   = $(SILENT_$(V))
 SILENT_0 = @
 SILENT_1 =
 
-.PHONY: help test test-fold test-indent
+.PHONY: help test test-fold test-indent test-efm
 
 all: test
 
-test: test-fold test-indent
+test: test-fold test-indent test-efm
 
 test-fold:
 	$(SILENT) vim -T dumb -E \
@@ -21,6 +21,12 @@ test-indent:
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
 		-c 'call RunTestIndent()'
+
+test-efm:
+	$(SILENT) vim -T dumb -E \
+		-c 'source test/functions.vim' \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestEfm()' > test-efm.log
 
 performance:
 	$(SILENT) time vim -T dumb -E \
