@@ -5,6 +5,18 @@ command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorForm
 command!          VerilogFollowInstance call verilog_systemverilog#FollowInstanceTag(line('.'), col('.'))
 command!          VerilogFollowPort call verilog_systemverilog#FollowInstanceSearchWord(line('.'), col('.'))
 command!          VerilogGotoInstanceStart call verilog_systemverilog#GotoInstanceStart(line('.'), col('.'))
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogFoldingAdd
+            \ call verilog_systemverilog#PushToVariable('g:verilog_syntax_fold', '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogFoldingRemove
+            \ call verilog_systemverilog#PopFromVariable('g:verilog_syntax_fold', '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogDisableIndentAdd
+            \ call verilog_systemverilog#PushToVariable('g:verilog_disable_indent', '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogDisableIndentRemove
+            \ call verilog_systemverilog#PopFromVariable('g:verilog_disable_indent', '<args>')
 
 " Configure tagbar
 " This requires a recent version of universal-ctags

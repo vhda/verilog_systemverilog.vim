@@ -445,6 +445,129 @@ function verilog_systemverilog#Verbose(message)
     echom a:message
   endif
 endfunction
+
+" Configuration control
+" Pushes value to list only if new
+" Based on: http://vi.stackexchange.com/questions/6619/append-to-global-variable-and-completion
+function verilog_systemverilog#PushToVariable(variable, value)
+  if exists(a:variable) && len(split(a:variable, ',')) > 0
+    exec 'let ' . a:variable . ' .= ",' . a:value . '"'
+  else
+    exec 'let ' . a:variable . ' = "' . a:value . '"'
+  endif
+endfunction
+
+function verilog_systemverilog#PopFromVariable(variable, value)
+  if exists(a:variable)
+    exec 'let list = split(' . a:variable . ', ",")'
+    if len(list) > 0
+      exec 'let ' . a:variable . ' = "' . join(filter(list, 'v:val !=# a:value'), ',') . '"'
+    else
+      exec 'let ' . a:variable . ' = "' . a:value . '"'
+    endif
+  endif
+endfunction
+" }}}
+
+"------------------------------------------------------------------------
+" Command completion functions
+" {{{
+function verilog_systemverilog#CompleteCommand(lead, command, cursor)
+  " Get list with current values in variable
+  if (a:command =~ 'Folding')
+    if exists('g:verilog_syntax_fold')
+      let current_values = split(g:verilog_syntax_fold, ',')
+    else
+      let current_values = []
+    endif
+  elseif (a:command =~ 'Indent')
+    if exists('g:verilog_disable_indent')
+      let current_values = split(g:verilog_disable_indent, ',')
+    else
+      let current_values = []
+    endif
+  endif
+
+  " Create list with valid completion values depending on command type
+  if (a:command =~ 'FoldingAdd')
+    let valid_completions = [
+          \ 'all',
+          \ 'class',
+          \ 'function',
+          \ 'task',
+          \ 'specify',
+          \ 'interface',
+          \ 'clocking',
+          \ 'covergroup',
+          \ 'sequence',
+          \ 'property',
+          \ 'comment',
+          \ 'define',
+          \ 'instance'
+          \ ]
+    if (empty(filter(current_values, 'v:val =~ "^block"')))
+      let valid_completions += [
+            \ 'block',
+            \ 'block_nested',
+            \ 'block_named'
+            \ ]
+    endif
+    for item in current_values
+      call filter(valid_completions, 'v:val !=# item')
+    endfor
+  elseif (a:command =~ 'DisableIndentAdd')
+    let valid_completions = [
+          \ 'module',
+          \ 'interface',
+          \ 'class',
+          \ 'package',
+          \ 'covergroup',
+          \ 'program',
+          \ 'generate',
+          \ 'sequence',
+          \ 'property',
+          \ 'method',
+          \ 'preproc',
+          \ 'conditional'
+          \ ]
+    for item in current_values
+      call filter(valid_completions, 'v:val !=# item')
+    endfor
+  else
+    let valid_completions = current_values
+  endif
+
+  " If a:lead already includes other comma separated values, then remove
+  " all from the list of valid values except the last
+  let lead_list = split(a:lead, ',')
+  call verilog_systemverilog#Verbose('Current lead values list: [' . join(lead_list, ',') . '] (length = ' . len(lead_list) . ')')
+  call verilog_systemverilog#Verbose('Valid completions: [' . join(valid_completions, ',') . '] (length = ' . len(valid_completions) . ')')
+  if (a:lead =~ ',$')
+    let initial_lead = lead_list
+    let real_lead = ""
+  else
+    if (len(lead_list) > 1)
+      let initial_lead = lead_list[0:-2]
+      let real_lead = lead_list[-1]
+    else
+      let initial_lead = []
+      let real_lead = a:lead
+    endif
+  endif
+  call verilog_systemverilog#Verbose('Removing [' . join(initial_lead, ',') . '] from completion value list')
+  call verilog_systemverilog#Verbose('Searching using lead: "' . real_lead . '"')
+  for item in initial_lead
+    call filter(valid_completions, 'v:val !=# item')
+  endfor
+
+  let completion_list = filter(valid_completions, 'v:val =~ "^" . real_lead')
+
+  if (len(initial_lead) > 0)
+    return map(completion_list, 'join(initial_lead, ",") . "," . v:val')
+  else
+    return completion_list
+  endif
+endfunction
 " }}}
 
 "------------------------------------------------------------------------

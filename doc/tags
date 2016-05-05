@@ -1,4 +1,8 @@
+:VerilogDisableIndentAdd	verilog_systemverilog.txt	/*:VerilogDisableIndentAdd*
+:VerilogDisableIndentRemove	verilog_systemverilog.txt	/*:VerilogDisableIndentRemove*
 :VerilogErrorFormat	verilog_systemverilog.txt	/*:VerilogErrorFormat*
+:VerilogFoldingAdd	verilog_systemverilog.txt	/*:VerilogFoldingAdd*
+:VerilogFoldingRemove	verilog_systemverilog.txt	/*:VerilogFoldingRemove*
 :VerilogFollowInstance	verilog_systemverilog.txt	/*:VerilogFollowInstance*
 :VerilogFollowPort	verilog_systemverilog.txt	/*:VerilogFollowPort*
 :VerilogGotoInstanceStart	verilog_systemverilog.txt	/*:VerilogGotoInstanceStart*
