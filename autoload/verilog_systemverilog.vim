@@ -593,6 +593,11 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     endif
     echo "Selected NCVerilog errorformat"
   endif
+  " Append UVM errorformat if enabled
+  if (exists("g:verilog_efm_uvm"))
+    set errorformat+=UVM_%tRROR\ %f(%l)\ %m
+    set errorformat+=UVM_%tATAL\ %f(%l)\ %m
+  endif
 endfunction
 " }}}
 
