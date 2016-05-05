@@ -484,6 +484,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"3. iverilog",
           \"4. cver",
           \"5. Leda",
+          \"6. NCVerilog",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -496,8 +497,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       let l:tool = "cver"
     elseif (l:tool == 5)
       let l:tool = "leda"
-    else
-      let l:tool = "iverilog"
+    elseif (l:tool == 6)
+      let l:tool = "ncverilog"
     endif
   else
     let l:tool = tolower(a:1)
@@ -514,7 +515,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     elseif (
       \ l:tool == "msim" ||
-      \ l:tool == "cver"
+      \ l:tool == "cver" ||
+      \ l:tool == "ncverilog"
       \ )
       let l:mode = inputlist([
             \"1. check all",
@@ -581,6 +583,15 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     "TODO Review -> Multiple line errorformat:
     "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
     echo "Selected Leda errorformat"
+  endif
+  if (l:tool == "ncverilog")
+    " Based on https://github.com/vhda/verilog_systemverilog.vim/issues/88
+    set errorformat=%.%#:\ \*%t\\,%.%#\ \(%f\\,%l\|%c\):%m
+    if (l:mode > 1)
+      " Ignore warnings
+      set errorformat^=%-G%.%#\ \*W\\,%.%#(%f\\,%l\|%c):\ %m
+    endif
+    echo "Selected NCVerilog errorformat"
   endif
 endfunction
 " }}}
