@@ -267,6 +267,26 @@ COMMANDS                                                    *verilog-commands*
     configured tool is executed with |:make|. For more information check the
     |quickfix| help page.
 
+:VerilogFoldingAdd                                        *:VerilogFoldingAdd*
+:VerilogFoldingRemove                                  *:VerilogFoldingRemove*
+    Commands with auto-completion to simplify maintenance of
+    |g:verilog_syntax_fold|.
+
+    If |c_CTRL-D| is used after these commands a list of valid values is
+    suggested. When adding new values only valid and not already enabled
+    options are suggested. When removing values only currently enabled values
+    are suggested.
+
+:VerilogIndentAdd                                          *:VerilogIndentAdd*
+:VerilogIndentRemove                                    *:VerilogIndentRemove*
+    Commands with auto-completion to simplify maintenance of
+    |g:verilog_disable_indent|.
+
+    If |c_CTRL-D| is used after these commands a list of valid values is
+    suggested. When adding new values only valid and not already enabled
+    options are suggested. When removing values only currently enabled values
+    are suggested.
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                                    *verilog-keys*
 
@@ -420,6 +440,9 @@ Example:
                c ;
 <
 
+    Note: The commands |:VerilogIndentAdd| and |:VerilogIndentRemove| are
+    provided to allow an easier management of this variable.
+
 ------------------------------------------------------------------------------
 SYNTAX CONFIGURATION                                   *verilog-config-syntax*
 
@@ -453,6 +476,9 @@ Example:
 >
     let g:verilog_syntax_fold = "function,task"
 <
+
+    Note: The commands |:VerilogFoldingAdd| and |:VerilogFoldingRemove| are
+    provided to allow an easier management of this variable.
 
 ------------------------------------------------------------------------------
 GENERAL CONFIGURATION                                 *verilog-config-general*
