@@ -474,7 +474,7 @@ endfunction
 
 "------------------------------------------------------------------------
 " Definitions for errorformat
-" {{{
+" {{{ 
 function! verilog_systemverilog#VerilogErrorFormat(...)
   " Choose tool
   if (a:0 == 0)
@@ -525,7 +525,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     endif
   else
-    let l_mode = a:2
+    let l:mode = a:2
   endif
 
   if (l:tool == "vcs")
@@ -587,6 +587,11 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
   if (l:tool == "ncverilog")
     " Based on https://github.com/vhda/verilog_systemverilog.vim/issues/88
     set errorformat=%.%#:\ \*%t\\,%.%#\ \(%f\\,%l\|%c\):%m
+    set errorformat+=%.%#\ *%t\\,%.%#(%f\\,%l\|%c):\ %m
+    " Assertion notices don't have column information
+    set errorformat+=%.%#\ *%t\\,%.%#(%f\\,%l):\ %m
+    " Add ability to parse NULL pointer errors:
+    set errorformat+=%E%>%.%#\ *E\\,%m,%C%.%#File:\ %f\\,\ line\ =\ %l\\,\ pos\ =\ %c,%Z%m
     if (l:mode > 1)
       " Ignore warnings
       set errorformat^=%-G%.%#\ \*W\\,%.%#(%f\\,%l\|%c):\ %m
@@ -599,6 +604,6 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     set errorformat+=UVM_%tATAL\ %f(%l)\ %m
   endif
 endfunction
-" }}}
+" }}} 
 
 " vi: sw=2 sts=2 fdm=marker:
