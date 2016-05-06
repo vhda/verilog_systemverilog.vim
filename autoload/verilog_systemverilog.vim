@@ -474,7 +474,7 @@ endfunction
 
 "------------------------------------------------------------------------
 " Definitions for errorformat
-" {{{ 
+" {{{
 function! verilog_systemverilog#VerilogErrorFormat(...)
   " Choose tool
   if (a:0 == 0)
@@ -604,6 +604,6 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     set errorformat+=UVM_%tATAL\ %f(%l)\ %m
   endif
 endfunction
-" }}} 
+" }}}
 
 " vi: sw=2 sts=2 fdm=marker:
