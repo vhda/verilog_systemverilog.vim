@@ -1,10 +1,30 @@
 " Global plugin settings
 
+" Initialize global variables
+if (!exists("g:verilog_syntax_fold"))
+    let g:verilog_syntax_fold = ""
+endif
+if (!exists("g:verilog_disable_indent"))
+    let g:verilog_disable_indent = ""
+endif
+
 " Command definitions
 command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)
 command!          VerilogFollowInstance call verilog_systemverilog#FollowInstanceTag(line('.'), col('.'))
 command!          VerilogFollowPort call verilog_systemverilog#FollowInstanceSearchWord(line('.'), col('.'))
 command!          VerilogGotoInstanceStart call verilog_systemverilog#GotoInstanceStart(line('.'), col('.'))
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogFoldingAdd
+            \ let g:verilog_syntax_fold=verilog_systemverilog#PushToVariable(g:verilog_syntax_fold, '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogFoldingRemove
+            \ let g:verilog_syntax_fold=verilog_systemverilog#PopFromVariable(g:verilog_syntax_fold, '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogIndentAdd
+            \ let g:verilog_disable_indent=verilog_systemverilog#PushToVariable(g:verilog_disable_indent, '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogIndentRemove
+            \ let g:verilog_disable_indent=verilog_systemverilog#PopFromVariable(g:verilog_disable_indent, '<args>')
 
 " Configure tagbar
 " This requires a recent version of universal-ctags
