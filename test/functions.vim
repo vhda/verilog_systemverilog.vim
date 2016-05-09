@@ -80,7 +80,14 @@ function! TestIndent()
 
 endfunction
 
-function! TestEfm(tool, mode)
+function! TestEfm(tool, mode, search_uvm)
+    let expected_errors   = 0
+    let expected_warnings = 0
+    let expected_lints    = 0
+    let uvm_expected_errors   = 0
+    let uvm_expected_warnings = 0
+    let uvm_expected_lints    = 0
+
     " Obtain tool configuration from file
     let config_found = 0
     let linenr = 0
@@ -102,13 +109,37 @@ function! TestEfm(tool, mode)
                 let expected_lints = 0
             endif
             let config_found = 1
-            break
+            if !a:search_uvm
+                break
+            endif
+        endif
+        " UVM config line
+        let uvm_config = matchlist(line, '^### *UVM E=\(\d\+\), *W=\(\d\+\)\(, *L=\(\d\+\)\)\?')
+        if len(uvm_config) != 0
+            let uvm_expected_errors = uvm_config[1]
+            if len(uvm_config) > 1
+                let uvm_expected_warnings = uvm_config[2]
+            endif
+            if len(uvm_config) > 3
+                let uvm_expected_lints = uvm_config[4]
+            endif
+            let uvm_config_found = 1
+            if config_found
+                break
+            endif
         endif
     endwhile
 
     if !config_found
         echo 'Test for tool ' . tolower(a:tool) . ' was not found'
         return 1
+    endif
+
+    " Calculate total expected errors
+    if a:search_uvm
+        let expected_errors   += uvm_expected_errors
+        let expected_warnings += uvm_expected_warnings
+        let expected_lints    += uvm_expected_lints
     endif
 
     " Setup 'errorformat' and 'makeprg'

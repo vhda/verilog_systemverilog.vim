@@ -14,6 +14,7 @@ b:verilog_syntax_fold_lst	verilog_systemverilog.txt	/*b:verilog_syntax_fold_lst*
 b:verilog_verbose	verilog_systemverilog.txt	/*b:verilog_verbose*
 g:verilog_disable_indent_lst	verilog_systemverilog.txt	/*g:verilog_disable_indent_lst*
 g:verilog_dont_deindent_eos	verilog_systemverilog.txt	/*g:verilog_dont_deindent_eos*
+g:verilog_efm_uvm_lst	verilog_systemverilog.txt	/*g:verilog_efm_uvm_lst*
 g:verilog_indent_assign_fix	verilog_systemverilog.txt	/*g:verilog_indent_assign_fix*
 g:verilog_indent_width	verilog_systemverilog.txt	/*g:verilog_indent_width*
 g:verilog_syntax_fold_lst	verilog_systemverilog.txt	/*g:verilog_syntax_fold_lst*
@@ -21,6 +22,7 @@ g:verilog_verbose	verilog_systemverilog.txt	/*g:verilog_verbose*
 verilog-about	verilog_systemverilog.txt	/*verilog-about*
 verilog-commands	verilog_systemverilog.txt	/*verilog-commands*
 verilog-config	verilog_systemverilog.txt	/*verilog-config*
+verilog-config-efm	verilog_systemverilog.txt	/*verilog-config-efm*
 verilog-config-general	verilog_systemverilog.txt	/*verilog-config-general*
 verilog-config-indent	verilog_systemverilog.txt	/*verilog-config-indent*
 verilog-config-syntax	verilog_systemverilog.txt	/*verilog-config-syntax*

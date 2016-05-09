@@ -17,6 +17,12 @@ command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
             \ VerilogDisableIndentRemove
             \ call verilog_systemverilog#PopFromVariable('verilog_disable_indent_lst', '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogErrorUVMAdd
+            \ call verilog_systemverilog#PushToVariable('verilog_efm_uvm_lst', '<args>')
+command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
+            \ VerilogErrorUVMRemove
+            \ call verilog_systemverilog#PopFromVariable('verilog_efm_uvm_lst', '<args>')
 
 " Configure tagbar
 " This requires a recent version of universal-ctags

@@ -514,6 +514,8 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
     let current_values = verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
   elseif (a:command =~ 'Indent')
     let current_values = verilog_systemverilog#VariableGetValue("verilog_disable_indent_lst")
+  elseif (a:command =~ 'ErrorUVM')
+    let current_values = verilog_systemverilog#VariableGetValue("verilog_efm_uvm_lst")
   endif
 
   " Create list with valid completion values depending on command type
@@ -557,6 +559,17 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'method',
           \ 'preproc',
           \ 'conditional'
+          \ ]
+    for item in current_values
+      call filter(valid_completions, 'v:val !=# item')
+    endfor
+  elseif (a:command =~ 'ErrorUVMAdd')
+    let valid_completions = [
+          \ 'all',
+          \ 'info',
+          \ 'warning',
+          \ 'error',
+          \ 'fatal',
           \ ]
     for item in current_values
       call filter(valid_completions, 'v:val !=# item')
@@ -732,6 +745,22 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     "TODO Review -> Multiple line errorformat:
     "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
     echo "Selected Leda errorformat"
+  endif
+  " Append UVM errorformat if enabled
+  if (exists("g:verilog_efm_uvm_lst"))
+    let verilog_efm_uvm = verilog_systemverilog#VariableGetValue('verilog_efm_uvm_lst')
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'info') >= 0)
+      set errorformat+=UVM_%tNFO\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'warning') >= 0)
+      set errorformat+=UVM_%tARNING\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'error') >= 0)
+      set errorformat+=UVM_%tRROR\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'fatal') >= 0)
+      set errorformat+=UVM_%tATAL\ %f(%l)\ %m
+    endif
   endif
 endfunction
 " }}}

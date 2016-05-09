@@ -447,6 +447,32 @@ Example:
     provided to allow an easier management of this variable.
 
 ------------------------------------------------------------------------------
+ERROR FORMAT CONFIGURATION                                *verilog-config-efm*
+
+                                                       *g:verilog_efm_uvm_lst*
+g:verilog_efm_uvm_lst~
+Default: undefined
+
+    When enabled, appends UVM message formats to |'errorformat'|.
+    This configuration is a comma-separated string of one or more of the
+    following:
+        - `fatal`
+        - `error`
+        - `warning`
+        - `info`
+        - `all` (enables all above options)
+
+Example:
+
+>
+    let g:verilog_efm_uvm_lst = "all"
+    let g:verilog_efm_uvm_lst = "fatal,error,warning"
+<
+
+    Note: The commands |:VerilogErrorUVMAdd| and |:VerilogErrorUVMRemove| are
+    provided to allow an easier management of this variable.
+
+------------------------------------------------------------------------------
 GENERAL CONFIGURATION                                 *verilog-config-general*
 
                                          *b:verilog_verbose* *g:verilog_verbose*
