@@ -80,4 +80,67 @@ function! TestIndent()
 
 endfunction
 
+function! TestEfm(tool, mode)
+    " Obtain tool configuration from file
+    let config_found = 0
+    let linenr = 0
+    while linenr < line("$")
+        let linenr += 1
+        let line = getline(linenr)
+        let tool_config = matchlist(line, '^### *' . tolower(a:tool) . ' E=\(\d\+\), *W=\(\d\+\)\(, *L=\(\d\+\)\)\?')
+        echo line
+        if len(tool_config) != 0
+            let expected_errors = tool_config[1]
+            if a:mode == 1
+                let expected_warnings = tool_config[2]
+            else
+                let expected_warnings = 0
+            endif
+            if a:mode <= 2
+                let expected_lints = tool_config[4]
+            else
+                let expected_lints = 0
+            endif
+            let config_found = 1
+            break
+        endif
+    endwhile
+
+    if !config_found
+        echo 'Test for tool ' . tolower(a:tool) . ' was not found'
+        return 1
+    endif
+
+    " Setup 'errorformat' and 'makeprg'
+    call verilog_systemverilog#VerilogErrorFormat(a:tool, a:mode)
+    setlocal makeprg=cat\ %
+
+    " Populate quickfix window
+    silent! make!
+    redraw
+
+    " Check results
+    let errors = 0
+    let warnings = 0
+    let qf_list = getqflist()
+    for qf_entry in qf_list
+        if qf_entry.type == 'E' || qf_entry.valid && qf_entry.type == ''
+            let errors += 1
+        endif
+        if qf_entry.type == 'W'
+            let warnings += 1
+        endif
+    endfor
+    if errors == expected_errors && warnings == expected_warnings
+        echo 'Error format test passed'
+        return 0
+    else
+        echo 'Error format test failed:'
+        echo ' Expected errors = ' . expected_errors . ', errors found = ' . errors
+        echo ' Expected warnings = ' . expected_warnings . ', warnings found = ' . warnings
+        echo ' errorformat = ' . &errorformat
+        return 1
+    endif
+endfunction
+
 " vi: set expandtab softtabstop=4 shiftwidth=4:

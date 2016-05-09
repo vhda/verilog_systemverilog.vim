@@ -1,0 +1,6 @@
+### iverilog E=5, W=0
+path/file.v:5: syntax error
+path/file.v:5: error: Invalid module instantiation
+path/file.v:18: syntax error
+path/file.v:15: error: Syntax error in instance port expression(s).
+path/file.v:47: error: Invalid module instantiation
