@@ -27,6 +27,7 @@ setlocal indentkeys+==endmodule,=endfunction,=endtask,=endspecify
 setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
 setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
 setlocal indentkeys+==`else,=`endif
+setlocal indentkeys+=;
 
 let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+-]\)'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
