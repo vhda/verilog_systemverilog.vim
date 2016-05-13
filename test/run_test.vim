@@ -5,7 +5,7 @@ function! RunTestFold()
     let test_result=0
 
     " Enable all syntax folding
-    let g:verilog_syntax_fold="all"
+    let g:verilog_syntax_fold_lst="all"
     set foldmethod=syntax
     set noautochdir
 
@@ -17,13 +17,13 @@ function! RunTestFold()
     echo ''
 
     " Test with "block_nested"
-    let g:verilog_syntax_fold="all,block_nested"
+    let g:verilog_syntax_fold_lst="all,block_nested"
     silent view!
     let test_result=TestFold(1) || test_result
     echo ''
 
     " Test with "block_named"
-    let g:verilog_syntax_fold="all,block_named"
+    let g:verilog_syntax_fold_lst="all,block_named"
     silent view!
     let test_result=TestFold(2) || test_result
     echo ''
@@ -41,13 +41,11 @@ endfunction
 "-----------------------------------------------------------------------
 function! RunTestIndent()
     unlet! g:verilog_dont_deindent_eos
-    let g:verilog_disable_indent = "module"
+    let g:verilog_disable_indent_lst = "module"
     let test_result=0
 
     " Open syntax indent test file
     silent edit test/indent.sv
-
-    let b:verilog_indent_preproc=1
 
     " Verify indent
     let test_result=TestIndent() || test_result

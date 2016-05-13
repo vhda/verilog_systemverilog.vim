@@ -441,7 +441,7 @@ endfunction
 " Verbose messaging
 " Only displays messages if b:verilog_verbose or g:verilog_verbose is defined
 function verilog_systemverilog#Verbose(message)
-  if exists("b:verilog_verbose") || exists("g:verilog_verbose")
+  if verilog_systemverilog#VariableExists("verilog_verbose")
     echom a:message
   endif
 endfunction
@@ -450,22 +450,58 @@ endfunction
 " Pushes value to list only if new
 " Based on: http://vi.stackexchange.com/questions/6619/append-to-global-variable-and-completion
 function verilog_systemverilog#PushToVariable(variable, value)
-  if exists(a:variable) && len(split(a:variable, ',')) > 0
-    exec 'let ' . a:variable . ' .= ",' . a:value . '"'
-  else
-    exec 'let ' . a:variable . ' = "' . a:value . '"'
+  let list = verilog_systemverilog#VariableGetValue(a:variable)
+  if (count(list, a:value) == 0)
+    call add(list, a:value)
   endif
+  call verilog_systemverilog#VariableSetValue(a:variable, list)
 endfunction
 
 function verilog_systemverilog#PopFromVariable(variable, value)
-  if exists(a:variable)
-    exec 'let list = split(' . a:variable . ', ",")'
-    if len(list) > 0
-      exec 'let ' . a:variable . ' = "' . join(filter(list, 'v:val !=# a:value'), ',') . '"'
-    else
-      exec 'let ' . a:variable . ' = "' . a:value . '"'
-    endif
+  let list = verilog_systemverilog#VariableGetValue(a:variable)
+  call verilog_systemverilog#VariableSetValue(a:variable, filter(list, "v:val !=# a:value"))
+endfunction
+
+" Get variable value
+" Searches for both b:variable and g:variable, with this priority.
+" If the variable name includes '_lst' it is automatically split into a
+" list.
+function verilog_systemverilog#VariableGetValue(variable)
+  if exists('b:' . a:variable)
+    let value = eval('b:' . a:variable)
+  elseif exists('g:' . a:variable)
+    let value = eval('g:' . a:variable)
+  else
+    let value = ''
   endif
+  if a:variable =~ '_lst'
+    return split(value, ',')
+  else
+    return value
+  endif
+endfunction
+
+" Set variable value
+" Searches for both b:variable and g:variable, with this priority.
+" If none exists, g: will be used
+" If the variable name includes '_lst' the value argument is assumed to
+" be a list.
+function verilog_systemverilog#VariableSetValue(variable, value)
+  if a:variable =~ '_lst'
+    let value = join(a:value, ',')
+  else
+    let value = a:value
+  endif
+  if exists('b:' . a:variable)
+    exec 'let b:' . a:variable . ' = value'
+  else
+    exec 'let g:' . a:variable . ' = value'
+  endif
+endfunction
+
+" Checks for variable existence
+function verilog_systemverilog#VariableExists(variable)
+  return exists('b:' . a:variable) || exists('g:' . a:variable)
 endfunction
 " }}}
 
@@ -475,17 +511,9 @@ endfunction
 function verilog_systemverilog#CompleteCommand(lead, command, cursor)
   " Get list with current values in variable
   if (a:command =~ 'Folding')
-    if exists('g:verilog_syntax_fold')
-      let current_values = split(g:verilog_syntax_fold, ',')
-    else
-      let current_values = []
-    endif
+    let current_values = verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
   elseif (a:command =~ 'Indent')
-    if exists('g:verilog_disable_indent')
-      let current_values = split(g:verilog_disable_indent, ',')
-    else
-      let current_values = []
-    endif
+    let current_values = verilog_systemverilog#VariableGetValue("verilog_disable_indent_lst")
   endif
 
   " Create list with valid completion values depending on command type

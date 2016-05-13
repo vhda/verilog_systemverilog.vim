@@ -131,12 +131,8 @@ endif
 syn keyword verilogObject      super
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
-" Only enable folding if g:verilog_syntax_fold is defined
-if exists("g:verilog_syntax_fold")
-    let s:verilog_syntax_fold=split(g:verilog_syntax_fold, ",")
-else
-    let s:verilog_syntax_fold=[]
-endif
+" Only enable folding if verilog_syntax_fold_lst is defined
+let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
 
 if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold

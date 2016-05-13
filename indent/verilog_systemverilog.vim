@@ -7,13 +7,6 @@
 "   Inspired from script originally created by
 "       Chih-Tsun Huang <cthuang@larc.ee.nthu.edu.tw>
 "
-" Buffer Variables:
-"     b:verilog_indent_width      : Indenting width.
-"     b:verilog_indent_modules    : Indentation within module blocks.
-"     b:verilog_indent_preproc    : Indent preprocessor statements.
-"     b:verilog_dont_deindent_eos : Don't de-indent the ); line in port lists
-"                                   and instances.
-"     b:verilog_indent_assign_fix : Indent assignments by fixed amount.
 
 " Only load this indent file when no other was loaded.
 if exists("b:did_indent")
@@ -70,24 +63,10 @@ set cpo-=C
 
 function! GetVerilogSystemVerilogIndent()
 
-  if exists("g:verilog_disable_indent")
-    let s:verilog_disable_indent = split(g:verilog_disable_indent, ",")
-  else
-    let s:verilog_disable_indent = []
-  endif
+  let s:verilog_disable_indent = verilog_systemverilog#VariableGetValue('verilog_disable_indent_lst')
 
-  if !exists('b:verilog_indent_modules') &&
-        \ index(s:verilog_disable_indent, 'module') < 0
-    let s:verilog_disable_indent += ['module']
-  endif
-
-  if !exists('b:verilog_indent_preproc') &&
-        \ index(s:verilog_disable_indent, 'preproc') < 0
-    let s:verilog_disable_indent += ['preproc']
-  endif
-
-  if exists('b:verilog_indent_width')
-    let s:offset = b:verilog_indent_width
+  if verilog_systemverilog#VariableExists('verilog_indent_width')
+    let s:offset = verilog_systemverilog#VariableGetValue('verilog_indent_width')
   else
     let s:offset = &sw
   endif
@@ -102,8 +81,7 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*)'
     let l:extra_offset = 0
     if s:curr_line =~ '^\s*);\s*$' &&
-          \ (exists('b:verilog_dont_deindent_eos') ||
-          \ exists('g:verilog_dont_deindent_eos'))
+          \ verilog_systemverilog#VariableExists('verilog_dont_deindent_eos')
       let l:extra_offset = s:offset
     endif
     call verilog_systemverilog#Verbose("Indenting )")
@@ -261,7 +239,7 @@ function! s:GetContextIndent()
             \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
         let l:open_offset = s:offset
         call verilog_systemverilog#Verbose("Increasing indent for an open statement.")
-        if (!exists("b:verilog_indent_assign_fix"))
+        if (!verilog_systemverilog#VariableExists("verilog_indent_assign_fix"))
           let l:look_for_open_assign = 1
         endif
       endif
