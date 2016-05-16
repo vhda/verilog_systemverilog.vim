@@ -303,8 +303,9 @@ following mappings are added to your |vimrc|.
 ------------------------------------------------------------------------------
 INDENT CONFIGURATION                                   *verilog-config-indent*
 
-                                                      *b:verilog_indent_width*
+                               *b:verilog_indent_width* *g:verilog_indent_width*
 b:verilog_indent_width~
+g:verilog_indent_width~
 Default: undefined
 
     Override normal |'shiftwidth'|.
@@ -314,47 +315,9 @@ Example:
     let b:verilog_indent_width = 8
 <
 
-                                                    *b:verilog_indent_modules*
-b:verilog_indent_modules~
-Default: undefined
-
-    Increment indentation level after module port list. By default no
-    indentation exists and code is aligned with the {module} declaration at
-    column 0.
-
-Example:
->
-    let b:verilog_indent_modules = 1
-<
-
-                                                    *b:verilog_indent_preproc*
-b:verilog_indent_preproc~
-Default: undefined
-
-    Increment indentation level after preprocessor conditional ifdef/ifndef.
-    If disabled (default), code following these statements has the same
-    indentation level.
-    By default:
->
-        `ifdef DEFINITION
-        assign a = b;
-        `endif
-<
-    When enbled:
->
-        `ifdef DEFINITION
-            assign a = b;
-        `endif
-<
-
-Example:
-
->
-    let b:verilog_indent_preproc = 1
-<
-
-                                                 *b:verilog_dont_deindent_eos*
+                     *b:verilog_dont_deindent_eos* *g:verilog_dont_deindent_eos*
 b:verilog_dont_deindent_eos~
+g:verilog_dont_deindent_eos~
 Default: undefined
 
     Disable de-indentation of the close parentheses of modules, functions,
@@ -379,8 +342,9 @@ Example:
     let b:verilog_dont_deindent_eos = 1
 <
 
-                                                 *b:verilog_indent_assign_fix*
+                     *b:verilog_indent_assign_fix* *g:verilog_indent_assign_fix*
 b:verilog_indent_assign_fix~
+g:verilog_indent_assign_fix~
 Default: undefined
 
     Always indent lines following an assignment by a fixed amount.
@@ -406,8 +370,9 @@ Example:
     let b:verilog_indent_assign_fix = 1
 <
 
-                                                    *g:verilog_disable_indent*
-g:verilog_disable_indent~
+                   *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
+b:verilog_disable_indent_lst~
+g:verilog_disable_indent_lst~
 Default: undefined
 
     Disables indent for specific Verilog/SystemVerilog contexts.
@@ -446,8 +411,9 @@ Example:
 ------------------------------------------------------------------------------
 SYNTAX CONFIGURATION                                   *verilog-config-syntax*
 
-                                                       *g:verilog_syntax_fold*
-g:verilog_syntax_fold~
+                         *b:verilog_syntax_fold_lst* *g:verilog_syntax_fold_lst*
+b:verilog_syntax_fold_lst~
+g:verilog_syntax_fold_lst~
 Default: undefined
 
     Enables syntax folding according to the configured values.
@@ -501,22 +467,34 @@ Example:
 6. Frequently Asked Questions                                    *verilog-faq*
 
 ------------------------------------------------------------------------------
-How to enable/disable indenting in modules?
+How to configure certain features only on some files?
 
-There are two config variables for this. |b:verilog_indent_modules| (which
-will be eventually deprecated) and the newer |g:verilog_disable_indent|.
-Because of the existence of |b:verilog_indent_modules|, indenting in modules
-is disabled by default. As well as this, because |b:verilog_indent_modules| is
-a buffer variable, to ensure indenting in modules is always enabled you must
-add the following to your |.vimrc|:
+Many configurations support both buffer local and global variables, allowing
+using default configurations together with local expections. This provides the
+simplicity of using global variables that do not require |:autocmd| for users
+that do not require exceptions, together with the versatily of buffer local
+variables for those that need it.
+
+The following example allows using different settings for Verilog and
+SystemVerilog files:
+
 >
-    augroup systemverilog_settings_1
-        au!
-        au Filetype verilog_systemverilog let b:verilog_indent_modules = 1
+    let g:verilog_dont_deindent_eos=1
+    augroup verilog_dont_deindent_eos
+        autocmd!
+        autocmd BufNewFile,BufRead *.sv let b:verilog_dont_deindent_eos=0
     augroup END
 <
-The same also applies for |b:verilog_indent_preproc| (indentation of
-preprocessor statements).
+Another example that uses a different configuration for files inside a
+specific folder:
+>
+    let g:verilog_dont_deindent_eos=1
+    augroup verilog_dont_deindent_eos
+        autocmd!
+        autocmd BufNewFile,BufRead */test/*.sv let b:verilog_dont_deindent_eos=0
+    augroup END
+<
+For more information regarding supported patterns check |autocmd-patterns|.
 
 ------------------------------------------------------------------------------
 Why is opening verilog/systemverilog files so slow?

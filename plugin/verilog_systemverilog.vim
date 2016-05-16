@@ -7,16 +7,16 @@ command!          VerilogFollowPort call verilog_systemverilog#FollowInstanceSea
 command!          VerilogGotoInstanceStart call verilog_systemverilog#GotoInstanceStart(line('.'), col('.'))
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
             \ VerilogFoldingAdd
-            \ call verilog_systemverilog#PushToVariable('g:verilog_syntax_fold', '<args>')
+            \ call verilog_systemverilog#PushToVariable('verilog_syntax_fold_lst', '<args>')
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
             \ VerilogFoldingRemove
-            \ call verilog_systemverilog#PopFromVariable('g:verilog_syntax_fold', '<args>')
+            \ call verilog_systemverilog#PopFromVariable('verilog_syntax_fold_lst', '<args>')
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
             \ VerilogDisableIndentAdd
-            \ call verilog_systemverilog#PushToVariable('g:verilog_disable_indent', '<args>')
+            \ call verilog_systemverilog#PushToVariable('verilog_disable_indent_lst', '<args>')
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand
             \ VerilogDisableIndentRemove
-            \ call verilog_systemverilog#PopFromVariable('g:verilog_disable_indent', '<args>')
+            \ call verilog_systemverilog#PopFromVariable('verilog_disable_indent_lst', '<args>')
 
 " Configure tagbar
 " This requires a recent version of universal-ctags
