@@ -10,6 +10,24 @@ http://www.vim.org/scripts/script.php?script_id=1586
 
 [comment]: <http://> "_ stop highlighting the underscore from the link above"
 
+## IMPORTANT NOTICE
+
+Version 3.0 reviews the configuration variables used in this plugin. As
+such, take into account that the following variables were deprecated and
+are no longer supported:
+
+* `b:verilog_indent_modules`
+* `b:verilog_indent_preproc`
+
+The following variables were renamed:
+
+* `g:verilog_disable_indent` -> `g:verilog_disable_indent_lst`
+* `g:verilog_syntax_fold` -> `g:verilog_syntax_fold_lst`
+
+Most configuration variables now also support buffer local variables,
+allowing exceptions to the default configuration through the use of
+`autocmd`.
+
 ## Features
 
 Besides some bug corrections, the following features were added to this set of scripts:

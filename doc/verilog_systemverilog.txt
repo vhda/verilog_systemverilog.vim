@@ -3,7 +3,7 @@
 Author:         Vitor Antunes <vitor.hda@gmail.com>
 Licence:        Vim licence, see |license|
 Homepage:       http://vhda.github.com/verilog_systemverilog.vim/
-Version:        2.0
+Version:        3.0
 
 ==============================================================================
 Contents                                *verilog_systemverilog* *verilog-contents*
@@ -519,7 +519,7 @@ see fit):
 ==============================================================================
 7. History                                                   *verilog-history*
 
-3.0 (????-??-??)
+3.0 (2016-05-17)
     - Reimplementation of indentation script (Lewis Russell)
     - Various improvements to omni-completion scripts
     - Add function to control errorformat configuration
