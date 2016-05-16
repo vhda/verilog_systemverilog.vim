@@ -20,6 +20,13 @@ else
    runtime! syntax/verilog.vim
 endif
 
+" Override 'iskeyword'
+if version >= 600
+   setlocal iskeyword=@,48-57,_,192-255
+else
+   set iskeyword=@,48-57,_,192-255
+endif
+
 " Store cpoptions
 let oldcpo=&cpoptions
 set cpo-=C
