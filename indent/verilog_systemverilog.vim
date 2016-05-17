@@ -81,7 +81,7 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*)'
     let l:extra_offset = 0
     if s:curr_line =~ '^\s*);\s*$' &&
-          \ verilog_systemverilog#VariableExists('verilog_dont_deindent_eos')
+          \ index(s:verilog_disable_indent, 'eos') < 0
       let l:extra_offset = s:offset
     endif
     call verilog_systemverilog#Verbose("Indenting )")
