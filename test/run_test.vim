@@ -75,6 +75,8 @@ endfunction
 function! RunTestEfm()
     let test_result=0
 
+    set nomore "Disable pager to avoid issues with Travis
+
     silent view test/errorformat.txt
     let test_result=TestEfm('iverilog', 1) || test_result
     echo ''

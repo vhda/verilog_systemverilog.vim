@@ -87,8 +87,8 @@ function! TestEfm(tool, mode)
     while linenr < line("$")
         let linenr += 1
         let line = getline(linenr)
+        " Tool config line
         let tool_config = matchlist(line, '^### *' . tolower(a:tool) . ' E=\(\d\+\), *W=\(\d\+\)\(, *L=\(\d\+\)\)\?')
-        echo line
         if len(tool_config) != 0
             let expected_errors = tool_config[1]
             if a:mode == 1
@@ -122,23 +122,41 @@ function! TestEfm(tool, mode)
     " Check results
     let errors = 0
     let warnings = 0
+    let lints = 0
     let qf_list = getqflist()
     for qf_entry in qf_list
-        if qf_entry.type == 'E' || qf_entry.valid && qf_entry.type == ''
-            let errors += 1
-        endif
-        if qf_entry.type == 'W'
-            let warnings += 1
+        " Only check valid entries
+        if qf_entry.valid != 0
+            " Consider Fatal and matches without type as errors
+            if qf_entry.type == 'E' ||
+                        \ qf_entry.type == 'F' ||
+                        \ qf_entry.type == ''
+                let errors += 1
+            endif
+            if qf_entry.type == 'W'
+                let warnings += 1
+            endif
+            " Consider Info as lint
+            if qf_entry.type == 'L' ||
+                        \ qf_entry.type == 'I'
+                let lints += 1
+            endif
         endif
     endfor
-    if errors == expected_errors && warnings == expected_warnings
+    echo 'Results:'
+    echo ' Expected errors = ' . expected_errors . ', errors found = ' . errors
+    echo ' Expected warnings = ' . expected_warnings . ', warnings found = ' . warnings
+    echo ' Expected lints = ' . expected_lints . ', lints found = ' . lints
+    echo ' errorformat = ' . &errorformat
+    echo 'Quickfix contents:'
+    for qf_entry in qf_list
+        echo qf_entry
+    endfor
+    if errors == expected_errors && warnings == expected_warnings && lints == expected_lints
         echo 'Error format test passed'
         return 0
     else
         echo 'Error format test failed:'
-        echo ' Expected errors = ' . expected_errors . ', errors found = ' . errors
-        echo ' Expected warnings = ' . expected_warnings . ', warnings found = ' . warnings
-        echo ' errorformat = ' . &errorformat
         return 1
     endif
 endfunction
