@@ -727,7 +727,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     echo "Selected Modelsim errorformat"
   endif
   if (l:tool == "iverilog")
-    set errorformat=%f:%l:\ %m
+    set errorformat=%f\\:%l:\ %m
     echo "Selected iverilog errorformat"
   endif
   if (l:tool == "cver")
@@ -741,7 +741,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
   endif
   if (l:tool == "leda")
     " Simple errorformat:
-    set errorformat=%f:%l:\ %.%#\[%t%.%#\]\ %m
+    set errorformat=%f\\:%l:\ %.%#\[%t%.%#\]\ %m
     "TODO Review -> Multiple line errorformat:
     "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
     echo "Selected Leda errorformat"
