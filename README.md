@@ -86,6 +86,7 @@ the following Verilog tools:
 * Icarus Verilog (`iverilog`)
 * GPL Cver (`cver`)
 * Synopsys Leda (`leda`)
+* Verilator (`verilator`)
 
 The command `VerilogErrorFormat` allows the interactive selection of these
 configurations. In some cases it is also possible to ignore _lint_ and/or

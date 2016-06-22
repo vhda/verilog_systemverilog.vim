@@ -5,6 +5,12 @@ path/file.v:18: syntax error
 path/file.v:15: error: Syntax error in instance port expression(s).
 path/file.v:47: error: Invalid module instantiation
 
+### verilator E=1, W=3
+%Warning-ASSIGNDLY: test.v:1: Unsupported: Ignoring delay on this assignment/primitive.
+%Warning-DECLFILENAME: test.v:2: Filename 'test' does not match MODULE name: something
+%Warning-IMPLICIT: test.v:3: Signal definition not found, creating implicitly: something
+%Error: test.v:4: Pin not found: something
+
 ### UVM E=2, W=1, L=1
 UVM_FATAL /path/file.sv(5) @ 1000: text
 UVM_ERROR /path/file.sv(5) @ 1000: text

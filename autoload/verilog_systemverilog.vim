@@ -648,6 +648,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"3. iverilog",
           \"4. cver",
           \"5. Leda",
+          \"6. verilator",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -660,6 +661,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       let l:tool = "cver"
     elseif (l:tool == 5)
       let l:tool = "leda"
+    elseif (l:tool == 6)
+      let l:tool = "verilator"
     else
       let l:tool = "iverilog"
     endif
@@ -678,7 +681,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     elseif (
       \ l:tool == "msim" ||
-      \ l:tool == "cver"
+      \ l:tool == "cver" ||
+      \ l:tool == "verilator"
       \ )
       let l:mode = inputlist([
             \"1. check all",
@@ -687,7 +691,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     endif
   else
-    let l_mode = a:2
+    let l:mode = a:2
   endif
 
   if (l:tool == "vcs")
@@ -745,6 +749,14 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     "TODO Review -> Multiple line errorformat:
     "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
     echo "Selected Leda errorformat"
+  endif
+  if (l:tool == "verilator")
+    set errorformat=%%%trror%.%#:\ %f:%l:\ %m
+    if (l:mode <= 1)
+      set errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
+    "elseif (l:mode <= 1)
+    endif
+    echo "Selected Verilator errorformat"
   endif
   " Append UVM errorformat if enabled
   if (exists("g:verilog_efm_uvm_lst"))
