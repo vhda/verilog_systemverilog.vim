@@ -75,9 +75,29 @@ endfunction
 function! RunTestEfm()
     let test_result=0
 
-    silent view test/errorformat.txt
-    let test_result=TestEfm('iverilog', 1) || test_result
-    echo ''
+    set nomore "Disable pager to avoid issues with Travis
+
+    let g:verilog_efm_quickfix_clean = 1
+
+    for check_uvm in [0, 1]
+        if check_uvm
+            let g:verilog_efm_uvm_lst = 'all'
+        else
+            unlet! g:verilog_efm_uvm_lst
+        endif
+
+        silent view test/errorformat.txt
+        let test_result=TestEfm('iverilog', 1, check_uvm) || test_result
+        echo ''
+
+        silent view test/errorformat.txt
+        let test_result=TestEfm('verilator', 1, check_uvm) || test_result
+        echo ''
+
+        silent view test/errorformat.txt
+        let test_result=TestEfm('verilator', 2, check_uvm) || test_result
+        echo ''
+    endfor
 
     " Check test results and exit accordingly
     if test_result

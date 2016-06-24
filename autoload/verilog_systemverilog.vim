@@ -514,6 +514,8 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
     let current_values = verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
   elseif (a:command =~ 'Indent')
     let current_values = verilog_systemverilog#VariableGetValue("verilog_disable_indent_lst")
+  elseif (a:command =~ 'ErrorUVM')
+    let current_values = verilog_systemverilog#VariableGetValue("verilog_efm_uvm_lst")
   endif
 
   " Create list with valid completion values depending on command type
@@ -557,6 +559,17 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'method',
           \ 'preproc',
           \ 'conditional'
+          \ ]
+    for item in current_values
+      call filter(valid_completions, 'v:val !=# item')
+    endfor
+  elseif (a:command =~ 'ErrorUVMAdd')
+    let valid_completions = [
+          \ 'all',
+          \ 'info',
+          \ 'warning',
+          \ 'error',
+          \ 'fatal',
           \ ]
     for item in current_values
       call filter(valid_completions, 'v:val !=# item')
@@ -635,6 +648,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"3. iverilog",
           \"4. cver",
           \"5. Leda",
+          \"6. verilator",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -647,6 +661,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       let l:tool = "cver"
     elseif (l:tool == 5)
       let l:tool = "leda"
+    elseif (l:tool == 6)
+      let l:tool = "verilator"
     else
       let l:tool = "iverilog"
     endif
@@ -665,7 +681,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     elseif (
       \ l:tool == "msim" ||
-      \ l:tool == "cver"
+      \ l:tool == "cver" ||
+      \ l:tool == "verilator"
       \ )
       let l:mode = inputlist([
             \"1. check all",
@@ -674,7 +691,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       echo "\n"
     endif
   else
-    let l_mode = a:2
+    let l:mode = a:2
   endif
 
   if (l:tool == "vcs")
@@ -714,7 +731,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     echo "Selected Modelsim errorformat"
   endif
   if (l:tool == "iverilog")
-    set errorformat=%f:%l:\ %m
+    set errorformat=%f\\:%l:\ %m
     echo "Selected iverilog errorformat"
   endif
   if (l:tool == "cver")
@@ -728,10 +745,42 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
   endif
   if (l:tool == "leda")
     " Simple errorformat:
-    set errorformat=%f:%l:\ %.%#\[%t%.%#\]\ %m
+    set errorformat=%f\\:%l:\ %.%#\[%t%.%#\]\ %m
     "TODO Review -> Multiple line errorformat:
     "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
     echo "Selected Leda errorformat"
+  endif
+  if (l:tool == "verilator")
+    set errorformat=%%%trror%.%#:\ %f:%l:\ %m
+    if (l:mode <= 1)
+      set errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
+    "elseif (l:mode <= 1)
+    endif
+    echo "Selected Verilator errorformat"
+  endif
+  " Append UVM errorformat if enabled
+  if (exists("g:verilog_efm_uvm_lst"))
+    let verilog_efm_uvm = verilog_systemverilog#VariableGetValue('verilog_efm_uvm_lst')
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'info') >= 0)
+      set errorformat+=UVM_%tNFO\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'warning') >= 0)
+      set errorformat+=UVM_%tARNING\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'error') >= 0)
+      set errorformat+=UVM_%tRROR\ %f(%l)\ %m
+    endif
+    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'fatal') >= 0)
+      set errorformat+=UVM_%tATAL\ %f(%l)\ %m
+    endif
+  endif
+  " Append any user-defined efm entries
+  if (exists("g:verilog_efm_custom"))
+    set errorformat+=g:verilog_efm_custom
+  endif
+  " Remove all unmatched lines from the quickfix window
+  if (exists("g:verilog_efm_quickfix_clean"))
+    set errorformat+=%-G%.%#
   endif
 endfunction
 " }}}
