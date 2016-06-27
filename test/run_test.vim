@@ -97,6 +97,14 @@ function! RunTestEfm()
         silent view test/errorformat.txt
         let test_result=TestEfm('verilator', 2, check_uvm) || test_result
         echo ''
+
+        silent view test/errorformat.txt
+        let test_result=TestEfm('ncverilog', 1, check_uvm) || test_result
+        echo ''
+
+        silent view test/errorformat.txt
+        let test_result=TestEfm('ncverilog', 2, check_uvm) || test_result
+        echo ''
     endfor
 
     " Check test results and exit accordingly
