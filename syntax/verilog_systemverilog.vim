@@ -108,18 +108,28 @@ syn keyword verilogConditional iff
 syn keyword verilogRepeat      return break continue
 syn keyword verilogRepeat      do while foreach
 
-syn match   verilogGlobal      "`begin_\w\+"
-syn match   verilogGlobal      "`end_\w\+"
-syn match   verilogGlobal      "`remove_\w\+"
-syn match   verilogGlobal      "`restore_\w\+"
+syn clear verilogGlobal
+syn match   verilogGlobal      "`[a-zA-Z_][a-zA-Z0-9_$]\+"
+syn match   verilogGlobal      "$[a-zA-Z0-9_$]\+"
 
-syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
+syn clear verilogConstant
+syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]\+\>"
 
-syn match   verilogNumber      "\<\d[0-9_]*\(\.\?[0-9_]\+\)\=\([fpnum]\)\=s\>"
+syn clear verilogNumber
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[bB]\s*[0-1_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[oO]\s*[0-7_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[dD]\s*[0-9_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[hH]\s*[0-9a-fA-F_xXzZ?]\+"
+syn match   verilogNumber      "\<[+-]\?[0-9_]\+\(\.[0-9_]*\)\?\(e[0-9_]*\)\?\>"
+syn match   verilogNumber      "\<\d[0-9_]*\(\.[0-9_]\+\)\=\([fpnum]\)\=s\>"
 syn keyword verilogNumber      1step
 
 syn keyword verilogMethod      new
-syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
+if v:version >= 704
+    syn match   verilogMethod  "\(^\s\+\.\)\@30<!\<\w\+\ze("
+else
+    syn match   verilogMethod  "\(^\s\+\.\)\@<!\<\w\+\ze("
+endif
 
 syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<\(assert\|assume\|cover\(point\)\?\|cross\)\>"
 if v:version >= 704
@@ -311,9 +321,6 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ keepend
         \ contained containedin=verilogFoldIfContainer
         \ contains=TOP
-    " The above syntax regions start/end matches will disable the respective
-    " verilogGlobal keywords. This syntax match fixes that:
-    syn match verilogGlobal "\<`\(ifn\?def\|e\(els\(e\|if\)\)\|ndif\)\>"
 endif
 if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFold

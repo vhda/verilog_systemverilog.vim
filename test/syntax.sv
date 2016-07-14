@@ -259,6 +259,51 @@ xor
 10_000.123ns
 100_000.123ns
 1_000_000.123ns
-1.2.3ns
+1.2.3ns  // Second to should not be part of number syntax
 1step
+`endif
+`ifdef NUMBERS
+4'h0
+4'h1
+4'h2
+4'h3
+4'h4
+4'h5
+4'h6
+4'h7
+4'h8
+4'h9
+4'ha
+4'hb
+4'hc
+4'hd
+4'he
+4'hf
+4'hA
+4'hB
+4'hC
+4'hD
+4'hE
+4'hF
+4'hg // Invalid value for hexadecimal number
+4'hG // Invalid value for hexadecimal number
+3'o0
+3'o1
+3'o2
+3'o3
+3'o4
+3'o5
+3'o6
+3'o7
+3'o8 // Invalid value for octal number
+3'b0_01
+3'b001
+3'b_01
+3'b120 // Invalid value for binary number
+'d10000
+'d_000_000
+'d_x00_000
+4'b0?x0
+4'b010?
+4'b010? ? 4'b????; // Conditional '?' and ';' should not be part of number syntax
 `endif

@@ -261,8 +261,53 @@
 <span class="Constant">10_000.123ns</span>
 <span class="Constant">100_000.123ns</span>
 <span class="Constant">1_000_000.123ns</span>
-<span class="Constant">1.2</span><span class="Special">.</span><span class="Constant">3ns</span>
+<span class="Constant">1.2</span><span class="Special">.</span><span class="Constant">3ns</span>  <span class="Comment">// Second to should not be part of number syntax</span>
 <span class="Constant">1step</span>
+<span class="PreProc">`endif</span>
+<span class="PreProc">`ifdef</span> <span class="Constant">NUMBERS</span>
+<span class="Constant">4'h0</span>
+<span class="Constant">4'h1</span>
+<span class="Constant">4'h2</span>
+<span class="Constant">4'h3</span>
+<span class="Constant">4'h4</span>
+<span class="Constant">4'h5</span>
+<span class="Constant">4'h6</span>
+<span class="Constant">4'h7</span>
+<span class="Constant">4'h8</span>
+<span class="Constant">4'h9</span>
+<span class="Constant">4'ha</span>
+<span class="Constant">4'hb</span>
+<span class="Constant">4'hc</span>
+<span class="Constant">4'hd</span>
+<span class="Constant">4'he</span>
+<span class="Constant">4'hf</span>
+<span class="Constant">4'hA</span>
+<span class="Constant">4'hB</span>
+<span class="Constant">4'hC</span>
+<span class="Constant">4'hD</span>
+<span class="Constant">4'hE</span>
+<span class="Constant">4'hF</span>
+<span class="Constant">4</span>'hg <span class="Comment">// Invalid value for hexadecimal number</span>
+<span class="Constant">4</span>'hG <span class="Comment">// Invalid value for hexadecimal number</span>
+<span class="Constant">3'o0</span>
+<span class="Constant">3'o1</span>
+<span class="Constant">3'o2</span>
+<span class="Constant">3'o3</span>
+<span class="Constant">3'o4</span>
+<span class="Constant">3'o5</span>
+<span class="Constant">3'o6</span>
+<span class="Constant">3'o7</span>
+<span class="Constant">3</span>'o8 <span class="Comment">// Invalid value for octal number</span>
+<span class="Constant">3'b0_01</span>
+<span class="Constant">3'b001</span>
+<span class="Constant">3'b_01</span>
+<span class="Constant">3'b1</span>20 <span class="Comment">// Invalid value for binary number</span>
+<span class="Constant">'d10000</span>
+<span class="Constant">'d_000_000</span>
+<span class="Constant">'d_x00_000</span>
+<span class="Constant">4'b0?x0</span>
+<span class="Constant">4'b010?</span>
+<span class="Constant">4'b010?</span> <span class="Special">?</span> <span class="Constant">4'b????</span><span class="Special">;</span> <span class="Comment">// Conditional '?' and ';' should not be part of number syntax</span>
 <span class="PreProc">`endif</span>
 </pre>
 </body>
