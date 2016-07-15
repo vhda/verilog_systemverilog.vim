@@ -27,10 +27,14 @@ setlocal fo-=t fo+=croqlm1
 " Set 'comments' to format dashed lists in comments.
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 
-" Win32 can filter files in the browse dialog
-if has("gui_win32") && !exists("b:browsefilter")
-  let b:browsefilter = "Verilog Source Files (*.v)\t*.v\n" .
-        \ "All Files (*.*)\t*.*\n"
+" Win32 and GTK can filter files in the browse dialog
+if (has("gui_win32") || has("gui_gtk")) && !exists("b:browsefilter")
+  let b:browsefilter = ""
+        \ . "Verilog Family Source Files\t*.v;*.vh;*.vp;*.sv;*.svh;*.svi;*.svp\n"
+        \ . "Verilog Source Files (*.v *.vh)\t*.v;*.vh\n"
+        \ . "SystemVerilog Source Files (*.sv *.svh *.svi)\t*.sv;*.svh;*.svi\n"
+        \ . "Protected Files (*.vp *.svp)\t*.vp;*.svp\n"
+        \ . "All Files (*.*)\t*.*\n"
 endif
 " Override matchit configurations
 if exists("loaded_matchit")
