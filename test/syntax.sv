@@ -307,3 +307,19 @@ xor
 4'b010?
 4'b010? ? 4'b????; // Conditional '?' and ';' should not be part of number syntax
 `endif
+// synopsys
+
+/* synopsys dc_script_begin
+*  set_size_only {U1}
+*  synopsys dc_script_end
+*/
+
+// synopsys dc_script_begin
+// set_size_only {U1}
+// synopsys dc_script_end
+
+// TODO todo check
+
+/*
+* TODO todo check
+*/
