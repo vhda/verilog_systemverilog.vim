@@ -115,4 +115,43 @@ function! RunTestEfm()
     endif
 endfunction
 
+"-----------------------------------------------------------------------
+" Syntax test
+"-----------------------------------------------------------------------
+function! RunTestSyntax()
+    set nomore "Disable pager to avoid issues with Travis
+
+    silent view test/syntax.sv
+
+    " Generate HTML version of the file
+    let g:html_line_ids=0
+    let g:html_number_lines=0
+    TOhtml
+    " Clean up resulting HTML to minimize differences with other version
+    " of TOhtml script
+    1,/<body>/-1delete
+    /<\/body>/+1,$delete
+    %s/ id='vimCodeElement'//
+    " Write final buffer
+    w! test/syntax.sv.new.html
+
+    " Compare with reference
+    silent let output = system('diff test/syntax.sv.html test/syntax.sv.new.html')
+
+    if output == ""
+        echo 'Syntax test passed'
+        let test_result = 0
+    else
+        echo 'Syntax test failed'
+        let test_result = 1
+    endif
+
+    " Check test results and exit accordingly
+    if test_result
+        cquit
+    else
+        qall!
+    endif
+endfunction
+
 " vi: set expandtab softtabstop=4 shiftwidth=4:

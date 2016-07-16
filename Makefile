@@ -8,7 +8,7 @@ SILENT_1 =
 
 all: test
 
-test: test-fold test-indent test-efm
+test: test-fold test-indent test-efm test-syntax
 
 test-fold:
 	$(SILENT) vim -T dumb -E \
@@ -27,6 +27,13 @@ test-efm:
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
 		-c 'call RunTestEfm()' > test-efm.log
+	$(SILENT) grep "^Error format test" test-efm.log
+
+test-syntax:
+	$(SILENT) vim -T dumb -E \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestSyntax()' > test-syntax.log
+	$(SILENT) grep "^Syntax test" test-syntax.log
 
 performance:
 	$(SILENT) time vim -T dumb -E \

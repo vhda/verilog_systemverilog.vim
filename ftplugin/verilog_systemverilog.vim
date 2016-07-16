@@ -12,13 +12,30 @@ setlocal include=^\\s*`include
 " Set omni completion function
 setlocal omnifunc=verilog_systemverilog#Complete
 
-" Behaves just like Verilog
-runtime! ftplugin/verilog.vim
-
 " Store cpoptions
 let oldcpo=&cpoptions
 set cpo-=C
 
+" Undo the plugin effect
+let b:undo_ftplugin = "setlocal fo< com< tw<"
+    \ . "| unlet! b:browsefilter b:match_ignorecase b:match_words"
+
+" Set 'formatoptions' to break comment lines but not other lines,
+" and insert the comment leader when hitting <CR> or using "o".
+setlocal fo-=t fo+=croqlm1
+
+" Set 'comments' to format dashed lists in comments.
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+
+" Win32 and GTK can filter files in the browse dialog
+if (has("gui_win32") || has("gui_gtk")) && !exists("b:browsefilter")
+  let b:browsefilter = ""
+        \ . "Verilog Family Source Files\t*.v;*.vh;*.vp;*.sv;*.svh;*.svi;*.svp\n"
+        \ . "Verilog Source Files (*.v *.vh)\t*.v;*.vh\n"
+        \ . "SystemVerilog Source Files (*.sv *.svh *.svi)\t*.sv;*.svh;*.svi\n"
+        \ . "Protected Files (*.vp *.svp)\t*.vp;*.svp\n"
+        \ . "All Files (*.*)\t*.*\n"
+endif
 " Override matchit configurations
 if exists("loaded_matchit")
   let b:match_ignorecase=0
@@ -50,6 +67,7 @@ endif
 
 " Restore cpoptions
 let &cpoptions=oldcpo
+unlet oldcpo
 
 " Raise warning if smartindent is defined
 if &smartindent

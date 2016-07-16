@@ -12,14 +12,6 @@ elseif exists("b:current_syntax")
    finish
 endif
 
-
-" Read in Verilog syntax files
-if version < 600
-   so syntax/verilog.vim
-else
-   runtime! syntax/verilog.vim
-endif
-
 " Override 'iskeyword'
 if version >= 600
    setlocal iskeyword=@,48-57,_,192-255
@@ -37,8 +29,6 @@ syn sync lines=1000
 "       SystemVerilog Syntax
 "##########################################################
 
-syn clear verilogLabel
-syn clear verilogStatement
 syn keyword verilogStatement   always and assign automatic buf
 syn keyword verilogStatement   bufif0 bufif1 cell cmos
 syn keyword verilogStatement   config deassign defparam design
@@ -104,22 +94,51 @@ syn keyword verilogStatement   until until_with untyped weak
 syn keyword verilogTypeDef     typedef enum
 
 syn keyword verilogConditional iff
+syn keyword verilogConditional if else case casex casez default endcase
 
+syn keyword verilogRepeat      forever repeat while for
 syn keyword verilogRepeat      return break continue
 syn keyword verilogRepeat      do while foreach
 
-syn match   verilogGlobal      "`begin_\w\+"
-syn match   verilogGlobal      "`end_\w\+"
-syn match   verilogGlobal      "`remove_\w\+"
-syn match   verilogGlobal      "`restore_\w\+"
+syn match   verilogGlobal      "`[a-zA-Z_][a-zA-Z0-9_$]\+"
+syn match   verilogGlobal      "$[a-zA-Z0-9_$]\+"
 
-syn match   verilogGlobal      "`[a-zA-Z0-9_]\+\>"
+syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]\+\>"
 
-syn match   verilogNumber      "\<\d[0-9_]*\(\.\?[0-9_]\+\)\=\([fpnum]\)\=s\>"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[bB]\s*[0-1_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[oO]\s*[0-7_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[dD]\s*[0-9_xXzZ?]\+"
+syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[hH]\s*[0-9a-fA-F_xXzZ?]\+"
+syn match   verilogNumber      "\<[+-]\?[0-9_]\+\(\.[0-9_]*\)\?\(e[0-9_]*\)\?\>"
+syn match   verilogNumber      "\<\d[0-9_]*\(\.[0-9_]\+\)\=\([fpnum]\)\=s\>"
 syn keyword verilogNumber      1step
 
+syn keyword verilogTodo        contained TODO FIXME
+
+syn match   verilogOperator    "[&|~><!)(*#%@+/=?:;}{,.\^\-\[\]]"
+
+syn region  verilogComment     start="/\*" end="\*/" contains=verilogTodo,@Spell
+syn match   verilogComment     "//.*" contains=verilogTodo,@Spell
+
+syn region  verilogString      start=+"+ skip=+\\"+ end=+"+ contains=verilogEscape,@Spell
+syn match   verilogEscape      +\\[nt"\\]+ contained
+syn match   verilogEscape      "\\\o\o\=\o\=" contained
+
+" Directives
+syn match   verilogDirective   "//\s*synopsys\>.*$"
+syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
+syn region  verilogDirective   start="//\s*synopsys \z(\w*\)begin\>" end="//\s*synopsys \z1end\>"
+
+syn match   verilogDirective   "//\s*\$s\>.*$"
+syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
+syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
+
 syn keyword verilogMethod      new
-syn match   verilogMethod      "\(\s\+\.\)\@<!\<\w\+\ze("
+if v:version >= 704
+    syn match   verilogMethod  "\(^\s\+\.\)\@30<!\<\w\+\ze("
+else
+    syn match   verilogMethod  "\(^\s\+\.\)\@<!\<\w\+\ze("
+endif
 
 syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<\(assert\|assume\|cover\(point\)\?\|cross\)\>"
 if v:version >= 704
@@ -311,9 +330,6 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ keepend
         \ contained containedin=verilogFoldIfContainer
         \ contains=TOP
-    " The above syntax regions start/end matches will disable the respective
-    " verilogGlobal keywords. This syntax match fixes that:
-    syn match verilogGlobal "\<`\(ifn\?def\|e\(els\(e\|if\)\)\|ndif\)\>"
 endif
 if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFold
@@ -335,6 +351,10 @@ if len(s:verilog_syntax_fold) > 0
     endif
 endif
 
+"Modify the following as needed.  The trade-off is performance versus
+"functionality.
+syn sync minlines=50
+
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
@@ -346,10 +366,21 @@ if version >= 508 || !exists("did_verilog_syn_inits")
       command -nargs=+ HiLink hi def link <args>
    endif
 
-   " Override default verilogLabel link
-   highlight! default link verilogLabel Tag
-
    " The default highlighting.
+   HiLink verilogCharacter       Character
+   HiLink verilogConditional     Conditional
+   HiLink verilogRepeat          Repeat
+   HiLink verilogString          String
+   HiLink verilogTodo            Todo
+   HiLink verilogComment         Comment
+   HiLink verilogConstant        Constant
+   HiLink verilogLabel           Tag
+   HiLink verilogNumber          Number
+   HiLink verilogOperator        Special
+   HiLink verilogStatement       Statement
+   HiLink verilogGlobal          Define
+   HiLink verilogDirective       SpecialComment
+   HiLink verilogEscape          Special
    HiLink verilogMethod          Function
    HiLink verilogTypeDef         TypeDef
    HiLink verilogObject          Type
