@@ -395,7 +395,7 @@ Default: undefined
 Example:
 
 >
-    let g:verilog_disable_indent = "module,class,interface"
+    let g:verilog_disable_indent_lst = "module,class,interface"
 <
     Disabling indentation of `conditional` will change the following:
 >
@@ -442,7 +442,7 @@ Default: undefined
 Example:
 
 >
-    let g:verilog_syntax_fold = "function,task"
+    let g:verilog_syntax_fold_lst = "function,task"
 <
 
     Note: The commands |:VerilogFoldingAdd| and |:VerilogFoldingRemove| are
