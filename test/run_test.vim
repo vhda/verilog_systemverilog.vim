@@ -95,7 +95,7 @@ function! RunTestEfm()
         echo ''
 
         silent view test/errorformat.txt
-        let test_result=TestEfm('verilator', 2, check_uvm) || test_result
+        let test_result=TestEfm('verilator', 3, check_uvm) || test_result
         echo ''
 
         silent view test/errorformat.txt
@@ -103,7 +103,7 @@ function! RunTestEfm()
         echo ''
 
         silent view test/errorformat.txt
-        let test_result=TestEfm('ncverilog', 2, check_uvm) || test_result
+        let test_result=TestEfm('ncverilog', 3, check_uvm) || test_result
         echo ''
     endfor
 
