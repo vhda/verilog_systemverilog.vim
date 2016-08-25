@@ -650,6 +650,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"5. Leda",
           \"6. Verilator",
           \"7. NCVerilog",
+          \"8. SpyGlass",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -667,7 +668,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     elseif (l:tool == 7)
       let l:tool = "ncverilog"
     else
-      let l:tool = "iverilog"
+      let l:tool = "spyglass"
     endif
   else
     let l:tool = tolower(a:1)
@@ -686,7 +687,8 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       \ l:tool == "msim" ||
       \ l:tool == "cver" ||
       \ l:tool == "verilator" ||
-      \ l:tool == "ncverilog"
+      \ l:tool == "ncverilog" ||
+      \ l:tool == "spyglass"
       \ )
       let l:mode = inputlist([
             \"1. check all",
@@ -713,7 +715,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
 
   call verilog_systemverilog#Verbose("Configuring errorformat with: tool=" . l:tool . "; mode=" . l:mode)
 
-  if (index(['vcs', 'modelsim', 'iverilog', 'cver', 'leda', 'verilator', 'ncverilog'], l:tool) >= 0)
+  if (index(['vcs', 'modelsim', 'iverilog', 'cver', 'leda', 'verilator', 'ncverilog', 'spyglass'], l:tool) >= 0)
     execute 'compiler! '. l:tool
     echo 'Selected errorformat for "' . l:tool . '"'
   else

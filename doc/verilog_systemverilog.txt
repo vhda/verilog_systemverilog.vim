@@ -161,6 +161,7 @@ tools:
 * Synopsys Leda (`leda`)
 * Verilator (`verilator`)
 * NCVerilog (`ncverilog`)
+* SpyGlass (`spyglass`)
 
 The |:compiler| or |:compiler|! commands can be used to enable these
 definitions on the current buffer or all buffers, respectively.
@@ -270,6 +271,7 @@ COMMANDS                                                    *verilog-commands*
       leda      - Synopsys Leda
       verilator - Verilator
       ncverilog - Cadence NCVerilog
+      spyglass  - Synopsys SpyGlass
 
     Values supported for {level}:
       1 - Mark all messages
