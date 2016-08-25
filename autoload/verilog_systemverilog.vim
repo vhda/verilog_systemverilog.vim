@@ -704,9 +704,10 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
 
   if (l:tool == "vcs")
     " Error messages
-    set errorformat=%E%trror-\[%.%\\+\]\ %m
+    set errorformat=%EError-\[%.%\\+\]\ %m
     set errorformat+=%C%m\"%f\"\\,\ %l%.%#
     set errorformat+=%C%f\\,\ %l
+    set errorformat+=%C%\\s%\\+%l:\ %m\\,\ column\ %c
     set errorformat+=%C%\\s%\\+%l:\ %m
     set errorformat+=%C%m\"%f\"\\,%.%#
     set errorformat+=%Z%p^                      "Column pointer
@@ -714,9 +715,9 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     set errorformat+=%Z%m                       "Finalization messages
     " Warning messages
     if (l:mode <= 2)
-      set errorformat+=%W%tarning-\[%.%\\+]\\$
-      set errorformat+=%-W%tarning-[LCA_FEATURES_ENABLED]\ Usage\ warning    "Ignore LCA enabled warning
-      set errorformat+=%W%tarning-\[%.%\\+\]\ %m
+      set errorformat+=%WWarning-\[%.%\\+]\\$
+      set errorformat+=%-WWarning-[LCA_FEATURES_ENABLED]\ Usage\ warning    "Ignore LCA enabled warning
+      set errorformat+=%WWarning-\[%.%\\+\]\ %m
     endif
     " Lint message
     if (l:mode <= 1)
