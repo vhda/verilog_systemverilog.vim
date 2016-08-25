@@ -86,29 +86,12 @@ function! RunTestEfm()
             unlet! g:verilog_efm_uvm_lst
         endif
 
-        silent view test/errorformat.txt
-        let test_result=TestEfm('iverilog', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('verilator', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('verilator', 3, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('ncverilog', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('ncverilog', 3, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('spyglass', 1, check_uvm) || test_result
-        echo ''
+        let test_result = TestEfm('iverilog',  1, check_uvm) || test_result
+        let test_result = TestEfm('verilator', 1, check_uvm) || test_result
+        let test_result = TestEfm('verilator', 3, check_uvm) || test_result
+        let test_result = TestEfm('ncverilog', 1, check_uvm) || test_result
+        let test_result = TestEfm('ncverilog', 3, check_uvm) || test_result
+        let test_result = TestEfm('spyglass',  1, check_uvm) || test_result
     endfor
 
     " Check test results and exit accordingly
