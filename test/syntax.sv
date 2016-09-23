@@ -28,8 +28,6 @@ casez
 cell
 chandle
 checker
-class
-clocking
 cmos
 config
 const
@@ -37,8 +35,6 @@ constraint
 context
 continue
 cover
-covergroup
-endgroup
 coverpoint
 cross
 deassign
@@ -52,11 +48,8 @@ edge
 else
 endcase
 endchecker
-endclass
-endclocking
 endconfig
 endgenerate
-endinterface
 endmodule
 endpackage
 endprimitive
@@ -77,8 +70,6 @@ foreach
 forever
 fork
 forkjoin
-function
-endfunction
 generate
 genvar
 global
@@ -102,7 +93,6 @@ instance
 int
 integer
 interconnect
-interface
 intersect
 join
 join_any
@@ -142,8 +132,6 @@ posedge
 primitive
 priority
 program
-property
-endproperty
 protected
 pull0
 pull1
@@ -177,8 +165,6 @@ s_nexttime
 s_until
 s_until_with
 scalared
-sequence
-endsequence
 shortint
 shortreal
 showcancelled
@@ -186,8 +172,6 @@ signed
 small
 soft
 solve
-specify
-endspecify
 specparam
 static
 string
@@ -202,8 +186,6 @@ sync_accept_on
 sync_reject_on
 table
 tagged
-task
-endtask
 this
 throughout
 time
@@ -247,6 +229,25 @@ within
 wor
 xnor
 xor
+// Syntax regions
+class
+endclass
+clocking
+endclocking
+covergroup
+endgroup
+function
+endfunction
+interface
+endinterface
+property
+endproperty
+sequence
+endsequence
+specify
+endspecify
+task
+endtask
 `endif
 `ifdef TIME
 10ns

@@ -119,6 +119,8 @@ endfunction
 " Syntax test
 "-----------------------------------------------------------------------
 function! RunTestSyntax()
+    let g:verilog_syntax_fold_lst=""
+    colorscheme default
     set nomore "Disable pager to avoid issues with Travis
 
     silent view test/syntax.sv
@@ -142,6 +144,9 @@ function! RunTestSyntax()
         echo 'Syntax test passed'
         let test_result = 0
     else
+        echo '=====DIFF START====='
+        echo output
+        echo '=====DIFF END======='
         echo 'Syntax test failed'
         let test_result = 1
     endif
