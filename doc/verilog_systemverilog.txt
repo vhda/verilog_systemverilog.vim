@@ -448,6 +448,19 @@ Example:
     Note: The commands |:VerilogFoldingAdd| and |:VerilogFoldingRemove| are
     provided to allow an easier management of this variable.
 
+                                                      *g:verilog_quick_syntax*
+g:verilog_quick_syntax~
+Default: undefined
+
+    When enabled, syntax regions will not be defined with Vim's 'syntax'
+    command. This can help performance if you are using an old machine or
+    viewing a large file such as a netlist. This can be useful if you don't
+    care about automatic indentation but still wish to have syntax coloring.
+
+    WARNING: Enabling this will change the behaviour of indentation as the
+    indentation script uses the syntax regions to determine the nested
+    context.
+
 ------------------------------------------------------------------------------
 ERROR FORMAT CONFIGURATION                                *verilog-config-efm*
 

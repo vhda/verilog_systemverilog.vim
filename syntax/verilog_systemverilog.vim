@@ -186,22 +186,27 @@ for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
         let s:region_end = '\<end'.name.'\>'
     endif
 
-    let s:verilog_syn_region_cmd =
-        \  'syn region verilog_'.substitute(name, '.*', '\u&', '')
-        \ .' matchgroup=verilogStatement'
-        \ .' start="'.s:region_start.'"'
-        \ .' end="'.s:region_end.'"'
-        \ .' transparent'
+    if verilog_systemverilog#VariableExists('verilog_quick_syntax')
+        execute 'syn match verilogStatement "'.s:region_start.'"'
+        execute 'syn match verilogStatement "'.s:region_end.'"'
+    else
+        let s:verilog_syn_region_cmd =
+            \  'syn region verilog'.substitute(name, '.*', '\u&', '')
+            \ .' matchgroup=verilogStatement'
+            \ .' start="'.s:region_start.'"'
+            \ .' end="'.s:region_end.'"'
+            \ .' transparent'
 
-    if name != 'class'
-        let s:verilog_syn_region_cmd .= ' keepend'
+        if name != 'class'
+            let s:verilog_syn_region_cmd .= ' keepend'
+        endif
+
+        if index(s:verilog_syntax_fold, name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+            let s:verilog_syn_region_cmd .= ' fold'
+        endif
+
+        execute s:verilog_syn_region_cmd
     endif
-
-    if index(s:verilog_syntax_fold, name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-        let s:verilog_syn_region_cmd .= ' fold'
-    endif
-
-    execute s:verilog_syn_region_cmd
 endfor
 
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
