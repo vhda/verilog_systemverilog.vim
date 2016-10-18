@@ -88,6 +88,9 @@ function! TestEfm(tool, mode, search_uvm)
     let uvm_expected_warnings = 0
     let uvm_expected_lints    = 0
 
+    " Re-read test file
+    silent view test/errorformat.txt
+
     " Obtain tool configuration from file
     let config_found = 0
     let linenr = 0

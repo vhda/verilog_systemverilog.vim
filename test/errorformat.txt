@@ -26,6 +26,10 @@ ncsim: *E,SOMECADENCEERRORCODE: Message
 ncsim: *E,ASRTST (filename.sv,123|12): Reason
 ncsim: irun 11.11-s111: Started on May 11, 1111 at 11:11:11 IST
 
+### spyglass E=1, W=1
+STX_VE_481   Syntax     path/file.v   1    Syntax error near ( } )
+[66]     UndrivenNUnloaded-ML    WARNING      Warning     path/file.v    1      2    UndrivenNUnloaded-ML : Detected undriven and unloaded(unconnected) net
+
 ### UVM E=2, W=1, L=1
 UVM_FATAL /path/file.sv(5) @ 1000: text
 UVM_ERROR /path/file.sv(5) @ 1000: text
