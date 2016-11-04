@@ -334,33 +334,6 @@ Example:
     let b:verilog_indent_width = 8
 <
 
-                     *b:verilog_dont_deindent_eos* *g:verilog_dont_deindent_eos*
-b:verilog_dont_deindent_eos~
-g:verilog_dont_deindent_eos~
-Default: undefined
-
-    Disable de-indentation of the close parentheses of modules, functions,
-    tasks, etc.
-    By default:
->
-        module mod(
-            input wire a,
-            input wire b,
-        );
-<
-    When enbled:
->
-        module mod(
-            input wire a,
-            input wire b,
-            );
-<
-Example:
-
->
-    let b:verilog_dont_deindent_eos = 1
-<
-
                      *b:verilog_indent_assign_fix* *g:verilog_indent_assign_fix*
 b:verilog_indent_assign_fix~
 g:verilog_indent_assign_fix~
@@ -392,7 +365,7 @@ Example:
                    *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
 b:verilog_disable_indent_lst~
 g:verilog_disable_indent_lst~
-Default: undefined
+Default: "eos"
 
     Disables indent for specific Verilog/SystemVerilog contexts.
     The following contexts are supported:
@@ -408,6 +381,7 @@ Default: undefined
         - `method`
         - `preproc`
         - `conditional`
+        - `eos`
 
 Example:
 
@@ -422,6 +396,23 @@ Example:
     // Disabling 'conditional'
     assign a = cond ? b :
                c ;
+<
+
+    Disabling indentation of `eos` will affect how the closing parentheses of
+    modules, functions, tasks, etc. are indented.
+    By default:
+>
+        module mod(
+            input wire a,
+            input wire b,
+            );
+<
+    When disabled:
+>
+        module mod(
+            input wire a,
+            input wire b,
+        );
 <
 
     Note: The commands |:VerilogIndentAdd| and |:VerilogIndentRemove| are
