@@ -106,37 +106,29 @@ endfunction
 " Syntax test
 "-----------------------------------------------------------------------
 function! RunTestSyntax()
-    let g:verilog_syntax_fold_lst=""
     colorscheme default
+    let test_result=0
+
     set nomore "Disable pager to avoid issues with Travis
+    set foldmethod=syntax
+    set foldlevel=99
 
-    silent view test/syntax.sv
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    " Generate HTML version of the file
-    let g:html_line_ids=0
-    let g:html_number_lines=0
-    TOhtml
-    " Clean up resulting HTML to minimize differences with other version
-    " of TOhtml script
-    1,/<body>/-1delete
-    /<\/body>/+1,$delete
-    %s/ id='vimCodeElement'//
-    " Write final buffer
-    w! test/syntax.sv.new.html
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    " Compare with reference
-    silent let output = system('diff test/syntax.sv.html test/syntax.sv.new.html')
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    "Failing due to block syntax region bug:
+    "let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    if output == ""
-        echo 'Syntax test passed'
-        let test_result = 0
-    else
-        echo '=====DIFF START====='
-        echo output
-        echo '=====DIFF END======='
-        echo 'Syntax test failed'
-        let test_result = 1
-    endif
+    let g:verilog_syntax_fold_lst='all,block_named'
+    "Failing due to block syntax region bug:
+    "let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
     " Check test results and exit accordingly
     if test_result

@@ -195,4 +195,47 @@ function! TestEfm(tool, mode, search_uvm)
     endif
 endfunction
 
+function! TestSyntax(file_name, test_name)
+    let test_name=substitute(a:test_name, ',', '_', '')
+    if test_name == ""
+        let test_name="default"
+    endif
+    let ref_file_name='test/' . a:file_name . '.html'
+    let new_file_name='test/' . a:file_name . '.' . test_name . '.html'
+
+    execute 'silent view test/' . a:file_name
+    syntax enable
+
+    " Generate HTML version of the file
+    let g:html_line_ids=0
+    let g:html_number_lines=0
+    let g:html_no_progress=1
+    TOhtml
+    " Clean up resulting HTML to minimize differences with other
+    " versions of TOhtml script
+    1,/<body>/-1 delete
+    /<\/body>/+1,$ delete
+    %s/ id='vimCodeElement'//e
+    " Write final buffer
+    execute 'w! ' . new_file_name
+    bd!
+
+    " Compare with reference
+    silent let output = system('diff ' . ref_file_name . ' ' . new_file_name)
+
+    if output == ""
+        echo 'Syntax test ' . test_name . ' passed'
+        echo ''
+        return 0
+    else
+        echo '=====DIFF START====='
+        echo output
+        echo '=====DIFF END======='
+        echo 'Syntax test ' . test_name . ' failed'
+        echo ''
+        return 1
+    endif
+
+endfunction
+
 " vi: set expandtab softtabstop=4 shiftwidth=4:
