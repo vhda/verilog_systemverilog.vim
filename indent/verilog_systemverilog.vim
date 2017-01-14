@@ -141,7 +141,7 @@ function! GetVerilogSystemVerilogIndent()
   endif
 
   if s:curr_line =~ s:vlog_statement &&
-        \ getline(v:lnum - 1) =~ 'else\s*$'
+        \ getline(v:lnum - 1) =~ '^\s*\(end\s*\)\?else\s*$'
     return indent(v:lnum - 1) + s:offset
   endif
 
