@@ -187,8 +187,7 @@ for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
     endif
 
     if verilog_systemverilog#VariableExists('verilog_quick_syntax')
-        execute 'syn match verilogStatement "'.s:region_start.'"'
-        execute 'syn match verilogStatement "'.s:region_end.'"'
+        execute 'syn keyword verilogStatement '.s:region_start.' '.s:region_end
     else
         let s:verilog_syn_region_cmd =
             \  'syn region verilog'.substitute(name, '.*', '\u&', '')
