@@ -128,6 +128,21 @@ function! RunTestSyntax()
     let g:verilog_syntax_fold_lst='all,instance'
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_named'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
     " Check test results and exit accordingly
     if test_result
         cquit

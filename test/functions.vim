@@ -224,14 +224,14 @@ function! TestSyntax(file_name, test_name)
     silent let output = system('diff ' . ref_file_name . ' ' . new_file_name)
 
     if output == ""
-        echo 'Syntax test ' . test_name . ' passed'
+        echo 'Syntax test "' . a:file_name . '" with folding ' . test_name . ' passed'
         echo ''
         return 0
     else
         echo '=====DIFF START====='
         echo output
         echo '=====DIFF END======='
-        echo 'Syntax test ' . test_name . ' failed'
+        echo 'Syntax test "' . a:file_name . '" with folding ' . test_name . ' failed'
         echo ''
         return 1
     endif
