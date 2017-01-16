@@ -251,6 +251,9 @@
 <span class="Statement">task</span>
 <span class="Statement">endtask</span>
 <span class="PreProc">`endif</span>
+<span class="PreProc">`ifdef</span> <span class="Constant">COMPLEX_STATEMENTS</span>
+<span class="Type">typedef</span> <span class="Statement">class</span> c<span class="Special">;</span>
+<span class="PreProc">`endif</span>
 <span class="PreProc">`ifdef</span> <span class="Constant">TIME</span>
 <span class="Constant">10ns</span>
 <span class="Constant">100ns</span>
@@ -326,6 +329,8 @@
 <span class="Comment">/*</span>
 <span class="Comment">* </span><span class="Todo">TODO</span><span class="Comment"> todo check</span>
 <span class="Comment">*/</span>
+
+<span class="Comment">// Comment with DEFINE-ML</span>
 
 <span class="Statement">always</span><span class="Special">@(</span><span class="Statement">posedge</span> clk <span class="Statement">or</span> <span class="Statement">posedge</span> rst<span class="Special">)</span>
 <span class="Statement">begin</span>

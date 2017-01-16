@@ -113,6 +113,7 @@ function! RunTestSyntax()
     set foldmethod=syntax
     set foldlevel=99
 
+    " Run syntax test for various folding configurations
     let g:verilog_syntax_fold_lst=''
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 

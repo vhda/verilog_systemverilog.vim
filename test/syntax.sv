@@ -249,6 +249,9 @@ endspecify
 task
 endtask
 `endif
+`ifdef COMPLEX_STATEMENTS
+typedef class c;
+`endif
 `ifdef TIME
 10ns
 100ns
@@ -324,6 +327,8 @@ endtask
 /*
 * TODO todo check
 */
+
+// Comment with DEFINE-ML
 
 always@(posedge clk or posedge rst)
 begin

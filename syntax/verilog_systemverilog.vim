@@ -138,71 +138,82 @@ endif
 syn keyword verilogObject      super
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
-let s:verilog_function_task_dequalifier =
-    \  '\('
-    \ .    '\('
-    \ .        'extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?'
-    \ .        '\|'
-    \ .        'pure\s\+virtual\s\+'
-    \ .    '\)'
-    \ .    '\(\(static\|protected\|local\)\s\+\)\?'
-    \ .'\)'
-
-execute 'syn match verilogStatement "'.s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>"'
 
 syn match verilogStatement '\(typedef\s\+\)\@<=\<class\>'
+syn match verilogStatement 'interface\ze\s\+class\>'
+
+" Create syntax definition from g:verilog_syntax dictionary
+function! s:SyntaxCreate(name, verilog_syntax)
+    if exists('a:verilog_syntax[a:name]')
+        let verilog_syn_region_name = 'verilog'.substitute(a:name, '.*', '\u&', '')
+        for entry in a:verilog_syntax[a:name]
+            if exists('entry["match"]')
+                " syn-match definitions
+                let match = entry["match"]
+                let verilog_syn_match_cmd = 'syn match '.verilog_syn_region_name.' "'.match.'"'
+
+                if exists('entry["syn_argument"]')
+                    let verilog_syn_match_cmd .= ' '.entry["syn_argument"]
+                endif
+
+                execute verilog_syn_match_cmd
+            elseif exists('entry["match_start"]') && exists('entry["match_end"]')
+                " syn-region definitions
+
+                let region_start = entry["match_start"]
+                let region_end = entry["match_end"]
+
+                if verilog_systemverilog#VariableExists('verilog_quick_syntax')
+                    execute 'syn keyword verilogStatement '.region_start.' '.region_end
+                else
+                    let verilog_syn_region_cmd = 'syn region '.verilog_syn_region_name
+
+                    if exists('entry["highlight"]')
+                        let verilog_syn_region_cmd .= ' matchgroup='.entry["highlight"]
+                    endif
+
+                    let verilog_syn_region_cmd .=
+                        \  ' start="'.region_start.'"'
+                        \ .' end="'.region_end.'"'
+
+                    if exists('entry["syn_argument"]')
+                        let verilog_syn_region_cmd .= ' '.entry["syn_argument"]
+                    endif
+
+                    if (index(s:verilog_syntax_fold, a:name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0)
+                        let verilog_syn_region_cmd .= ' fold'
+                    endif
+
+                    execute verilog_syn_region_cmd
+                endif
+            else
+                echoerr 'Incorrect syntax defintion for '.a:name
+            endif
+        endfor
+    end
+endfunction
 
 " Only enable folding if verilog_syntax_fold_lst is defined
 let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
 
-if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogFold
-        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\(\<if\>\)\@!\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
-        \ end=")\s*;"
-        \ transparent
-        \ keepend
-        \ fold
-endif
+" Syntax priority list
+let s:verilog_syntax_order = [
+            \ 'instance',
+            \ 'prototype',
+            \ 'class',
+            \ 'clocking',
+            \ 'covergroup',
+            \ 'function',
+            \ 'interface',
+            \ 'property',
+            \ 'sequence',
+            \ 'specify',
+            \ 'task',
+            \ ]
 
-for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
-    \ 'property', 'sequence', 'specify', 'task', ]
-
-    if name == 'task' || name == 'function'
-        let s:region_start = s:verilog_function_task_dequalifier.'\@<!\<'.name.'\>'
-    elseif name == 'class'
-        let s:region_start = '\(typedef\s\+\)\@<!\<\(interface\s\+\)\?class\>'
-    elseif name == 'interface'
-        let s:region_start = '\<interface\>\(\s\+class\)\@!'
-    else
-        let s:region_start = '\<'.name.'\>'
-    endif
-
-    if name == 'covergroup'
-        let s:region_end = '\<endgroup\>'
-    else
-        let s:region_end = '\<end'.name.'\>'
-    endif
-
-    if verilog_systemverilog#VariableExists('verilog_quick_syntax')
-        execute 'syn keyword verilogStatement '.s:region_start.' '.s:region_end
-    else
-        let s:verilog_syn_region_cmd =
-            \  'syn region verilog'.substitute(name, '.*', '\u&', '')
-            \ .' matchgroup=verilogStatement'
-            \ .' start="'.s:region_start.'"'
-            \ .' end="'.s:region_end.'"'
-            \ .' transparent'
-
-        if name != 'class'
-            let s:verilog_syn_region_cmd .= ' keepend'
-        endif
-
-        if index(s:verilog_syntax_fold, name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-            let s:verilog_syn_region_cmd .= ' fold'
-        endif
-
-        execute s:verilog_syn_region_cmd
-    endif
+" Generate syntax definitions for supported types
+for name in s:verilog_syntax_order
+    call s:SyntaxCreate(name, g:verilog_syntax)
 endfor
 
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
@@ -296,13 +307,11 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ contains=TOP
 endif
 
-" Expand verilogComment
-syn match verilogComment "//.*" contains=verilogTodo,verilogDirective,@Spell
-if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend fold
-else
-    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend
-endif
+" Generate syntax definitions for comments after other standard syntax
+" definitions to guarantee highest priority
+for name in ['comment']
+    call s:SyntaxCreate(name, g:verilog_syntax)
+endfor
 
 " Special comments: Synopsys directives
 syn match   verilogDirective   "//\s*synopsys\>.*$"
@@ -339,6 +348,7 @@ if version >= 508 || !exists("did_verilog_syn_inits")
    HiLink verilogLabel           Tag
    HiLink verilogNumber          Number
    HiLink verilogOperator        Special
+   HiLink verilogPrototype       Statement
    HiLink verilogStatement       Statement
    HiLink verilogGlobal          Define
    HiLink verilogDirective       SpecialComment
