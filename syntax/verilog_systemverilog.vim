@@ -167,6 +167,15 @@ syn match verilogStatement '\(typedef\s\+\)\@<=\<class\>'
 " Only enable folding if verilog_syntax_fold_lst is defined
 let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
 
+if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogFold
+        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\(\<if\>\)\@!\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
+        \ end=")\s*;"
+        \ transparent
+        \ keepend
+        \ fold
+endif
+
 for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
     \ 'property', 'sequence', 'specify', 'task', ]
 
@@ -285,15 +294,6 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ keepend
         \ contained containedin=verilogFoldIfContainer
         \ contains=TOP
-endif
-
-if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogFold
-        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
-        \ end=")\s*;"
-        \ transparent
-        \ keepend
-        \ fold
 endif
 
 " Expand verilogComment

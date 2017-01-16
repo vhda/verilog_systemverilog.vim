@@ -324,3 +324,11 @@ endtask
 /*
 * TODO todo check
 */
+
+always@(posedge clk or posedge rst)
+begin
+  priority if (rst)
+    state <= IDLE;
+  else
+    state <= NS;
+end
