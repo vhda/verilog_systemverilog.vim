@@ -117,9 +117,6 @@ syn keyword verilogTodo        contained TODO FIXME
 
 syn match   verilogOperator    "[&|~><!)(*#%@+/=?:;}{,.\^\-\[\]]"
 
-syn region  verilogComment     start="/\*" end="\*/" contains=verilogTodo,@Spell
-syn match   verilogComment     "//.*" contains=verilogTodo,@Spell
-
 syn region  verilogString      start=+"+ skip=+\\"+ end=+"+ contains=verilogEscape,@Spell
 syn match   verilogEscape      +\\[nt"\\]+ contained
 syn match   verilogEscape      "\\\o\o\=\o\=" contained
@@ -288,13 +285,11 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
 endif
 
 " Expand verilogComment
-if len(s:verilog_syntax_fold) > 0
-    syn match verilogComment "//.*" contains=verilogTodo,@Spell
-    if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend fold
-    else
-        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend
-    endif
+syn match verilogComment "//.*" contains=verilogTodo,verilogDirective,@Spell
+if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend fold
+else
+    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend
 endif
 
 " Special comments: Synopsys directives
