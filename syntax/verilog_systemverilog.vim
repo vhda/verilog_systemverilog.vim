@@ -103,7 +103,7 @@ syn keyword verilogRepeat      do while foreach
 syn match   verilogGlobal      "`[a-zA-Z_][a-zA-Z0-9_$]\+"
 syn match   verilogGlobal      "$[a-zA-Z0-9_$]\+"
 
-syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]\+\>"
+syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]*\>"
 
 syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[bB]\s*[0-1_xXzZ?]\+"
 syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[oO]\s*[0-7_xXzZ?]\+"
