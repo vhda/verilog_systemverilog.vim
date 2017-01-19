@@ -289,7 +289,7 @@ COMMANDS                                                    *verilog-commands*
 :VerilogFoldingAdd                                        *:VerilogFoldingAdd*
 :VerilogFoldingRemove                                  *:VerilogFoldingRemove*
     Commands with auto-completion to simplify maintenance of
-    |g:verilog_syntax_fold|.
+    |g:verilog_syntax_fold_lst|.
 
     If |c_CTRL-D| is used after these commands a list of valid values is
     suggested. When adding new values only valid and not already enabled
@@ -590,7 +590,7 @@ specific folder:
 For more information regarding supported patterns check |autocmd-patterns|.
 
 ------------------------------------------------------------------------------
-Why is opening verilog/systemverilog files so slow?
+Why is opening Verilog/SystemVerilog files so slow?
 
 If you are working with files which are over thousands of lines in length,
 then having folding enabled can significantly slow down opening these files. A
@@ -601,10 +601,10 @@ see fit):
         au!
         " Enable folding for normal size files. Folding is really slow for large files.
         au Filetype verilog_systemverilog if line('$') < 2000
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = "all"
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold_lst = "all"
         au Filetype verilog_systemverilog     syntax enable "Trigger fold calculation
         au Filetype verilog_systemverilog else
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = ""
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold_lst = ""
         au Filetype verilog_systemverilog endif
     augroup END
 <

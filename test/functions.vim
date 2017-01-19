@@ -39,7 +39,7 @@ function! TestFold(...)
 
     if (fail == 1)
         echo 'Fold test failed:'
-        echo 'g:verilog_syntax_fold: ' . g:verilog_syntax_fold
+        echo 'g:verilog_syntax_fold_lst: ' . g:verilog_syntax_fold_lst
         echo fail_lines
         return 1
     else
