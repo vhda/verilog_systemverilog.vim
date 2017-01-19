@@ -206,38 +206,50 @@ for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
 endfor
 
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
-    syn region verilogFoldBlockContainer
+    syn region verilogBlockContainer
         \ start="\<begin\>"
         \ end="\<end\>"
         \ skip="/[*/].*"
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
-        \ contains=verilogComment,verilogFold,verilogBlock
+        \ contains=verilogBlock,verilogBlockNamed,verilogBlockEnd
     if index(s:verilog_syntax_fold, "block_nested") >= 0
-        syn region verilogFold
+        syn region verilogBlock
+            \ matchgroup=verilogStatement
             \ start="\<begin\>"
-            \ end="\<end\>"me=s-1
-            \ transparent
+            \ end="\<end\>.*\<begin\>"ms=s-1,me=s-1
             \ fold
-            \ contained containedin=verilogFoldBlockContainer
+            \ transparent
+            \ contained
+            \ nextgroup=verilogBlockEnd
             \ contains=TOP
-        syn match verilogStatement "\<begin\|end\>"
+        syn region verilogBlockEnd
+            \ matchgroup=verilogStatement
+            \ start="\<end\>.*\<begin\>"
+            \ end="\<end\>\ze.*\(\<begin\>\)\@!"
+            \ fold
+            \ transparent
+            \ contained
+            \ contains=TOP
+        syn match verilogStatement "\<end\>"
     else "block_named
         syn region verilogBlock
+            \ matchgroup=verilogStatement
             \ start="\<begin\>"
             \ end="\<end\>"
             \ transparent
-            \ contained containedin=verilogFoldBlockContainer
-            \ contains=TOP,verilogFold
-        syn region verilogFold
+            \ contained
+            \ contains=TOP
+        syn region verilogBlockNamed
+            \ matchgroup=verilogStatement
             \ start="\<begin\>\ze\s*:\s*\z(\w\+\)"
-            \ end="\<end\>"me=s-1
+            \ end="\<end\>"
             \ transparent
             \ fold
-            \ contained containedin=verilogBlock
+            \ contained
             \ contains=TOP
-        syn match verilogStatement "\<begin\|end\>"
+        "TODO break up if...else statements
     endif
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
@@ -251,36 +263,36 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogFoldIfContainer
+    syn region verilogIfdefContainer
         \ start="`ifn\?def\>"
         \ end="`endif\>"
         \ skip="/[*/].*"
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
-        \ contains=NONE
-    syn region verilogFoldIf
+        \ contains=verilogIfdef,verilogIfdefElse,verilogIfdefEndif
+    syn region verilogIfdef
         \ start="`ifn\?def\>"
         \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
-        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contained
+        \ nextgroup=verilogIfdefElse,verilogIfdefEndif
         \ contains=TOP
-    syn region verilogFoldElseIf
+    syn region verilogIfdefElse
         \ start="`els\(e\|if\)\>"
         \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
-        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contained
+        \ nextgroup=verilogIfdefElse,verilogIfdefEndif
         \ contains=TOP
-    syn region verilogFoldElse
+    syn region verilogIfdefEndif
         \ start="`else\>"
         \ end="`endif\>"
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
+        \ contained
         \ contains=TOP
 endif
 

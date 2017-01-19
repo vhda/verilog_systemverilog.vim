@@ -120,12 +120,10 @@ function! RunTestSyntax()
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
     let g:verilog_syntax_fold_lst='all,block_nested'
-    "Failing due to block syntax region bug:
-    "let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
     let g:verilog_syntax_fold_lst='all,block_named'
-    "Failing due to block syntax region bug:
-    "let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
     let g:verilog_syntax_fold_lst='all,instance'
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
