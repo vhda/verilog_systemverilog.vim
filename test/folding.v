@@ -264,4 +264,9 @@ end else begin                                                //<1><1><1>
 end else begin:b3                                             //<1><1><1>
     do5();                                                    //<1><1><1>
 end                                                           //<1><1><1>
+                                                              //<0><0><0>
+// spyglass disable_block SOMETHING                           //<1><1><1>
+assign a = b & c;                                             //<1><1><1>
+// spyglass enable_block SOMETHING                            //<1><1><1>
+                                                              //<0><0><0>
 // vi: set number norelativenumber expandtab softtabstop=4 shiftwidth=4:

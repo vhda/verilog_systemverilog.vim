@@ -313,6 +313,14 @@ for name in ['comment']
     call s:SyntaxCreate(name, g:verilog_syntax)
 endfor
 
+" Generate syntax definitions for custom types last to allow overriding
+" standard syntax
+if exists('g:verilog_syntax_custom')
+    for name in keys(g:verilog_syntax_custom)
+        call s:SyntaxCreate(name, g:verilog_syntax_custom)
+    endfor
+endif
+
 " Special comments: Synopsys directives
 syn match   verilogDirective   "//\s*synopsys\>.*$"
 syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
