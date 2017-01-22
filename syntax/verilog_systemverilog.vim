@@ -150,110 +150,65 @@ endif
 syn keyword verilogObject      super
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
+let s:verilog_function_task_dequalifier =
+    \  '\('
+    \ .    '\('
+    \ .        'extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?'
+    \ .        '\|'
+    \ .        'pure\s\+virtual\s\+'
+    \ .    '\)'
+    \ .    '\(\(static\|protected\|local\)\s\+\)\?'
+    \ .'\)'
+
+execute 'syn match verilogStatement "'.s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>"'
+
+syn match verilogStatement '\(typedef\s\+\)\@<=\<class\>'
+
 " Only enable folding if verilog_syntax_fold_lst is defined
 let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
 
-if index(s:verilog_syntax_fold, "task") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<task\>"
-        \ end="\<endtask\>"
-        \ transparent
-        \ keepend
-        \ fold
-    syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<task\>"
-else
-    syn keyword verilogStatement  task endtask
-endif
-if index(s:verilog_syntax_fold, "function") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<!\<function\>"
-        \ end="\<endfunction\>"
-        \ transparent
-        \ keepend
-        \ fold
-    syn match   verilogStatement "\(\(\(extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?\)\|\(\pure\s\+virtual\s\+\)\)\(\(static\|protected\|local\)\s\+\)\?\)\@<=\<function\>"
-else
-    syn keyword verilogStatement  function endfunction
-endif
-if index(s:verilog_syntax_fold, "class") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\(typedef\s\+\)\@<!\<\(interface\s\+\)\?class\>"
-        \ end="\<endclass\>"
-        \ transparent
-        \ fold
-    syn match   verilogStatement "\(typedef\s\+\)\@<=\<class\>"
-else
-    syn keyword verilogStatement class endclass
-endif
-if index(s:verilog_syntax_fold, "interface") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<interface\>\(\s\+class\)\@!"
-        \ end="\<endinterface\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement interface endinterface
-endif
-if index(s:verilog_syntax_fold, "clocking") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<clocking\>"
-        \ end="\<endclocking\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement clocking endclocking
-endif
-if index(s:verilog_syntax_fold, "covergroup") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<covergroup\>"
-        \ end="\<endgroup\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement  covergroup endgroup
-endif
-if index(s:verilog_syntax_fold, "sequence") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<sequence\>"
-        \ end="\<endsequence\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement  sequence endsequence
-endif
-if index(s:verilog_syntax_fold, "property") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<property\>"
-        \ end="\<endproperty\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement  property endproperty
-endif
-if index(s:verilog_syntax_fold, "specify") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
-        \ matchgroup=verilogStatement
-        \ start="\<specify\>"
-        \ end="\<endspecify\>"
-        \ transparent
-        \ keepend
-        \ fold
-else
-    syn keyword verilogStatement  specify endspecify
-endif
+for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
+    \ 'property', 'sequence', 'specify', 'task', ]
+
+    if name == 'task' || name == 'function'
+        let s:region_start = s:verilog_function_task_dequalifier.'\@<!\<'.name.'\>'
+    elseif name == 'class'
+        let s:region_start = '\(typedef\s\+\)\@<!\<\(interface\s\+\)\?class\>'
+    elseif name == 'interface'
+        let s:region_start = '\<interface\>\(\s\+class\)\@!'
+    else
+        let s:region_start = '\<'.name.'\>'
+    endif
+
+    if name == 'covergroup'
+        let s:region_end = '\<endgroup\>'
+    else
+        let s:region_end = '\<end'.name.'\>'
+    endif
+
+    if verilog_systemverilog#VariableExists('verilog_quick_syntax')
+        execute 'syn match verilogStatement "'.s:region_start.'"'
+        execute 'syn match verilogStatement "'.s:region_end.'"'
+    else
+        let s:verilog_syn_region_cmd =
+            \  'syn region verilog'.substitute(name, '.*', '\u&', '')
+            \ .' matchgroup=verilogStatement'
+            \ .' start="'.s:region_start.'"'
+            \ .' end="'.s:region_end.'"'
+            \ .' transparent'
+
+        if name != 'class'
+            let s:verilog_syn_region_cmd .= ' keepend'
+        endif
+
+        if index(s:verilog_syntax_fold, name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+            let s:verilog_syn_region_cmd .= ' fold'
+        endif
+
+        execute s:verilog_syn_region_cmd
+    endif
+endfor
+
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
     syn region verilogFoldBlockContainer
         \ start="\<begin\>"
@@ -298,6 +253,7 @@ elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold
 else
     syn keyword verilogStatement  begin end
 endif
+
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFoldIfContainer
         \ start="`ifn\?def\>"
@@ -331,23 +287,23 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ contained containedin=verilogFoldIfContainer
         \ contains=TOP
 endif
+
 if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region verilogFold
         \ start="^\s*\w\+\(\s*#\s*(\|\s\+\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
         \ end=")\s*;"
         \ transparent
-        \ fold
         \ keepend
+        \ fold
 endif
 
 " Expand verilogComment
 if len(s:verilog_syntax_fold) > 0
-    syn clear   verilogComment
-    syn match   verilogComment  "//.*"                      contains=verilogTodo,@Spell
+    syn match verilogComment "//.*" contains=verilogTodo,@Spell
     if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-        syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell                     keepend fold
+        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend fold
     else
-        syn region  verilogComment  start="/\*"     end="\*/"   contains=verilogTodo,@Spell                     keepend
+        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend
     endif
 endif
 

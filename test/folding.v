@@ -28,42 +28,46 @@ endtask : t                                                   //<1><1><1>
 *                                                             //<1><1><1>
 */                                                            //<1><1><1>
                                                               //<0><0><0>
-extern function ext_func (x, y);                              //<0><0><0>
+extern                        function    e_func (x, y);      //<0><0><0>
+extern              static    function   es_func (x, y);      //<0><0><0>
+extern              protected function   ep_func (x, y);      //<0><0><0>
+extern              local     function   el_func (x, y);      //<0><0><0>
                                                               //<0><0><0>
-extern static function ext_static_func (x, y);                //<0><0><0>
+       pure virtual           function   pv_func (x);         //<0><0><0>
+       pure virtual static    function  pvs_func (x);         //<0><0><0>
+       pure virtual protected function  pvp_func (x);         //<0><0><0>
+       pure virtual local     function  pvl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern protected function ext_protected_func (x, y);          //<0><0><0>
+extern      virtual           function   ev_func (x);         //<0><0><0>
+extern      virtual static    function  evs_func (x);         //<0><0><0>
+extern      virtual protected function  evp_func (x);         //<0><0><0>
+extern      virtual local     function  evl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern local function ext_local_func (x, y);                  //<0><0><0>
+extern pure virtual           function  epv_func (x);         //<0><0><0>
+extern pure virtual static    function epvs_func (x);         //<0><0><0>
+extern pure virtual protected function epvp_func (x);         //<0><0><0>
+extern pure virtual local     function epvl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern pure virtual function ext_pure_virt_func (x);          //<0><0><0>
+extern                        task        e_task (x, y);      //<0><0><0>
+extern              static    task       es_task (x, y);      //<0><0><0>
+extern              protected task       ep_task (x, y);      //<0><0><0>
+extern              local     task       el_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual function pure_virt_func (x);                     //<0><0><0>
+       pure virtual           task       pv_task (x);         //<0><0><0>
+       pure virtual static    task      pvs_task (x);         //<0><0><0>
+       pure virtual protected task      pvp_task (x);         //<0><0><0>
+       pure virtual local     task      pvl_task (x);         //<0><0><0>
                                                               //<0><0><0>
-pure virtual static function pure_virt_static_func (x);       //<0><0><0>
+extern      virtual           task       ev_task (x, y);      //<0><0><0>
+extern      virtual static    task      evs_task (x, y);      //<0><0><0>
+extern      virtual protected task      evp_task (x, y);      //<0><0><0>
+extern      virtual local     task      evl_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual protected function pure_virt_protected_func (x); //<0><0><0>
+extern pure virtual           task      epv_task (x, y);      //<0><0><0>
+extern pure virtual static    task     epvs_task (x, y);      //<0><0><0>
+extern pure virtual protected task     epvp_task (x, y);      //<0><0><0>
+extern pure virtual local     task     epvl_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual local function pure_virt_local_func (x);         //<0><0><0>
-                                                              //<0><0><0>
-                                                              //<0><0><0>
-extern task ext_task (x, y);                                  //<0><0><0>
-                                                              //<0><0><0>
-extern static task ext_static_task (x, y);                    //<0><0><0>
-                                                              //<0><0><0>
-extern protected task ext_protected_task (x, y);              //<0><0><0>
-                                                              //<0><0><0>
-extern local task ext_local_task (x, y);                      //<0><0><0>
-                                                              //<0><0><0>
-extern pure virtual task ext_pure_virt_task (x);              //<0><0><0>
-                                                              //<0><0><0>
-pure virtual task pure_virt_task (x);                         //<0><0><0>
-                                                              //<0><0><0>
-pure virtual static task pure_virt_static_task (x);           //<0><0><0>
-                                                              //<0><0><0>
-pure virtual protected task pure_virt_protected_task (x);     //<0><0><0>
-                                                              //<0><0><0>
-pure virtual local task pure_virt_local_task (x);             //<0><0><0>
                                                               //<0><0><0>
 /**                                                           //<1><1><1>
 * Static function                                             //<1><1><1>
