@@ -19,6 +19,7 @@ setlocal indentkeys=!^F,o,O,0),0},=begin,=end,=join,=endcase,=join_any,=join_non
 setlocal indentkeys+==endmodule,=endfunction,=endtask,=endspecify
 setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
 setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
+setlocal indentkeys+==endgenerate,=endchecker,=endconfig,=endprimitive,=endtable
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
@@ -81,7 +82,7 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*)'
     let l:extra_offset = 0
     if s:curr_line =~ '^\s*);\s*$' &&
-          \ verilog_systemverilog#VariableExists('verilog_dont_deindent_eos')
+          \ index(s:verilog_disable_indent, 'eos') < 0
       let l:extra_offset = s:offset
     endif
     call verilog_systemverilog#Verbose("Indenting )")

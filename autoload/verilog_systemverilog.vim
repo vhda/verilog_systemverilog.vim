@@ -558,7 +558,8 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'property',
           \ 'method',
           \ 'preproc',
-          \ 'conditional'
+          \ 'conditional',
+          \ 'eos'
           \ ]
     for item in current_values
       call filter(valid_completions, 'v:val !=# item')
@@ -637,7 +638,7 @@ endfunction
 " }}}
 
 "------------------------------------------------------------------------
-" Definitions for errorformat
+" Command to control errorformat and compiler
 " {{{
 function! verilog_systemverilog#VerilogErrorFormat(...)
   " Choose tool
@@ -648,8 +649,9 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
           \"3. iverilog",
           \"4. cver",
           \"5. Leda",
-          \"6. verilator",
+          \"6. Verilator",
           \"7. NCVerilog",
+          \"8. SpyGlass",
           \])
     echo "\n"
     if (l:tool == 1)
@@ -667,7 +669,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     elseif (l:tool == 7)
       let l:tool = "ncverilog"
     else
-      let l:tool = "iverilog"
+      let l:tool = "spyglass"
     endif
   else
     let l:tool = tolower(a:1)
@@ -686,13 +688,17 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
       \ l:tool == "msim" ||
       \ l:tool == "cver" ||
       \ l:tool == "verilator" ||
-      \ l:tool == "ncverilog"
+      \ l:tool == "ncverilog" ||
+      \ l:tool == "spyglass"
       \ )
       let l:mode = inputlist([
             \"1. check all",
             \"2. ignore warnings"
             \])
       echo "\n"
+      if (l:mode == 2)
+        let l:mode = 3
+      endif
     else
       let l:mode = 1
     endif
@@ -700,107 +706,21 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     let l:mode = a:2
   endif
 
+  if (l:mode <= 1)
+    let g:verilog_efm_level = "lint"
+  elseif (l:mode <= 2)
+    let g:verilog_efm_level = "warning"
+  else
+    let g:verilog_efm_level = "error"
+  endif
+
   call verilog_systemverilog#Verbose("Configuring errorformat with: tool=" . l:tool . "; mode=" . l:mode)
 
-  if (l:tool == "vcs")
-    " Error messages
-    set errorformat=%E%trror-\[%.%\\+\]\ %m
-    set errorformat+=%C%m\"%f\"\\,\ %l%.%#
-    set errorformat+=%C%f\\,\ %l
-    set errorformat+=%C%\\s%\\+%l:\ %m
-    set errorformat+=%C%m\"%f\"\\,%.%#
-    set errorformat+=%Z%p^                      "Column pointer
-    set errorformat+=%C%m                       "Catch all rule
-    set errorformat+=%Z%m                       "Finalization messages
-    " Warning messages
-    if (l:mode <= 2)
-      set errorformat+=%W%tarning-\[%.%\\+]\\$
-      set errorformat+=%-W%tarning-[LCA_FEATURES_ENABLED]\ Usage\ warning    "Ignore LCA enabled warning
-      set errorformat+=%W%tarning-\[%.%\\+\]\ %m
-    endif
-    " Lint message
-    if (l:mode <= 1)
-      set errorformat+=%I%tint-\[%.%\\+\]\ %m
-    endif
-    echo "Selected VCS errorformat"
-    "TODO Add support for:
-    "Error-[SE] Syntax error
-    "  Following verilog source has syntax error :
-    "  "../../rtl_v/anadigintf/anasoftramp.v", 128: token is 'else'
-    "          else
-  endif
-  if (l:tool == "msim")
-    " Error messages
-    set errorformat=\*\*\ Error:\ %f(%l):\ %m
-    " Warning messages
-    if (l:mode <= 1)
-      set errorformat+=\*\*\ Warning:\ \[\%n\]\ %f(%l):\ %m
-    endif
-    echo "Selected Modelsim errorformat"
-  endif
-  if (l:tool == "iverilog")
-    set errorformat=%f\\:%l:\ %m
-    echo "Selected iverilog errorformat"
-  endif
-  if (l:tool == "cver")
-    " Error messages
-    set errorformat=\*\*%f(%l)\ ERROR\*\*\ \[%n\]\ %m
-    " Warning messages
-    if (l:mode <= 1)
-      set errorformat+=\*\*%f(%l)\ WARN\*\*\ \[%n\]\ %m,\*\*\ WARN\*\*\ \[\%n\]\ %m
-    endif
-    echo "Selected cver errorformat"
-  endif
-  if (l:tool == "leda")
-    " Simple errorformat:
-    set errorformat=%f\\:%l:\ %.%#\[%t%.%#\]\ %m
-    "TODO Review -> Multiple line errorformat:
-    "set errorformat=%A\ %#%l:%.%#,%C\ \ \ \ \ \ \ \ %p^^%#,%Z%f:%l:\ %.%#[%t%.%#]\ %m
-    echo "Selected Leda errorformat"
-  endif
-  if (l:tool == "verilator")
-    set errorformat=%%%trror%.%#:\ %f:%l:\ %m
-    if (l:mode <= 1)
-      set errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
-    "elseif (l:mode <= 1)
-    endif
-    echo "Selected Verilator errorformat"
-  endif
-  if (l:tool == "ncverilog")
-    " Based on https://github.com/vhda/verilog_systemverilog.vim/issues/88
-    set errorformat =%.%#:\ *%t\\,%.%#\ %#\(%f\\,%l\|%c\):\ %m
-    set errorformat+=%.%#:\ *%t\\,%.%#\ %#\(%f\\,%l\):\ %m
-    " Multi-line error messages
-    set errorformat+=%A%.%#\ *%t\\,%.%#:\ %m,%ZFile:\ %f\\,\ line\ =\ %l\\,\ pos\ =\ %c
-    if (l:mode > 1)
-      " Ignore warnings
-      set errorformat^=%-G%.%#\ *W\\,%.%#:\ %m
-    endif
-    echo "Selected NCVerilog errorformat"
-  endif
-  " Append UVM errorformat if enabled
-  if (exists("g:verilog_efm_uvm_lst"))
-    let verilog_efm_uvm = verilog_systemverilog#VariableGetValue('verilog_efm_uvm_lst')
-    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'info') >= 0)
-      set errorformat+=UVM_%tNFO\ %f(%l)\ %m
-    endif
-    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'warning') >= 0)
-      set errorformat+=UVM_%tARNING\ %f(%l)\ %m
-    endif
-    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'error') >= 0)
-      set errorformat+=UVM_%tRROR\ %f(%l)\ %m
-    endif
-    if (index(verilog_efm_uvm, 'all') >= 0 || index(verilog_efm_uvm, 'fatal') >= 0)
-      set errorformat+=UVM_%tATAL\ %f(%l)\ %m
-    endif
-  endif
-  " Append any user-defined efm entries
-  if (exists("g:verilog_efm_custom"))
-    set errorformat+=g:verilog_efm_custom
-  endif
-  " Remove all unmatched lines from the quickfix window
-  if (exists("g:verilog_efm_quickfix_clean"))
-    set errorformat+=%-G%.%#
+  if (index(['vcs', 'modelsim', 'iverilog', 'cver', 'leda', 'verilator', 'ncverilog', 'spyglass'], l:tool) >= 0)
+    execute 'compiler! '. l:tool
+    echo 'Selected errorformat for "' . l:tool . '"'
+  else
+    echoerr 'Unknown tool name "' . l:tool . '"'
   endif
 endfunction
 " }}}
