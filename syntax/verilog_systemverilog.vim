@@ -124,15 +124,6 @@ syn region  verilogString      start=+"+ skip=+\\"+ end=+"+ contains=verilogEsca
 syn match   verilogEscape      +\\[nt"\\]+ contained
 syn match   verilogEscape      "\\\o\o\=\o\=" contained
 
-" Directives
-syn match   verilogDirective   "//\s*synopsys\>.*$"
-syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
-syn region  verilogDirective   start="//\s*synopsys \z(\w*\)begin\>" end="//\s*synopsys \z1end\>"
-
-syn match   verilogDirective   "//\s*\$s\>.*$"
-syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
-syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
-
 syn keyword verilogMethod      new
 if v:version >= 704
     syn match   verilogMethod  "\(^\s\+\.\)\@30<!\<\w\+\ze("
@@ -305,6 +296,15 @@ if len(s:verilog_syntax_fold) > 0
         syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend
     endif
 endif
+
+" Special comments: Synopsys directives
+syn match   verilogDirective   "//\s*synopsys\>.*$"
+syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
+syn region  verilogDirective   start="//\s*synopsys \z(\w*\)begin\>" end="//\s*synopsys \z1end\>"
+
+syn match   verilogDirective   "//\s*\$s\>.*$"
+syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
+syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
 
 "Modify the following as needed.  The trade-off is performance versus
 "functionality.
