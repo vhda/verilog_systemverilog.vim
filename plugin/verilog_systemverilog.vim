@@ -105,7 +105,7 @@ let g:verilog_syntax = {
                         \ {
                         \ 'match_start' : '/\*',
                         \ 'match_end'   : '\*/',
-                        \ 'syn_argument': 'contains=verilogTodo,verilogDirective,@Spell keepend'
+                        \ 'syn_argument': 'contains=verilogTodo,verilogDirective,@Spell keepend extend'
                         \ }],
       \ 'covergroup'  : [{
                         \ 'match_start' : '\<covergroup\>',

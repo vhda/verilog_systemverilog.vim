@@ -267,6 +267,19 @@ uvm_blocking_put_port <span class="Special">#(</span>trans<span class="Special">
     <span class="Identifier">do5</span><span class="Special">();</span>                                                    <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Statement">end</span>                                                           <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
                                                               <span class="Comment">//&lt;0&gt;&lt;0&gt;&lt;0&gt;</span>
+<span class="Statement">task</span> something<span class="Special">;</span>                                               <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+<span class="Statement">fork</span>                                                          <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+    <span class="Statement">begin</span>                                                     <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;1&gt;</span>
+        <span class="Statement">begin</span>                                                 <span class="Comment">//&lt;3&gt;&lt;3&gt;&lt;1&gt;</span>
+        <span class="Statement">end</span>                                                   <span class="Comment">//&lt;3&gt;&lt;3&gt;&lt;1&gt;</span>
+        <span class="Comment">/*                                                    //&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
+<span class="Comment">        begin                                                 //&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
+<span class="Comment">        end                                                   //&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
+<span class="Comment">        */</span>                                                    <span class="Comment">//&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
+    <span class="Statement">end</span>                                                       <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;1&gt;</span>
+<span class="Statement">join</span>                                                          <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+<span class="Statement">endtask</span>                                                       <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+                                                              <span class="Comment">//&lt;0&gt;&lt;0&gt;&lt;0&gt;</span>
 <span class="Comment">// spyglass disable_block SOMETHING                           //&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Statement">assign</span> a <span class="Special">=</span> b <span class="Special">&amp;</span> c<span class="Special">;</span>                                             <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Comment">// spyglass enable_block SOMETHING</span>                            <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
