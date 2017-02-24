@@ -103,7 +103,7 @@ syn keyword verilogRepeat      do while foreach
 syn match   verilogGlobal      "`[a-zA-Z_][a-zA-Z0-9_$]\+"
 syn match   verilogGlobal      "$[a-zA-Z0-9_$]\+"
 
-syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]\+\>"
+syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]*\>"
 
 syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[bB]\s*[0-1_xXzZ?]\+"
 syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[oO]\s*[0-7_xXzZ?]\+"
@@ -117,21 +117,9 @@ syn keyword verilogTodo        contained TODO FIXME
 
 syn match   verilogOperator    "[&|~><!)(*#%@+/=?:;}{,.\^\-\[\]]"
 
-syn region  verilogComment     start="/\*" end="\*/" contains=verilogTodo,@Spell
-syn match   verilogComment     "//.*" contains=verilogTodo,@Spell
-
 syn region  verilogString      start=+"+ skip=+\\"+ end=+"+ contains=verilogEscape,@Spell
 syn match   verilogEscape      +\\[nt"\\]+ contained
 syn match   verilogEscape      "\\\o\o\=\o\=" contained
-
-" Directives
-syn match   verilogDirective   "//\s*synopsys\>.*$"
-syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
-syn region  verilogDirective   start="//\s*synopsys \z(\w*\)begin\>" end="//\s*synopsys \z1end\>"
-
-syn match   verilogDirective   "//\s*\$s\>.*$"
-syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
-syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
 
 syn keyword verilogMethod      new
 if v:version >= 704
@@ -167,6 +155,15 @@ syn match verilogStatement '\(typedef\s\+\)\@<=\<class\>'
 " Only enable folding if verilog_syntax_fold_lst is defined
 let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
 
+if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogFold
+        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\(\<if\>\)\@!\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
+        \ end=")\s*;"
+        \ transparent
+        \ keepend
+        \ fold
+endif
+
 for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
     \ 'property', 'sequence', 'specify', 'task', ]
 
@@ -187,8 +184,7 @@ for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
     endif
 
     if verilog_systemverilog#VariableExists('verilog_quick_syntax')
-        execute 'syn match verilogStatement "'.s:region_start.'"'
-        execute 'syn match verilogStatement "'.s:region_end.'"'
+        execute 'syn keyword verilogStatement '.s:region_start.' '.s:region_end
     else
         let s:verilog_syn_region_cmd =
             \  'syn region verilog'.substitute(name, '.*', '\u&', '')
@@ -210,38 +206,50 @@ for name in ['class', 'clocking', 'covergroup', 'function', 'interface',
 endfor
 
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
-    syn region verilogFoldBlockContainer
+    syn region verilogBlockContainer
         \ start="\<begin\>"
         \ end="\<end\>"
         \ skip="/[*/].*"
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
-        \ contains=verilogComment,verilogFold,verilogBlock
+        \ contains=verilogBlock,verilogBlockNamed,verilogBlockEnd
     if index(s:verilog_syntax_fold, "block_nested") >= 0
-        syn region verilogFold
+        syn region verilogBlock
+            \ matchgroup=verilogStatement
             \ start="\<begin\>"
-            \ end="\<end\>"me=s-1
-            \ transparent
+            \ end="\<end\>.*\<begin\>"ms=s-1,me=s-1
             \ fold
-            \ contained containedin=verilogFoldBlockContainer
+            \ transparent
+            \ contained
+            \ nextgroup=verilogBlockEnd
             \ contains=TOP
-        syn match verilogStatement "\<begin\|end\>"
+        syn region verilogBlockEnd
+            \ matchgroup=verilogStatement
+            \ start="\<end\>.*\<begin\>"
+            \ end="\<end\>\ze.*\(\<begin\>\)\@!"
+            \ fold
+            \ transparent
+            \ contained
+            \ contains=TOP
+        syn match verilogStatement "\<end\>"
     else "block_named
         syn region verilogBlock
+            \ matchgroup=verilogStatement
             \ start="\<begin\>"
             \ end="\<end\>"
             \ transparent
-            \ contained containedin=verilogFoldBlockContainer
-            \ contains=TOP,verilogFold
-        syn region verilogFold
+            \ contained
+            \ contains=TOP
+        syn region verilogBlockNamed
+            \ matchgroup=verilogStatement
             \ start="\<begin\>\ze\s*:\s*\z(\w\+\)"
-            \ end="\<end\>"me=s-1
+            \ end="\<end\>"
             \ transparent
             \ fold
-            \ contained containedin=verilogBlock
+            \ contained
             \ contains=TOP
-        syn match verilogStatement "\<begin\|end\>"
+        "TODO break up if...else statements
     endif
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
@@ -255,57 +263,55 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogFoldIfContainer
+    syn region verilogIfdefContainer
         \ start="`ifn\?def\>"
         \ end="`endif\>"
         \ skip="/[*/].*"
         \ transparent
         \ keepend extend
         \ containedin=ALLBUT,verilogComment
-        \ contains=NONE
-    syn region verilogFoldIf
+        \ contains=verilogIfdef,verilogIfdefElse,verilogIfdefEndif
+    syn region verilogIfdef
         \ start="`ifn\?def\>"
         \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
-        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contained
+        \ nextgroup=verilogIfdefElse,verilogIfdefEndif
         \ contains=TOP
-    syn region verilogFoldElseIf
+    syn region verilogIfdefElse
         \ start="`els\(e\|if\)\>"
         \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
-        \ nextgroup=verilogFoldElseIf,verilogFoldElse
+        \ contained
+        \ nextgroup=verilogIfdefElse,verilogIfdefEndif
         \ contains=TOP
-    syn region verilogFoldElse
+    syn region verilogIfdefEndif
         \ start="`else\>"
         \ end="`endif\>"
         \ fold transparent
         \ keepend
-        \ contained containedin=verilogFoldIfContainer
+        \ contained
         \ contains=TOP
 endif
 
-if index(s:verilog_syntax_fold, "instance") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogFold
-        \ start="^\s*\w\+\(\s*#\s*(\|\s\+\w\+\s*(\)\(.*)\s*\w\+\s*;\)\@!"
-        \ end=")\s*;"
-        \ transparent
-        \ keepend
-        \ fold
+" Expand verilogComment
+syn match verilogComment "//.*" contains=verilogTodo,verilogDirective,@Spell
+if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
+    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend fold
+else
+    syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,verilogDirective,@Spell keepend
 endif
 
-" Expand verilogComment
-if len(s:verilog_syntax_fold) > 0
-    syn match verilogComment "//.*" contains=verilogTodo,@Spell
-    if index(s:verilog_syntax_fold, "comment") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend fold
-    else
-        syn region verilogComment start="/\*" end="\*/" contains=verilogTodo,@Spell keepend
-    endif
-endif
+" Special comments: Synopsys directives
+syn match   verilogDirective   "//\s*synopsys\>.*$"
+syn region  verilogDirective   start="/\*\s*synopsys\>" end="\*/"
+syn region  verilogDirective   start="//\s*synopsys \z(\w*\)begin\>" end="//\s*synopsys \z1end\>"
+
+syn match   verilogDirective   "//\s*\$s\>.*$"
+syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
+syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
 
 "Modify the following as needed.  The trade-off is performance versus
 "functionality.

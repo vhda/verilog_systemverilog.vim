@@ -326,5 +326,13 @@
 <span class="Comment">/*</span>
 <span class="Comment">* </span><span class="Todo">TODO</span><span class="Comment"> todo check</span>
 <span class="Comment">*/</span>
+
+<span class="Statement">always</span><span class="Special">@(</span><span class="Statement">posedge</span> clk <span class="Statement">or</span> <span class="Statement">posedge</span> rst<span class="Special">)</span>
+<span class="Statement">begin</span>
+  <span class="Statement">priority</span> <span class="Statement">if</span> <span class="Special">(</span>rst<span class="Special">)</span>
+    state <span class="Special">&lt;=</span> <span class="Constant">IDLE</span><span class="Special">;</span>
+  <span class="Statement">else</span>
+    state <span class="Special">&lt;=</span> <span class="Constant">NS</span><span class="Special">;</span>
+<span class="Statement">end</span>
 </pre>
 </body>

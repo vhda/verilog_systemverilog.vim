@@ -31,8 +31,9 @@ test-efm:
 
 test-syntax:
 	$(SILENT) vim -T dumb -E \
+	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' > test-syntax.log
+		-c 'call RunTestSyntax()' | tr -d '[]' > test-syntax.log
 	$(SILENT) grep "^Syntax test" test-syntax.log
 
 performance:
