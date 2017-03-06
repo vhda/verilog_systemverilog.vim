@@ -219,6 +219,12 @@ uvm_blocking_put_port <span class="Special">#(</span>trans<span class="Special">
                                                               <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Statement">endtask</span> <span class="Special">:</span> t_multi_line                                        <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
                                                               <span class="Comment">//&lt;0&gt;&lt;0&gt;&lt;0&gt;</span>
+  <span class="Statement">task</span> <span class="Identifier">t_multi_line_indented</span><span class="Special">(</span>                                 <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+    <span class="Statement">input</span> an_input                                            <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+  <span class="Special">);</span>                                                          <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+                                                              <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+  <span class="Statement">endtask</span> <span class="Special">:</span> t_multi_line                                      <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+                                                              <span class="Comment">//&lt;0&gt;&lt;0&gt;&lt;0&gt;</span>
 <span class="Statement">if</span> <span class="Special">(</span>cond1<span class="Special">)</span> <span class="Statement">begin</span>                                              <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;0&gt;</span>
     <span class="Identifier">do1</span><span class="Special">();</span>                                                    <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;0&gt;</span>
 <span class="Statement">end</span> <span class="Statement">else</span> <span class="Statement">if</span> <span class="Special">(</span>cond2<span class="Special">)</span> <span class="Statement">begin</span>                                     <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;0&gt;</span>

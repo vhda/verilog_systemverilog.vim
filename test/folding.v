@@ -217,6 +217,12 @@ task t_multi_line(                                            //<1><1><1>
                                                               //<1><1><1>
 endtask : t_multi_line                                        //<1><1><1>
                                                               //<0><0><0>
+  task t_multi_line_indented(                                 //<1><1><1>
+    input an_input                                            //<1><1><1>
+  );                                                          //<1><1><1>
+                                                              //<1><1><1>
+  endtask : t_multi_line                                      //<1><1><1>
+                                                              //<0><0><0>
 if (cond1) begin                                              //<1><1><0>
     do1();                                                    //<1><1><0>
 end else if (cond2) begin                                     //<1><1><0>

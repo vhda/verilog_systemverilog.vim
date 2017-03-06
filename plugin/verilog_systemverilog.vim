@@ -125,7 +125,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'instance'    : [{
-                        \ 'match_start' : '^\s*\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
+                        \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
                         \ 'match_end'   : ')\s*;',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
