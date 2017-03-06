@@ -13,7 +13,7 @@ begin                                                         //<2><2><1>
     state = something();                                      //<2><2><1>
     begin : block1                                            //<3><3><2>
         state = 2'b00;                                        //<3><3><2>
-        begin                                                 //<4><4><2>
+        if (a == b) begin                                     //<4><4><2>
             begin : block2                                    //<5><5><3>
             end // block2                                     //<5><5><3>
             state = 2'b11;                                    //<4><4><2>

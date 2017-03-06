@@ -1018,4 +1018,11 @@ assert_label: assert property (
 );
 // End of copied code
 
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/113
+assign a = b <= c &&
+           d <= e &&
+           f <= g &&
+           h <= i;
+// End of copied code
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

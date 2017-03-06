@@ -256,7 +256,7 @@ function! s:GetContextIndent()
         return len(substitute(l:line, '?\s*\zs.*', '', ""))
       endif
       " Search for assignments (=, <=) that don't end in ";"
-      if l:line =~ s:vlog_assign . '[^;]*$'
+      if l:line =~ s:vlog_assign . '[^;]*$' && (!s:InsideAssign(l:lnum))
         if l:line !~ s:vlog_assign . '\s*$'
           " If there are values after the assignment, then use that column as
           " the indentation of the open statement.
@@ -393,6 +393,10 @@ endfunction
 
 function! s:IsComment(lnum)
   return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogComment"
+endfunction
+
+function! s:InsideAssign(lnum)
+  return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogAssign"
 endfunction
 
 " vi: sw=2 sts=2:

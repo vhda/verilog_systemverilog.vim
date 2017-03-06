@@ -76,6 +76,11 @@ let s:verilog_function_task_dequalifier =
     \ .'\)'
 
 let g:verilog_syntax = {
+      \ 'assign'      : [{
+                        \ 'match_start' : '[^=!]<\?=\(=\)\@!',
+                        \ 'match_end'   : '\ze\(;\|\*)\)',
+                        \ 'syn_argument': 'transparent',
+                        \ }],
       \ 'block'       : [{
                         \ 'match_start' : '\<begin\>',
                         \ 'match_end'   : '\<end\>',
