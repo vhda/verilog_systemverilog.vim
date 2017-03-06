@@ -1035,6 +1035,13 @@ assign a = b <= c &&
 // Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/129
 if (cond) begin do_something; end
 do_something_else;
+
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/120
+package automatic regmodel_dpi_pkg;
+    export "DPI-SC" task check_reg;
+    task check_reg(string mystring, output bit [63:0] o1);
+    endtask
+endpackage
 // End of copied code
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

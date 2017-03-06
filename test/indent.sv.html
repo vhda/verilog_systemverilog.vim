@@ -1037,6 +1037,13 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 <span class="Comment">// Code from: // <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/129">https://github.com/vhda/verilog_systemverilog.vim/issues/129</a></span>
 <span class="Statement">if</span> <span class="Special">(</span>cond<span class="Special">)</span> <span class="Statement">begin</span> do_something<span class="Special">;</span> <span class="Statement">end</span>
 do_something_else<span class="Special">;</span>
+
+<span class="Comment">// Code from: // <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/120">https://github.com/vhda/verilog_systemverilog.vim/issues/120</a></span>
+<span class="Statement">package</span> <span class="Statement">automatic</span> regmodel_dpi_pkg<span class="Special">;</span>
+    <span class="Statement">export</span> <span class="Constant">&quot;DPI-SC&quot;</span> <span class="Statement">task</span> check_reg<span class="Special">;</span>
+    <span class="Statement">task</span> <span class="Identifier">check_reg</span><span class="Special">(</span><span class="Statement">string</span> mystring<span class="Special">,</span> <span class="Statement">output</span> <span class="Statement">bit</span> <span class="Special">[</span><span class="Constant">63</span><span class="Special">:</span><span class="Constant">0</span><span class="Special">]</span> o1<span class="Special">);</span>
+    <span class="Statement">endtask</span>
+<span class="Statement">endpackage</span>
 <span class="Comment">// End of copied code</span>
 
 <span class="Comment">// vim&#0058; set expandtab softtabstop=4 shiftwidth=4 nofoldenable:</span>

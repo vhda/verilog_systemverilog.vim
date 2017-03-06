@@ -69,7 +69,7 @@ enum
 event
 eventually
 expect
-export
+export "DPI-SC" task exported_task;
 extends
 extern
 final

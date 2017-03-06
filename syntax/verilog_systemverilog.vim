@@ -69,7 +69,7 @@ syn keyword verilogStatement   logic bit byte time
 syn keyword verilogStatement   int longint shortint
 syn keyword verilogStatement   struct packed
 syn keyword verilogStatement   final
-syn keyword verilogStatement   import export
+syn keyword verilogStatement   import
 syn keyword verilogStatement   context pure
 syn keyword verilogStatement   void shortreal chandle string
 syn keyword verilogStatement   modport
@@ -213,6 +213,7 @@ let s:verilog_syntax_order = [
             \ 'class',
             \ 'clocking',
             \ 'covergroup',
+            \ 'export',
             \ 'expression',
             \ 'function',
             \ 'interface',
