@@ -1,3 +1,14 @@
+module mymodule(
+  input  wire a,
+  input  wire b,
+  `ifdef MACRO
+  input  wire c,
+  `endif
+  output wire y
+);
+
+endmodule
+
 `ifdef SYSTEM_VERILOG_KEYWORDS
 accept_on
 alias
@@ -50,7 +61,6 @@ endcase
 endchecker
 endconfig
 endgenerate
-endmodule
 endpackage
 endprimitive
 endprogram
@@ -109,7 +119,6 @@ macromodule
 matches
 medium
 modport
-module
 nand
 negedge
 nettype
@@ -240,6 +249,8 @@ function
 endfunction
 interface
 endinterface
+module
+endmodule
 property
 endproperty
 sequence

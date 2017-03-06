@@ -135,8 +135,14 @@ let g:verilog_syntax = {
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
+      \ 'module'      : [{
+                        \ 'match_start' : '\<\(extern\s\+\)\@<!\<module\>',
+                        \ 'match_end'   : '\<endmodule\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogInterface',
+                        \ }],
       \ 'property'    : [{
-                        \ 'match_start' : '\<property\>',
+                        \ 'match_start' : '\<\(\(assert\|cover\)\s\+\)\@<!\<property\>',
                         \ 'match_end'   : '\<endproperty\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',

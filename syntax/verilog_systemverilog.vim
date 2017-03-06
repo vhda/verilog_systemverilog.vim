@@ -33,7 +33,7 @@ syn keyword verilogStatement   always and assign automatic buf
 syn keyword verilogStatement   bufif0 bufif1 cell cmos
 syn keyword verilogStatement   config deassign defparam design
 syn keyword verilogStatement   disable edge endconfig
-syn keyword verilogStatement   endgenerate endmodule
+syn keyword verilogStatement   endgenerate
 syn keyword verilogStatement   endprimitive endtable
 syn keyword verilogStatement   event force fork join
 syn keyword verilogStatement   join_any join_none forkjoin
@@ -41,7 +41,7 @@ syn keyword verilogStatement   generate genvar highz0 highz1 ifnone
 syn keyword verilogStatement   incdir include initial inout input
 syn keyword verilogStatement   instance integer large liblist
 syn keyword verilogStatement   library localparam macromodule medium
-syn keyword verilogStatement   module nand negedge nmos nor
+syn keyword verilogStatement   nand negedge nmos nor
 syn keyword verilogStatement   noshowcancelled not notif0 notif1 or
 syn keyword verilogStatement   output parameter pmos posedge primitive
 syn keyword verilogStatement   pull0 pull1 pulldown pullup
@@ -205,6 +205,7 @@ let s:verilog_syntax_order = [
             \ 'covergroup',
             \ 'function',
             \ 'interface',
+            \ 'module',
             \ 'property',
             \ 'sequence',
             \ 'specify',
@@ -217,14 +218,6 @@ for name in s:verilog_syntax_order
 endfor
 
 if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_fold, "block_named") >= 0
-    syn region verilogBlockContainer
-        \ start="\<begin\>"
-        \ end="\<end\>"
-        \ skip="/[*/].*"
-        \ transparent
-        \ keepend extend
-        \ containedin=ALLBUT,verilogComment
-        \ contains=verilogBlock,verilogBlockNamed,verilogBlockEnd
     if index(s:verilog_syntax_fold, "block_nested") >= 0
         syn region verilogBlock
             \ matchgroup=verilogStatement
@@ -262,6 +255,13 @@ if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_f
             \ contains=TOP
         "TODO break up if...else statements
     endif
+    syn region verilogBlockContainer
+        \ start="\<begin\>"
+        \ end="\<end\>"
+        \ skip="/[*/].*"
+        \ transparent
+        \ keepend extend
+        \ contains=verilogBlock,verilogBlockNamed,verilogBlockEnd
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
     syn region  verilogFold
         \ matchgroup=verilogStatement
@@ -274,14 +274,6 @@ else
 endif
 
 if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region verilogIfdefContainer
-        \ start="`ifn\?def\>"
-        \ end="`endif\>"
-        \ skip="/[*/].*"
-        \ transparent
-        \ keepend extend
-        \ containedin=ALLBUT,verilogComment
-        \ contains=verilogIfdef,verilogIfdefElse,verilogIfdefEndif
     syn region verilogIfdef
         \ start="`ifn\?def\>"
         \ end="^\s*`els\(e\|if\)\>"ms=s-1,me=s-1
@@ -305,6 +297,13 @@ if index(s:verilog_syntax_fold, "define") >= 0 || index(s:verilog_syntax_fold, "
         \ keepend
         \ contained
         \ contains=TOP
+    syn region verilogIfdefContainer
+        \ start="`ifn\?def\>"
+        \ end="`endif\>"
+        \ skip="/[*/].*"
+        \ transparent
+        \ keepend extend
+        \ contains=verilogIfdef,verilogIfdefElse,verilogIfdefEndif
 endif
 
 " Generate syntax definitions for comments after other standard syntax
