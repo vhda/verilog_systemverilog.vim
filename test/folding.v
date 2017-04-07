@@ -13,7 +13,7 @@ begin                                                         //<2><2><1>
     state = something();                                      //<2><2><1>
     begin : block1                                            //<3><3><2>
         state = 2'b00;                                        //<3><3><2>
-        begin                                                 //<4><4><2>
+        if (a == b) begin                                     //<4><4><2>
             begin : block2                                    //<5><5><3>
             end // block2                                     //<5><5><3>
             state = 2'b11;                                    //<4><4><2>
@@ -217,6 +217,12 @@ task t_multi_line(                                            //<1><1><1>
                                                               //<1><1><1>
 endtask : t_multi_line                                        //<1><1><1>
                                                               //<0><0><0>
+  task t_multi_line_indented(                                 //<1><1><1>
+    input an_input                                            //<1><1><1>
+  );                                                          //<1><1><1>
+                                                              //<1><1><1>
+  endtask : t_multi_line                                      //<1><1><1>
+                                                              //<0><0><0>
 if (cond1) begin                                              //<1><1><0>
     do1();                                                    //<1><1><0>
 end else if (cond2) begin                                     //<1><1><0>
@@ -264,4 +270,22 @@ end else begin                                                //<1><1><1>
 end else begin:b3                                             //<1><1><1>
     do5();                                                    //<1><1><1>
 end                                                           //<1><1><1>
+                                                              //<0><0><0>
+task something;                                               //<1><1><1>
+fork                                                          //<1><1><1>
+    begin                                                     //<2><2><1>
+        begin                                                 //<3><3><1>
+        end                                                   //<3><3><1>
+        /*                                                    //<3><3><2>
+        begin                                                 //<3><3><2>
+        end                                                   //<3><3><2>
+        */                                                    //<3><3><2>
+    end                                                       //<2><2><1>
+join                                                          //<1><1><1>
+endtask                                                       //<1><1><1>
+                                                              //<0><0><0>
+// spyglass disable_block SOMETHING                           //<1><1><1>
+assign a = b & c;                                             //<1><1><1>
+// spyglass enable_block SOMETHING                            //<1><1><1>
+                                                              //<0><0><0>
 // vi: set number norelativenumber expandtab softtabstop=4 shiftwidth=4:

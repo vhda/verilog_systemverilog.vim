@@ -1,4 +1,16 @@
 "-----------------------------------------------------------------------
+" Global configurations
+"-----------------------------------------------------------------------
+" Configure custom syntax
+let g:verilog_syntax_custom = {
+    \ 'spyglass' : [{
+        \ 'match_start' : '\/\/\s*spyglass\s\+disable_block\s\+\z(\(\w\|-\)\+\(\s\+\(\w\|-\)\+\)*\)',
+        \ 'match_end'   : '\/\/\s*spyglass\s\+enable_block\s\+\z1',
+        \ 'syn_argument': 'transparent keepend',
+        \ }],
+    \ }
+
+"-----------------------------------------------------------------------
 " Syntax folding test
 "-----------------------------------------------------------------------
 function! RunTestFold()
@@ -113,6 +125,7 @@ function! RunTestSyntax()
     set foldmethod=syntax
     set foldlevel=99
 
+    " Run syntax test for various folding configurations
     let g:verilog_syntax_fold_lst=''
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 

@@ -535,6 +535,9 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'define',
           \ 'instance'
           \ ]
+    if (exists('g:verilog_syntax_custom'))
+      let valid_completions += keys(g:verilog_syntax_custom)
+    endif
     if (empty(filter(current_values, 'v:val =~ "^block"')))
       let valid_completions += [
             \ 'block',

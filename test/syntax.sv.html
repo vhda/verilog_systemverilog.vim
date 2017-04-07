@@ -1,5 +1,16 @@
 <body>
 <pre>
+<span class="Statement">module</span> <span class="Identifier">mymodule</span><span class="Special">(</span>
+  <span class="Statement">input</span>  <span class="Statement">wire</span> a<span class="Special">,</span>
+  <span class="Statement">input</span>  <span class="Statement">wire</span> b<span class="Special">,</span>
+  <span class="PreProc">`ifdef</span> <span class="Constant">MACRO</span>
+  <span class="Statement">input</span>  <span class="Statement">wire</span> c<span class="Special">,</span>
+  <span class="PreProc">`endif</span>
+  <span class="Statement">output</span> <span class="Statement">wire</span> y
+<span class="Special">);</span>
+
+<span class="Statement">endmodule</span>
+
 <span class="PreProc">`ifdef</span> <span class="Constant">SYSTEM_VERILOG_KEYWORDS</span>
 <span class="Statement">accept_on</span>
 <span class="Statement">alias</span>
@@ -52,7 +63,6 @@
 <span class="Statement">endchecker</span>
 <span class="Statement">endconfig</span>
 <span class="Statement">endgenerate</span>
-<span class="Statement">endmodule</span>
 <span class="Statement">endpackage</span>
 <span class="Statement">endprimitive</span>
 <span class="Statement">endprogram</span>
@@ -111,7 +121,6 @@
 <span class="Statement">matches</span>
 <span class="Statement">medium</span>
 <span class="Statement">modport</span>
-<span class="Statement">module</span>
 <span class="Statement">nand</span>
 <span class="Statement">negedge</span>
 <span class="Statement">nettype</span>
@@ -242,6 +251,8 @@
 <span class="Statement">endfunction</span>
 <span class="Statement">interface</span>
 <span class="Statement">endinterface</span>
+<span class="Statement">module</span>
+<span class="Statement">endmodule</span>
 <span class="Statement">property</span>
 <span class="Statement">endproperty</span>
 <span class="Statement">sequence</span>
@@ -250,6 +261,9 @@
 <span class="Statement">endspecify</span>
 <span class="Statement">task</span>
 <span class="Statement">endtask</span>
+<span class="PreProc">`endif</span>
+<span class="PreProc">`ifdef</span> <span class="Constant">COMPLEX_STATEMENTS</span>
+<span class="Type">typedef</span> <span class="Statement">class</span> c<span class="Special">;</span>
 <span class="PreProc">`endif</span>
 <span class="PreProc">`ifdef</span> <span class="Constant">TIME</span>
 <span class="Constant">10ns</span>
@@ -326,6 +340,8 @@
 <span class="Comment">/*</span>
 <span class="Comment">* </span><span class="Todo">TODO</span><span class="Comment"> todo check</span>
 <span class="Comment">*/</span>
+
+<span class="Comment">// Comment with DEFINE-ML</span>
 
 <span class="Statement">always</span><span class="Special">@(</span><span class="Statement">posedge</span> clk <span class="Statement">or</span> <span class="Statement">posedge</span> rst<span class="Special">)</span>
 <span class="Statement">begin</span>
