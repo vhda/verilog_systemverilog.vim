@@ -78,8 +78,14 @@ let s:verilog_function_task_dequalifier =
 let g:verilog_syntax = {
       \ 'assign'      : [{
                         \ 'match_start' : '[^=!]<\?=\(=\)\@!',
-                        \ 'match_end'   : '\ze\(;\|\*)\)',
-                        \ 'syn_argument': 'transparent',
+                        \ 'match_end'   : '\ze;',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'attribute'   : [{
+                        \ 'match_start' : '(\*',
+                        \ 'match_end'   : '\*)',
+                        \ 'highlight'   : 'verilogDirective',
+                        \ 'syn_argument': 'transparent keepend contains=verilogNumber,verilogOperator,verilogString',
                         \ }],
       \ 'block'       : [{
                         \ 'match_start' : '\<begin\>',
