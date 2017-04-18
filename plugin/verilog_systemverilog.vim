@@ -131,7 +131,7 @@ let g:verilog_syntax = {
                         \ }],
       \ 'instance'    : [{
                         \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
-                        \ 'match_end'   : ')\s*;',
+                        \ 'match_end'   : ';',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'interface'   : [{
