@@ -135,7 +135,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'interface'   : [{
-                        \ 'match_start' : '\<interface\>\(\s\+class\)\@!',
+                        \ 'match_start' : '\(\<virtual\s\+\)\@<!\<interface\>\(\s\+class\)\@!',
                         \ 'match_end'   : '\<endinterface\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
@@ -154,7 +154,6 @@ let g:verilog_syntax = {
                         \ }],
       \ 'prototype'   : [{
                         \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>',
-                        \ 'highlight'   : 'verilogStatement',
                         \ }],
       \ 'sequence'    : [{
                         \ 'match_start' : '\<sequence\>',
@@ -167,6 +166,9 @@ let g:verilog_syntax = {
                         \ 'match_end'   : '\<endspecify\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'statement'   : [{
+                        \ 'match'       : '\<interface\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',

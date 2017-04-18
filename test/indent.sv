@@ -30,6 +30,8 @@ class z;
         super.new();
     endfunction;
 
+    virtual interface my_itf itf;
+
     // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/4
     task run_phase(uvm_phase phase);
 

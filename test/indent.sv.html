@@ -32,6 +32,8 @@
         <span class="Type">super</span><span class="Special">.</span><span class="Identifier">new</span><span class="Special">();</span>
     <span class="Statement">endfunction</span><span class="Special">;</span>
 
+    <span class="Statement">virtual</span> <span class="Statement">interface</span> my_itf itf<span class="Special">;</span>
+
     <span class="Comment">// Code from: <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/4">https://github.com/vhda/verilog_systemverilog.vim/issues/4</a></span>
     <span class="Statement">task</span> <span class="Identifier">run_phase</span><span class="Special">(</span>uvm_phase phase<span class="Special">);</span>
 
@@ -985,9 +987,9 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 
 <span class="Comment">// Code from: <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/51">https://github.com/vhda/verilog_systemverilog.vim/issues/51</a></span>
 <span class="Statement">module</span> dut_wrapper <span class="Special">(</span>
-    interface source_IF<span class="Special">,</span>
-    interface sink_IF<span class="Special">,</span>
-    interface ctrl_IF
+    <span class="Statement">interface</span> source_IF<span class="Special">,</span>
+    <span class="Statement">interface</span> sink_IF<span class="Special">,</span>
+    <span class="Statement">interface</span> ctrl_IF
 <span class="Special">);</span>
 
 <span class="Statement">endmodule</span>
