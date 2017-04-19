@@ -198,7 +198,9 @@ let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax
 
 " Syntax priority list
 let s:verilog_syntax_order = [
+            \ 'statement',
             \ 'assign',
+            \ 'attribute',
             \ 'instance',
             \ 'prototype',
             \ 'class',

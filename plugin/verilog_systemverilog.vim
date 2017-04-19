@@ -78,8 +78,14 @@ let s:verilog_function_task_dequalifier =
 let g:verilog_syntax = {
       \ 'assign'      : [{
                         \ 'match_start' : '[^=!]<\?=\(=\)\@!',
-                        \ 'match_end'   : '\ze\(;\|\*)\)',
-                        \ 'syn_argument': 'transparent',
+                        \ 'match_end'   : '\ze;',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'attribute'   : [{
+                        \ 'match_start' : '(\*',
+                        \ 'match_end'   : '\*)',
+                        \ 'highlight'   : 'verilogDirective',
+                        \ 'syn_argument': 'transparent keepend contains=verilogNumber,verilogOperator,verilogString',
                         \ }],
       \ 'block'       : [{
                         \ 'match_start' : '\<begin\>',
@@ -131,11 +137,11 @@ let g:verilog_syntax = {
                         \ }],
       \ 'instance'    : [{
                         \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
-                        \ 'match_end'   : ')\s*;',
+                        \ 'match_end'   : ';',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'interface'   : [{
-                        \ 'match_start' : '\<interface\>\(\s\+class\)\@!',
+                        \ 'match_start' : '\(\<virtual\s\+\)\@<!\<interface\>\(\s\+class\)\@!',
                         \ 'match_end'   : '\<endinterface\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
@@ -154,7 +160,6 @@ let g:verilog_syntax = {
                         \ }],
       \ 'prototype'   : [{
                         \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>',
-                        \ 'highlight'   : 'verilogStatement',
                         \ }],
       \ 'sequence'    : [{
                         \ 'match_start' : '\<sequence\>',
@@ -167,6 +172,9 @@ let g:verilog_syntax = {
                         \ 'match_end'   : '\<endspecify\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'statement'   : [{
+                        \ 'match'       : '\<interface\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
