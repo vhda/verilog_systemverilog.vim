@@ -133,7 +133,7 @@ class z;
         `uvm_info("TAG", "message2", UVM_NONE)
     // End of copied code
 
-    // Oter tests
+    // Other tests
     task fork_test;
         fork
             do_something1();
@@ -157,6 +157,11 @@ class z;
         endcase
 
     endtask
+
+    function less_or_equal;
+        if (a <= b)
+            less_or_equal = a;
+    endfunction
 
     task while_block;
         while (1)
