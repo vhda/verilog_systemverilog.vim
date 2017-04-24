@@ -82,7 +82,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'attribute'   : [{
-                        \ 'match_start' : '(\*',
+                        \ 'match_start' : '\(@\s*\)\@<!(\*',
                         \ 'match_end'   : '\*)',
                         \ 'highlight'   : 'verilogDirective',
                         \ 'syn_argument': 'transparent keepend contains=verilogNumber,verilogOperator,verilogString',
