@@ -348,3 +348,11 @@ begin
   else
     state <= NS;
 end
+
+always @(*) begin : label
+  if (a) begin
+    y = c;
+  end else begin
+    y = d;
+  end
+end
