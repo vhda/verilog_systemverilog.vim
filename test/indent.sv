@@ -1027,4 +1027,9 @@ assign a = b <= c &&
            h <= i;
 // End of copied code
 
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/129
+if (cond) begin do_something; end
+do_something_else;
+// End of copied code
+
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

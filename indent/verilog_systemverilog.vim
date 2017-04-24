@@ -327,7 +327,10 @@ function! s:GetContextIndent()
 
     if l:oneline_mode == 1 && l:line =~ s:vlog_statement
       let l:oneline_mode = 0
-    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl
+    elseif l:oneline_mode == 1 && l:line =~ '\<begin\>.*\<end\>'
+      call verilog_systemverilog#Verbose("'begin'..'end' pair.")
+      return indent(l:lnum)
+    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl && l:line !~ '\<begin\>.*\<end\>'
       if s:curr_line =~ '^\s*\<begin\>'
         call verilog_systemverilog#Verbose("Standalone 'begin' after block declaration.")
         return indent(l:lnum)
