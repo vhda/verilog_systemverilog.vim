@@ -180,12 +180,18 @@ function! s:SyntaxCreate(name, verilog_syntax)
                         let verilog_syn_region_cmd .= ' '.entry["syn_argument"]
                     endif
 
-                    if (index(s:verilog_syntax_fold, a:name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0)
-                        let verilog_syn_region_cmd .= ' fold'
+                    if !exists('entry["no_fold"]')
+                        if (index(s:verilog_syntax_fold, a:name) >= 0 || index(s:verilog_syntax_fold, "all") >= 0)
+                            let verilog_syn_region_cmd .= ' fold'
+                        endif
                     endif
 
                     execute verilog_syn_region_cmd
                 endif
+            elseif exists('entry["cluster"]')
+                " syn-cluster definitions
+
+                execute 'syn cluster '.verilog_syn_region_name.' contains='.entry["cluster"]
             else
                 echoerr 'Incorrect syntax defintion for '.a:name
             endif
@@ -198,6 +204,7 @@ let s:verilog_syntax_fold=verilog_systemverilog#VariableGetValue("verilog_syntax
 
 " Syntax priority list
 let s:verilog_syntax_order = [
+            \ 'baseCluster',
             \ 'statement',
             \ 'assign',
             \ 'attribute',
@@ -206,6 +213,7 @@ let s:verilog_syntax_order = [
             \ 'class',
             \ 'clocking',
             \ 'covergroup',
+            \ 'expression',
             \ 'function',
             \ 'interface',
             \ 'module',
