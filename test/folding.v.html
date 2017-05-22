@@ -15,7 +15,7 @@
     state <span class="Special">=</span> <span class="Identifier">something</span><span class="Special">();</span>                                      <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;1&gt;</span>
     <span class="Statement">begin</span> <span class="Special">:</span> <span class="Special">block1</span>                                            <span class="Comment">//&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
         state <span class="Special">=</span> <span class="Constant">2'b00</span><span class="Special">;</span>                                        <span class="Comment">//&lt;3&gt;&lt;3&gt;&lt;2&gt;</span>
-        <span class="Statement">if</span> <span class="Special">(</span>a <span class="Special">==</span> b<span class="Special">)</span> <span class="Statement">begin</span>                                     <span class="Comment">//&lt;4&gt;&lt;4&gt;&lt;2&gt;</span>
+        <span class="Statement">if</span> <span class="Special">(</span>a <span class="Special">&lt;=</span> b<span class="Special">)</span> <span class="Statement">begin</span>                                     <span class="Comment">//&lt;4&gt;&lt;4&gt;&lt;2&gt;</span>
             <span class="Statement">begin</span> <span class="Special">:</span> <span class="Special">block2</span>                                    <span class="Comment">//&lt;5&gt;&lt;5&gt;&lt;3&gt;</span>
             <span class="Statement">end</span> <span class="Comment">// block2                                     //&lt;5&gt;&lt;5&gt;&lt;3&gt;</span>
             state <span class="Special">=</span> <span class="Constant">2'b11</span><span class="Special">;</span>                                    <span class="Comment">//&lt;4&gt;&lt;4&gt;&lt;2&gt;</span>

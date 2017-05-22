@@ -77,15 +77,19 @@ let s:verilog_function_task_dequalifier =
 
 let g:verilog_syntax = {
       \ 'assign'      : [{
-                        \ 'match_start' : '[^=!]<\?=\(=\)\@!',
-                        \ 'match_end'   : '\ze;',
-                        \ 'syn_argument': 'transparent keepend',
+                        \ 'match_start' : '[^><=!]\zs<\?=\(=\)\@!',
+                        \ 'match_end'   : ';',
+                        \ 'highlight'   : 'verilogOperator',
+                        \ 'syn_argument': 'transparent keepend contains=@verilogBaseCluster',
                         \ }],
       \ 'attribute'   : [{
                         \ 'match_start' : '\(@\s*\)\@<!(\*',
                         \ 'match_end'   : '\*)',
                         \ 'highlight'   : 'verilogDirective',
-                        \ 'syn_argument': 'transparent keepend contains=verilogNumber,verilogOperator,verilogString',
+                        \ 'syn_argument': 'transparent keepend contains=verilogComment,verilogNumber,verilogOperator,verilogString',
+                        \ }],
+      \ 'baseCluster' : [{
+                        \ 'cluster'     : 'verilogComment,verilogNumber,verilogOperator,verilogString,verilogConstant,verilogGlobal,verilogMethod,verilogObject,verilogIfdefContainer'
                         \ }],
       \ 'block'       : [{
                         \ 'match_start' : '\<begin\>',
@@ -129,6 +133,13 @@ let g:verilog_syntax = {
                         \ 'match_mid'   : '`els\(e\|if\)\>',
                         \ 'match_end'   : '`endif\>',
                         \ }],
+      \ 'expression'  : [{
+                        \ 'match_start' : '(',
+                        \ 'match_end'   : ')',
+                        \ 'highlight'   : 'verilogOperator',
+                        \ 'syn_argument': 'transparent contains=@verilogBaseCluster,verilogStatement',
+                        \ 'no_fold'     : '1',
+                        \ }],
       \ 'function'    : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<function\>',
                         \ 'match_end'   : '\<endfunction\>',
@@ -138,7 +149,7 @@ let g:verilog_syntax = {
       \ 'instance'    : [{
                         \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
                         \ 'match_end'   : ';',
-                        \ 'syn_argument': 'transparent keepend',
+                        \ 'syn_argument': 'transparent keepend contains=verilogListParam,verilogStatement,@verilogBaseCluster',
                         \ }],
       \ 'interface'   : [{
                         \ 'match_start' : '\(\<virtual\s\+\)\@<!\<interface\>\(\s\+class\)\@!',

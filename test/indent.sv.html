@@ -135,7 +135,7 @@
         <span class="PreProc">`uvm_info</span><span class="Special">(</span><span class="Constant">&quot;TAG&quot;</span><span class="Special">,</span> <span class="Constant">&quot;message2&quot;</span><span class="Special">,</span> <span class="Constant">UVM_NONE</span><span class="Special">)</span>
     <span class="Comment">// End of copied code</span>
 
-    <span class="Comment">// Oter tests</span>
+    <span class="Comment">// Other tests</span>
     <span class="Statement">task</span> fork_test<span class="Special">;</span>
         <span class="Statement">fork</span>
             <span class="Identifier">do_something1</span><span class="Special">();</span>
@@ -159,6 +159,11 @@
         <span class="Statement">endcase</span>
 
     <span class="Statement">endtask</span>
+
+    <span class="Statement">function</span> less_or_equal<span class="Special">;</span>
+        <span class="Statement">if</span> <span class="Special">(</span>a <span class="Special">&lt;=</span> b<span class="Special">)</span>
+            less_or_equal <span class="Special">=</span> a<span class="Special">;</span>
+    <span class="Statement">endfunction</span>
 
     <span class="Statement">task</span> while_block<span class="Special">;</span>
         <span class="Statement">while</span> <span class="Special">(</span><span class="Constant">1</span><span class="Special">)</span>
