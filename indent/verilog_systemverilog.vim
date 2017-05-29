@@ -367,7 +367,7 @@ function! s:GetContextIndent()
       return s:GetContextStartIndent("sequence"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_property
       return s:GetContextStartIndent("property"  , l:lnum) + l:open_offset
-    elseif l:line =~ s:vlog_method
+    elseif l:line =~ s:vlog_method && s:InsideMethod(l:lnum, len(l:line))
       return s:GetContextStartIndent("method"    , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_preproc
       return s:GetContextStartIndent("preproc"   , l:lnum) + l:open_offset
@@ -400,6 +400,16 @@ endfunction
 
 function! s:InsideAssign(lnum)
   return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogAssign"
+endfunction
+
+function! s:InsideMethod(lnum, cnum)
+  for id in synstack(a:lnum, a:cnum)
+    let name = synIDattr(id, "name")
+    if name == "verilogTask" || name == "verilogFunction"
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 " vi: sw=2 sts=2:

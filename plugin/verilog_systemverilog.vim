@@ -133,6 +133,12 @@ let g:verilog_syntax = {
                         \ 'match_mid'   : '`els\(e\|if\)\>',
                         \ 'match_end'   : '`endif\>',
                         \ }],
+      \ 'export'      : [{
+                        \ 'match_start' : '\<export\>',
+                        \ 'match_end'   : '\<task\|function\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent contains=ALLBUT,verilogFunction,verilogTask',
+                        \ }],
       \ 'expression'  : [{
                         \ 'match_start' : '(',
                         \ 'match_end'   : ')',
