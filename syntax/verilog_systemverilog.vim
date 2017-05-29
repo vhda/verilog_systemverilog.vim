@@ -131,9 +131,9 @@ endif
 
 syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<\(assert\|assume\|cover\(point\)\?\|cross\)\>"
 if v:version >= 704
-    syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@20<=\<\k\+\>"
+    syn match   verilogLabel   "\(\<\(begin\|end\)\>\s*:\s*\)\@20<=\<\k\+\>"
 else
-    syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@<=\<\k\+\>"
+    syn match   verilogLabel   "\(\<\(begin\|end\)\>\s*:\s*\)\@<=\<\k\+\>"
 endif
 
 syn keyword verilogObject      super null this
