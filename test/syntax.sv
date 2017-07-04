@@ -216,7 +216,6 @@ triand
 trior
 trireg
 type
-typedef
 union
 unique
 unique0
@@ -245,6 +244,7 @@ wor
 xnor
 xor
 // Syntax regions
+typedef;
 class
 endclass
 clocking

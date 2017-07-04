@@ -124,6 +124,8 @@ interface a;                                                  //<1><1><1>
                                                               //<1><1><1>
 endinterface : a                                              //<1><1><1>
 
+typedef interface class my_itf_class;                         //<0><0><0>
+
 `ifdef A                                                      //<1><1><1>
 reg test;                                                     //<1><1><1>
                                                               //<1><1><1>

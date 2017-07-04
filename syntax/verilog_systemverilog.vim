@@ -92,7 +92,7 @@ syn keyword verilogStatement   s_always s_eventually s_nexttime s_until s_until_
 syn keyword verilogStatement   strong sync_accept_on sync_reject_on unique unique0
 syn keyword verilogStatement   until until_with untyped weak
 
-syn keyword verilogTypeDef     typedef enum
+syn keyword verilogTypeDef     enum
 
 syn keyword verilogConditional iff
 syn keyword verilogConditional if else case casex casez default endcase
@@ -139,9 +139,6 @@ endif
 syn keyword verilogObject      super null this
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
-
-syn match verilogStatement '\(typedef\s\+\)\@<=\<class\>'
-syn match verilogStatement 'interface\ze\s\+class\>'
 
 " Create syntax definition from g:verilog_syntax dictionary
 function! s:SyntaxCreate(name, verilog_syntax)
@@ -224,6 +221,7 @@ let s:verilog_syntax_order = [
             \ 'sequence',
             \ 'specify',
             \ 'task',
+            \ 'typedef',
             \ ]
 
 " Generate syntax definitions for supported types

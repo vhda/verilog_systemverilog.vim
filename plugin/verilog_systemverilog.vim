@@ -103,7 +103,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent',
                         \ }],
       \ 'class'       : [{
-                        \ 'match_start' : '\<\(typedef\s\+\)\@<!\(interface\s\+\)\?class\>',
+                        \ 'match_start' : '\<class\>',
                         \ 'match_end'   : '\<endclass\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent',
@@ -192,13 +192,19 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'statement'   : [{
-                        \ 'match'       : '\<\(interface\|property\|sequence\)\>',
+                        \ 'match'       : '\<\(interface\|property\|sequence\|class\)\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
                         \ 'match_end'   : '\<endtask\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'typedef'     : [{
+                        \ 'match_start' : '\<typedef\>',
+                        \ 'match_end'   : '\ze;',
+                        \ 'highlight'   : 'verilogTypeDef',
+                        \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogClass',
                         \ }],
       \ }
 

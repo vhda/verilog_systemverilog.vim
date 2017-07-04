@@ -118,13 +118,15 @@
 
 <span class="Statement">interface</span> a<span class="Special">;</span>                                                  <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
                                                               <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
-  <span class="Statement">interface class</span> b<span class="Special">;</span>                                          <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;2&gt;</span>
+  <span class="Statement">interface</span> <span class="Statement">class</span> b<span class="Special">;</span>                                          <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;2&gt;</span>
   <span class="Statement">endclass</span> <span class="Special">:</span> b                                                <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;2&gt;</span>
                                                               <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
   <span class="Statement">clocking</span> cb <span class="Special">@</span> <span class="Special">(</span><span class="Statement">posedge</span> Clk<span class="Special">);</span>                                <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;2&gt;</span>
   <span class="Statement">endclocking</span> <span class="Special">:</span> cb                                            <span class="Comment">//&lt;2&gt;&lt;2&gt;&lt;2&gt;</span>
                                                               <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Statement">endinterface</span> <span class="Special">:</span> a                                              <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
+
+<span class="Type">typedef</span> <span class="Statement">interface</span> <span class="Statement">class</span> my_itf_class<span class="Special">;</span>                         <span class="Comment">//&lt;0&gt;&lt;0&gt;&lt;0&gt;</span>
 
 <span class="PreProc">`ifdef</span> <span class="Constant">A</span>                                                      <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
 <span class="Statement">reg</span> test<span class="Special">;</span>                                                     <span class="Comment">//&lt;1&gt;&lt;1&gt;&lt;1&gt;</span>
