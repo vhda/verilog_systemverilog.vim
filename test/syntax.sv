@@ -116,6 +116,7 @@ localparam
 logic
 longint
 macromodule
+mailbox
 matches
 medium
 modport
@@ -174,6 +175,7 @@ s_nexttime
 s_until
 s_until_with
 scalared
+semaphore
 shortint
 shortreal
 showcancelled

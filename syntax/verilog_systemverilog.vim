@@ -54,6 +54,7 @@ syn keyword verilogStatement   supply0 supply1 table time tran
 syn keyword verilogStatement   tranif0 tranif1 tri tri0 tri1 triand
 syn keyword verilogStatement   trior trireg unsigned use vectored wait
 syn keyword verilogStatement   wand weak0 weak1 wire wor xnor xor
+syn keyword verilogStatement   semaphore mailbox
 
 syn keyword verilogStatement   always_comb always_ff always_latch
 syn keyword verilogStatement   checker endchecker
