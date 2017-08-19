@@ -23,7 +23,7 @@ setlocal indentkeys+==endgenerate,=endchecker,=endconfig,=endprimitive,=endtable
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
-let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+-]\)'
+let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+]\|-[^>]\)'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
