@@ -358,3 +358,5 @@ always @(*) begin : label
     y = d;
   end
 end
+
+assign a = myfunc(this);
