@@ -79,7 +79,7 @@ syn keyword verilogStatement   program endprogram
 syn keyword verilogStatement   bins binsof illegal_bins ignore_bins
 syn keyword verilogStatement   alias matches solve static assert
 syn keyword verilogStatement   assume before expect bind
-syn keyword verilogStatement   extends null tagged extern this
+syn keyword verilogStatement   extends tagged extern
 syn keyword verilogStatement   first_match throughout timeprecision
 syn keyword verilogStatement   timeunit priority type union
 syn keyword verilogStatement   uwire var cross ref wait_order intersect
@@ -136,7 +136,7 @@ else
     syn match   verilogLabel   "\(\<begin\>\s*:\s*\)\@<=\<\k\+\>"
 endif
 
-syn keyword verilogObject      super
+syn keyword verilogObject      super null this
 syn match   verilogObject      "\<\w\+\ze\(::\|\.\)" contains=verilogNumber
 
 
