@@ -148,6 +148,9 @@ To enable syntax folding set the following option:
     set foldmethod=syntax
 <
 
+Take into account that all folding is disabled by default and the list of
+items to be folded must be configured using |g:verilog_syntax_fold_lst|.
+
 ------------------------------------------------------------------------------
 VERILOG ERROR FORMATS                                            *verilog-efm*
 
