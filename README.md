@@ -186,6 +186,10 @@ $ git clone https://github.com/vhda/verilog_systemverilog.vim
 
 ## Other Vim addons helpful for Verilog/SystemVerilog
 
+### Verilog Instance
+[verilog-instance.vim][verilog-instance] creates SystemVerilog port instantiation from port declaration.
+Works on modules, tasks, functions and all other similar structures.
+
 ### Matchit
 
 This addon allows using <kbd>%</kbd> to jump between matching keywords as Vim already
@@ -244,15 +248,16 @@ page.
 [P]: https://github.com/junegunn/vim-plug
 [e]: https://ctags.io
 [t]: http://majutsushi.github.io/tagbar/
-[hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
-[supertab]:     https://github.com/ervandew/supertab
-[vim-omni]:     http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
-[vim-omnifunc]: http://vimdoc.sourceforge.net/htmldoc/options.html#'omnifunc'
-[vim-echom]:    http://vimdoc.sourceforge.net/htmldoc/eval.html#:echom
-[vim-errorformat]: http://vimdoc.sourceforge.net/htmldoc/options.html#'errorformat'
-[vim-makeprg]:  http://vimdoc.sourceforge.net/htmldoc/options.html#'makeprg'
-[vim-quickfix]: http://vimdoc.sourceforge.net/htmldoc/quickfix.html
-[vim-synfold]:  http://vimdoc.sourceforge.net/htmldoc/syntax.html#syntax
+[verilog-instance]: https://github.com/antoinemadec/vim-verilog-instance
+[hl_matchit]:       https://github.com/vimtaku/hl_matchit.vim
+[supertab]:         https://github.com/ervandew/supertab
+[vim-omni]:         http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
+[vim-omnifunc]:     http://vimdoc.sourceforge.net/htmldoc/options.html#'omnifunc'
+[vim-echom]:        http://vimdoc.sourceforge.net/htmldoc/eval.html#:echom
+[vim-errorformat]:  http://vimdoc.sourceforge.net/htmldoc/options.html#'errorformat'
+[vim-makeprg]:      http://vimdoc.sourceforge.net/htmldoc/options.html#'makeprg'
+[vim-quickfix]:     http://vimdoc.sourceforge.net/htmldoc/quickfix.html
+[vim-synfold]:      http://vimdoc.sourceforge.net/htmldoc/syntax.html#syntax
 
 
 <!-- Other links:
