@@ -1,3 +1,14 @@
+module mymodule(
+  input  wire a,
+  input  wire b,
+  `ifdef MACRO
+  input  wire c,
+  `endif
+  output wire y
+);
+
+endmodule
+
 `ifdef SYSTEM_VERILOG_KEYWORDS
 accept_on
 alias
@@ -28,8 +39,6 @@ casez
 cell
 chandle
 checker
-class
-clocking
 cmos
 config
 const
@@ -37,8 +46,6 @@ constraint
 context
 continue
 cover
-covergroup
-endgroup
 coverpoint
 cross
 deassign
@@ -52,12 +59,8 @@ edge
 else
 endcase
 endchecker
-endclass
-endclocking
 endconfig
 endgenerate
-endinterface
-endmodule
 endpackage
 endprimitive
 endprogram
@@ -66,7 +69,7 @@ enum
 event
 eventually
 expect
-export
+export "DPI-SC" task exported_task;
 extends
 extern
 final
@@ -77,8 +80,6 @@ foreach
 forever
 fork
 forkjoin
-function
-endfunction
 generate
 genvar
 global
@@ -102,7 +103,6 @@ instance
 int
 integer
 interconnect
-interface
 intersect
 join
 join_any
@@ -116,10 +116,10 @@ localparam
 logic
 longint
 macromodule
+mailbox
 matches
 medium
 modport
-module
 nand
 negedge
 nettype
@@ -142,8 +142,6 @@ posedge
 primitive
 priority
 program
-property
-endproperty
 protected
 pull0
 pull1
@@ -177,8 +175,7 @@ s_nexttime
 s_until
 s_until_with
 scalared
-sequence
-endsequence
+semaphore
 shortint
 shortreal
 showcancelled
@@ -186,8 +183,6 @@ signed
 small
 soft
 solve
-specify
-endspecify
 specparam
 static
 string
@@ -202,8 +197,6 @@ sync_accept_on
 sync_reject_on
 table
 tagged
-task
-endtask
 this
 throughout
 time
@@ -247,6 +240,30 @@ within
 wor
 xnor
 xor
+// Syntax regions
+class
+endclass
+clocking
+endclocking
+covergroup
+endgroup
+function
+endfunction
+interface
+endinterface
+module
+endmodule
+property
+endproperty
+sequence
+endsequence
+specify
+endspecify
+task
+endtask
+`endif
+`ifdef COMPLEX_STATEMENTS
+typedef class c;
 `endif
 `ifdef TIME
 10ns
@@ -323,3 +340,23 @@ xor
 /*
 * TODO todo check
 */
+
+// Comment with DEFINE-ML
+
+always@(posedge clk or posedge rst)
+begin
+  priority if (rst)
+    state <= IDLE;
+  else
+    state <= NS;
+end
+
+always @(*) begin : label
+  if (a) begin
+    y = c;
+  end else begin
+    y = d;
+  end
+end
+
+assign a = myfunc(this);

@@ -4,6 +4,8 @@ SILENT   = $(SILENT_$(V))
 SILENT_0 = @
 SILENT_1 =
 
+SHELL = /bin/bash -o pipefail
+
 .PHONY: help test test-fold test-indent test-efm
 
 all: test
@@ -26,14 +28,15 @@ test-efm:
 	$(SILENT) vim -T dumb -E \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestEfm()' > test-efm.log
-	$(SILENT) grep "^Error format test" test-efm.log
+		-c 'call RunTestEfm()' | \
+		tee test-efm.log | grep "^Error format test"
 
 test-syntax:
 	$(SILENT) vim -T dumb -E \
+	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' > test-syntax.log
-	$(SILENT) grep "^Syntax test" test-syntax.log
+		-c 'call RunTestSyntax()' | tr -d '[]' | \
+		tee test-syntax.log | grep "^Syntax test"
 
 performance:
 	$(SILENT) time vim -T dumb -E \

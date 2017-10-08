@@ -18,6 +18,7 @@ are no longer supported:
 
 * `b:verilog_indent_modules`
 * `b:verilog_indent_preproc`
+* `g:verilog_dont_deindent_eos`
 
 The following variables were renamed:
 

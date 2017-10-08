@@ -30,6 +30,8 @@ class z;
         super.new();
     endfunction;
 
+    virtual interface my_itf itf;
+
     // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/4
     task run_phase(uvm_phase phase);
 
@@ -131,7 +133,7 @@ class z;
         `uvm_info("TAG", "message2", UVM_NONE)
     // End of copied code
 
-    // Oter tests
+    // Other tests
     task fork_test;
         fork
             do_something1();
@@ -155,6 +157,11 @@ class z;
         endcase
 
     endtask
+
+    function less_or_equal;
+        if (a <= b)
+            less_or_equal = a;
+    endfunction
 
     task while_block;
         while (1)
@@ -1016,6 +1023,25 @@ assert_label: assert property (
                      b &&
                      c
 );
+// End of copied code
+
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/113
+assign a = b <= c &&
+           d <= e &&
+           f <= g &&
+           h <= i;
+// End of copied code
+
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/129
+if (cond) begin do_something; end
+do_something_else;
+
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/120
+package automatic regmodel_dpi_pkg;
+    export "DPI-SC" task check_reg;
+    task check_reg(string mystring, output bit [63:0] o1);
+    endtask
+endpackage
 // End of copied code
 
 // vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:

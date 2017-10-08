@@ -4,19 +4,28 @@
 function f;                                                   //<1><1><1>
 begin                                                         //<2><2><1>
                                                               //<2><2><1>
-end                                                           //<2><1><1>
+end                                                           //<2><2><1>
 endfunction : f                                               //<1><1><1>
                                                               //<0><0><0>
 task t;                                                       //<1><1><1>
                                                               //<1><1><1>
 begin                                                         //<2><2><1>
+    state = something();                                      //<2><2><1>
     begin : block1                                            //<3><3><2>
-        begin                                                 //<4><4><2>
+        state = 2'b00;                                        //<3><3><2>
+        if (a <= b) begin                                     //<4><4><2>
             begin : block2                                    //<5><5><3>
             end // block2                                     //<5><5><3>
+            state = 2'b11;                                    //<4><4><2>
+            begin                                             //<5><5><2>
+            end                                               //<5><5><2>
+        end                                                   //<4><4><2>
+        begin : block3                                        //<4><4><3>
+        end // block3                                         //<4><4><3>
+        begin                                                 //<4><4><2>
         end                                                   //<4><4><2>
     end // block1                                             //<3><3><2>
-end                                                           //<2><1><1>
+end                                                           //<2><2><1>
                                                               //<1><1><1>
 endtask : t                                                   //<1><1><1>
                                                               //<0><0><0>
@@ -28,42 +37,46 @@ endtask : t                                                   //<1><1><1>
 *                                                             //<1><1><1>
 */                                                            //<1><1><1>
                                                               //<0><0><0>
-extern function ext_func (x, y);                              //<0><0><0>
+extern                        function    e_func (x, y);      //<0><0><0>
+extern              static    function   es_func (x, y);      //<0><0><0>
+extern              protected function   ep_func (x, y);      //<0><0><0>
+extern              local     function   el_func (x, y);      //<0><0><0>
                                                               //<0><0><0>
-extern static function ext_static_func (x, y);                //<0><0><0>
+       pure virtual           function   pv_func (x);         //<0><0><0>
+       pure virtual static    function  pvs_func (x);         //<0><0><0>
+       pure virtual protected function  pvp_func (x);         //<0><0><0>
+       pure virtual local     function  pvl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern protected function ext_protected_func (x, y);          //<0><0><0>
+extern      virtual           function   ev_func (x);         //<0><0><0>
+extern      virtual static    function  evs_func (x);         //<0><0><0>
+extern      virtual protected function  evp_func (x);         //<0><0><0>
+extern      virtual local     function  evl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern local function ext_local_func (x, y);                  //<0><0><0>
+extern pure virtual           function  epv_func (x);         //<0><0><0>
+extern pure virtual static    function epvs_func (x);         //<0><0><0>
+extern pure virtual protected function epvp_func (x);         //<0><0><0>
+extern pure virtual local     function epvl_func (x);         //<0><0><0>
                                                               //<0><0><0>
-extern pure virtual function ext_pure_virt_func (x);          //<0><0><0>
+extern                        task        e_task (x, y);      //<0><0><0>
+extern              static    task       es_task (x, y);      //<0><0><0>
+extern              protected task       ep_task (x, y);      //<0><0><0>
+extern              local     task       el_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual function pure_virt_func (x);                     //<0><0><0>
+       pure virtual           task       pv_task (x);         //<0><0><0>
+       pure virtual static    task      pvs_task (x);         //<0><0><0>
+       pure virtual protected task      pvp_task (x);         //<0><0><0>
+       pure virtual local     task      pvl_task (x);         //<0><0><0>
                                                               //<0><0><0>
-pure virtual static function pure_virt_static_func (x);       //<0><0><0>
+extern      virtual           task       ev_task (x, y);      //<0><0><0>
+extern      virtual static    task      evs_task (x, y);      //<0><0><0>
+extern      virtual protected task      evp_task (x, y);      //<0><0><0>
+extern      virtual local     task      evl_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual protected function pure_virt_protected_func (x); //<0><0><0>
+extern pure virtual           task      epv_task (x, y);      //<0><0><0>
+extern pure virtual static    task     epvs_task (x, y);      //<0><0><0>
+extern pure virtual protected task     epvp_task (x, y);      //<0><0><0>
+extern pure virtual local     task     epvl_task (x, y);      //<0><0><0>
                                                               //<0><0><0>
-pure virtual local function pure_virt_local_func (x);         //<0><0><0>
-                                                              //<0><0><0>
-                                                              //<0><0><0>
-extern task ext_task (x, y);                                  //<0><0><0>
-                                                              //<0><0><0>
-extern static task ext_static_task (x, y);                    //<0><0><0>
-                                                              //<0><0><0>
-extern protected task ext_protected_task (x, y);              //<0><0><0>
-                                                              //<0><0><0>
-extern local task ext_local_task (x, y);                      //<0><0><0>
-                                                              //<0><0><0>
-extern pure virtual task ext_pure_virt_task (x);              //<0><0><0>
-                                                              //<0><0><0>
-pure virtual task pure_virt_task (x);                         //<0><0><0>
-                                                              //<0><0><0>
-pure virtual static task pure_virt_static_task (x);           //<0><0><0>
-                                                              //<0><0><0>
-pure virtual protected task pure_virt_protected_task (x);     //<0><0><0>
-                                                              //<0><0><0>
-pure virtual local task pure_virt_local_task (x);             //<0><0><0>
                                                               //<0><0><0>
 /**                                                           //<1><1><1>
 * Static function                                             //<1><1><1>
@@ -141,6 +154,12 @@ reg test;                                                     //<1><1><1>
                                                               //<2><2><2>
   `endif                                                      //<2><2><2>
                                                               //<1><1><1>
+  `ifndef E_2                                                 //<2><2><2>
+                                                              //<2><2><2>
+  `elsif E_3                                                  //<2><2><2>
+                                                              //<2><2><2>
+  `endif                                                      //<2><2><2>
+                                                              //<1><1><1>
 `endif                                                        //<1><1><1>
                                                               //<0><0><0>
 `ifdef A                                                      //<1><1><1>
@@ -192,6 +211,18 @@ module_name #(VALUE1) instance_name                           //<1><1><1>
                                                               //<0><0><0>
 uvm_blocking_put_port #(trans) out;                           //<0><0><0>
                                                               //<0><0><0>
+task t_multi_line(                                            //<1><1><1>
+  input an_input                                              //<1><1><1>
+);                                                            //<1><1><1>
+                                                              //<1><1><1>
+endtask : t_multi_line                                        //<1><1><1>
+                                                              //<0><0><0>
+  task t_multi_line_indented(                                 //<1><1><1>
+    input an_input                                            //<1><1><1>
+  );                                                          //<1><1><1>
+                                                              //<1><1><1>
+  endtask : t_multi_line                                      //<1><1><1>
+                                                              //<0><0><0>
 if (cond1) begin                                              //<1><1><0>
     do1();                                                    //<1><1><0>
 end else if (cond2) begin                                     //<1><1><0>
@@ -200,7 +231,7 @@ end else if (cond2) begin                                     //<1><1><0>
     do4();                                                    //<1><1><0>
 end else begin                                                //<1><1><0>
     do5();                                                    //<1><1><0>
-end                                                           //<1><0><0>
+end                                                           //<1><1><0>
                                                               //<0><0><0>
 if (cond1)                                                    //<0><0><0>
     do1();                                                    //<0><0><0>
@@ -213,7 +244,7 @@ else if (cond2) begin                                         //<1><1><0>
     do4();                                                    //<1><1><0>
 end else begin                                                //<1><1><0>
     do5();                                                    //<1><1><0>
-end                                                           //<1><0><0>
+end                                                           //<1><1><0>
                                                               //<0><0><0>
 if (cond1) begin : b1                                         //<1><1><1>
     do1();                                                    //<1><1><1>
@@ -223,7 +254,7 @@ end else if (cond2) begin : b2                                //<1><1><1>
     do4();                                                    //<1><1><1>
 end else begin : b3                                           //<1><1><1>
     do5();                                                    //<1><1><1>
-end                                                           //<1><0><0>
+end                                                           //<1><1><1>
                                                               //<0><0><0>
 if (cond1)                                                    //<0><0><0>
     do1();                                                    //<0><0><0>
@@ -234,9 +265,27 @@ else if (cond2) begin : b1                                    //<1><1><1>
     end                                                       //<2><2><2>
     do3();                                                    //<1><1><1>
     do4();                                                    //<1><1><1>
-end else begin                                                //<1><1><0>
+end else begin                                                //<1><1><1>
     do5();                                                    //<1><1><0>
 end else begin:b3                                             //<1><1><1>
     do5();                                                    //<1><1><1>
-end                                                           //<1><0><0>
+end                                                           //<1><1><1>
+                                                              //<0><0><0>
+task something;                                               //<1><1><1>
+fork                                                          //<1><1><1>
+    begin                                                     //<2><2><1>
+        begin                                                 //<3><3><1>
+        end                                                   //<3><3><1>
+        /*                                                    //<3><3><2>
+        begin                                                 //<3><3><2>
+        end                                                   //<3><3><2>
+        */                                                    //<3><3><2>
+    end                                                       //<2><2><1>
+join                                                          //<1><1><1>
+endtask                                                       //<1><1><1>
+                                                              //<0><0><0>
+// spyglass disable_block SOMETHING                           //<1><1><1>
+assign a = b & c;                                             //<1><1><1>
+// spyglass enable_block SOMETHING                            //<1><1><1>
+                                                              //<0><0><0>
 // vi: set number norelativenumber expandtab softtabstop=4 shiftwidth=4:

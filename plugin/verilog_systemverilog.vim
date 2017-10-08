@@ -1,4 +1,5 @@
 " Global plugin settings
+let g:verilog_disable_indent="eos"
 
 " Command definitions
 command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)
@@ -62,5 +63,142 @@ let g:tagbar_type_verilog_systemverilog = {
         \ 'R' : 'property'
     \ },
 \ }
+
+" Define regular expressions for Verilog/SystemVerilog statements
+let s:verilog_function_task_dequalifier =
+    \  '\('
+    \ .    '\('
+    \ .        'extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?'
+    \ .        '\|'
+    \ .        'pure\s\+virtual\s\+'
+    \ .    '\)'
+    \ .    '\(\(static\|protected\|local\)\s\+\)\?'
+    \ .'\)'
+
+let g:verilog_syntax = {
+      \ 'assign'      : [{
+                        \ 'match_start' : '[^><=!]\zs<\?=\(=\)\@!',
+                        \ 'match_end'   : ';',
+                        \ 'highlight'   : 'verilogOperator',
+                        \ 'syn_argument': 'transparent keepend contains=@verilogBaseCluster',
+                        \ }],
+      \ 'attribute'   : [{
+                        \ 'match_start' : '\(@\s*\)\@<!(\*',
+                        \ 'match_end'   : '\*)',
+                        \ 'highlight'   : 'verilogDirective',
+                        \ 'syn_argument': 'transparent keepend contains=verilogComment,verilogNumber,verilogOperator,verilogString',
+                        \ }],
+      \ 'baseCluster' : [{
+                        \ 'cluster'     : 'verilogComment,verilogNumber,verilogOperator,verilogString,verilogConstant,verilogGlobal,verilogMethod,verilogObject,verilogIfdefContainer'
+                        \ }],
+      \ 'block'       : [{
+                        \ 'match_start' : '\<begin\>',
+                        \ 'match_end'   : '\<end\>',
+                        \ 'syn_argument': 'transparent',
+                        \ }],
+      \ 'block_named' : [{
+                        \ 'match_start' : '\<begin\>\s*:\s*\w\+',
+                        \ 'match_end'   : '\<end\>',
+                        \ 'syn_argument': 'transparent',
+                        \ }],
+      \ 'class'       : [{
+                        \ 'match_start' : '\<\(typedef\s\+\)\@<!\(interface\s\+\)\?class\>',
+                        \ 'match_end'   : '\<endclass\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent',
+                        \ }],
+      \ 'clocking'    : [{
+                        \ 'match_start' : '\<clocking\>',
+                        \ 'match_end'   : '\<endclocking\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'comment'     : [{
+                        \ 'match'       : '//.*',
+                        \ 'syn_argument': 'contains=verilogTodo,verilogDirective,@Spell'
+                        \ },
+                        \ {
+                        \ 'match_start' : '/\*',
+                        \ 'match_end'   : '\*/',
+                        \ 'syn_argument': 'contains=verilogTodo,verilogDirective,@Spell keepend extend'
+                        \ }],
+      \ 'covergroup'  : [{
+                        \ 'match_start' : '\<covergroup\>',
+                        \ 'match_end'   : '\<endgroup\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'define'      : [{
+                        \ 'match_start' : '`ifn\?def\>',
+                        \ 'match_mid'   : '`els\(e\|if\)\>',
+                        \ 'match_end'   : '`endif\>',
+                        \ }],
+      \ 'export'      : [{
+                        \ 'match_start' : '\<export\>',
+                        \ 'match_end'   : '\<task\|function\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent contains=ALLBUT,verilogFunction,verilogTask',
+                        \ }],
+      \ 'expression'  : [{
+                        \ 'match_start' : '(',
+                        \ 'match_end'   : ')',
+                        \ 'highlight'   : 'verilogOperator',
+                        \ 'syn_argument': 'transparent contains=@verilogBaseCluster,verilogStatement',
+                        \ 'no_fold'     : '1',
+                        \ }],
+      \ 'function'    : [{
+                        \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<function\>',
+                        \ 'match_end'   : '\<endfunction\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'instance'    : [{
+                        \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
+                        \ 'match_end'   : ';',
+                        \ 'syn_argument': 'transparent keepend contains=verilogListParam,verilogStatement,@verilogBaseCluster',
+                        \ }],
+      \ 'interface'   : [{
+                        \ 'match_start' : '\(\<virtual\s\+\)\@<!\<interface\>\(\s\+class\)\@!',
+                        \ 'match_end'   : '\<endinterface\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'module'      : [{
+                        \ 'match_start' : '\<\(extern\s\+\)\@<!\<module\>',
+                        \ 'match_end'   : '\<endmodule\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogInterface',
+                        \ }],
+      \ 'property'    : [{
+                        \ 'match_start' : '\<\(\(assert\|cover\)\s\+\)\@<!\<property\>',
+                        \ 'match_end'   : '\<endproperty\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'prototype'   : [{
+                        \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>',
+                        \ }],
+      \ 'sequence'    : [{
+                        \ 'match_start' : '\<sequence\>',
+                        \ 'match_end'   : '\<endsequence\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'specify'     : [{
+                        \ 'match_start' : '\<specify\>',
+                        \ 'match_end'   : '\<endspecify\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ 'statement'   : [{
+                        \ 'match'       : '\<interface\>',
+                        \ }],
+      \ 'task'        : [{
+                        \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
+                        \ 'match_end'   : '\<endtask\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
+      \ }
 
 " vi: set expandtab softtabstop=4 shiftwidth=4:

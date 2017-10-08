@@ -148,11 +148,14 @@ To enable syntax folding set the following option:
     set foldmethod=syntax
 <
 
+Take into account that all folding is disabled by default and the list of
+items to be folded must be configured using |g:verilog_syntax_fold_lst|.
+
 ------------------------------------------------------------------------------
 VERILOG ERROR FORMATS                                            *verilog-efm*
 
-This plugin includes the |'errorformat'| configurations for the following
-Verilog tools:
+This plugin includes the |:compiler| definitions for the following Verilog
+tools:
 
 * Synopsys VCS (`vcs`)
 * Mentor Modelsim (`msim`)
@@ -160,6 +163,16 @@ Verilog tools:
 * GPL Cver (`cver`)
 * Synopsys Leda (`leda`)
 * Verilator (`verilator`)
+* NCVerilog (`ncverilog`)
+* SpyGlass (`spyglass`)
+
+The |:compiler| or |:compiler|! commands can be used to enable these
+definitions on the current buffer or all buffers, respectively.
+Example for `iverilog`:
+
+>
+    :compiler! iverilog
+<
 
 The command |:VerilogErrorFormat| allows the interactive selection of these
 configurations. In some cases it is also possible to ignore lint and/or
@@ -179,11 +192,14 @@ This argument can take the following values:
 2. Ignore lint messages.
 3. Ignore lint and warning messages.
 
-After the |'errorformat'| has been so defined, it is only a matter of setting
-|'makeprg'| and run `:make` to call the tool of choice and vim will
-automatically detect errors, open the required file and place the cursor on
-the error position. To navigate the error list use the commands `:cnext` and
-`:cprevious`.
+    Note: The |:compiler| definitions only configure the |'errorformat'|
+    option, so it is always necessary to also setup |'makeprg'| before running
+    |:make| to execute the selected tool.
+
+After doing this Vim will be able to detect error messages displayed by the
+selected tool. Vim will also automatically open the files with errors and
+place the cursor on the error position. To navigate the error list use the
+commands |:cnext| and |:cprevious|.
 
 For more information check the help page for the |quickfix| vim feature.
 
@@ -246,7 +262,9 @@ COMMANDS                                                    *verilog-commands*
     Configure |'errorformat'| for the selected tool.
 
     If called without arguments it will interactively ask for the tool name
-    and, if the tool supports it, the level of errors to identify in the log.
+    and, if the tool supports it, the level of error messages to identify in
+    the log. This commands then configures |g:verilog_efm_level| accordingly
+    and executes |:compiler|! with the selected tool.
 
     Values supported for {tool}:
       vcs       - Synopsys VCS
@@ -254,7 +272,9 @@ COMMANDS                                                    *verilog-commands*
       iverilog  - Icarus Verilog
       cver      - GPL Cver
       leda      - Synopsys Leda
+      verilator - Verilator
       ncverilog - Cadence NCVerilog
+      spyglass  - Synopsys SpyGlass
 
     Values supported for {level}:
       1 - Mark all messages
@@ -272,7 +292,7 @@ COMMANDS                                                    *verilog-commands*
 :VerilogFoldingAdd                                        *:VerilogFoldingAdd*
 :VerilogFoldingRemove                                  *:VerilogFoldingRemove*
     Commands with auto-completion to simplify maintenance of
-    |g:verilog_syntax_fold|.
+    |g:verilog_syntax_fold_lst|.
 
     If |c_CTRL-D| is used after these commands a list of valid values is
     suggested. When adding new values only valid and not already enabled
@@ -317,33 +337,6 @@ Example:
     let b:verilog_indent_width = 8
 <
 
-                     *b:verilog_dont_deindent_eos* *g:verilog_dont_deindent_eos*
-b:verilog_dont_deindent_eos~
-g:verilog_dont_deindent_eos~
-Default: undefined
-
-    Disable de-indentation of the close parentheses of modules, functions,
-    tasks, etc.
-    By default:
->
-        module mod(
-            input wire a,
-            input wire b,
-        );
-<
-    When enbled:
->
-        module mod(
-            input wire a,
-            input wire b,
-            );
-<
-Example:
-
->
-    let b:verilog_dont_deindent_eos = 1
-<
-
                      *b:verilog_indent_assign_fix* *g:verilog_indent_assign_fix*
 b:verilog_indent_assign_fix~
 g:verilog_indent_assign_fix~
@@ -375,7 +368,7 @@ Example:
                    *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
 b:verilog_disable_indent_lst~
 g:verilog_disable_indent_lst~
-Default: undefined
+Default: "eos"
 
     Disables indent for specific Verilog/SystemVerilog contexts.
     The following contexts are supported:
@@ -391,6 +384,7 @@ Default: undefined
         - `method`
         - `preproc`
         - `conditional`
+        - `eos`
 
 Example:
 
@@ -405,6 +399,23 @@ Example:
     // Disabling 'conditional'
     assign a = cond ? b :
                c ;
+<
+
+    Disabling indentation of `eos` will affect how the closing parentheses of
+    modules, functions, tasks, etc. are indented.
+    By default:
+>
+        module mod(
+            input wire a,
+            input wire b,
+            );
+<
+    When disabled:
+>
+        module mod(
+            input wire a,
+            input wire b,
+        );
 <
 
     Note: The commands |:VerilogIndentAdd| and |:VerilogIndentRemove| are
@@ -448,8 +459,65 @@ Example:
     Note: The commands |:VerilogFoldingAdd| and |:VerilogFoldingRemove| are
     provided to allow an easier management of this variable.
 
+
+                             *b:verilog_syntax_custom* *g:verilog_syntax_custom*
+b:verilog_syntax_custom~
+g:verilog_syntax_custom~
+Default: undefined
+
+    Dictionary containing custom syntax declarations.
+    Each dictionary key is a list of syntax definitions that is a dictionary
+    with the following keys:
+        - `match`        - Match expression for a |:syn-match| entry.
+        - `match_start`  - Match start expression for a |:syn-region| entry.
+        - `match_end`    - Match end expression for a |:syn-region| entry.
+        - `highlight`    - Highlight to be used on as |:syn-matchgroup|.
+        - `syn_argument` - Other optional |:syn-arguments|.
+
+Example:
+
+>
+    let g:verilog_syntax_custom = {
+        \ 'spyglass' : [{
+            \ 'match_start' : '\/\/\s*spyglass\s\+disable_block\s\+\z(\(\w\|-\)\+\(\s\+\(\w\|-\)\+\)*\)',
+            \ 'match_end'   : '\/\/\s*spyglass\s\+enable_block\s\+\z1',
+            \ 'syn_argument': 'transparent keepend',
+            \ }],
+        \ }
+<
+
+                                                      *g:verilog_quick_syntax*
+g:verilog_quick_syntax~
+Default: undefined
+
+    When enabled, syntax regions will not be defined with Vim's 'syntax'
+    command. This can help performance if you are using an old machine or
+    viewing a large file such as a netlist. This can be useful if you don't
+    care about automatic indentation but still wish to have syntax coloring.
+
+    WARNING: Enabling this will change the behaviour of indentation as the
+    indentation script uses the syntax regions to determine the nested
+    context.
+
 ------------------------------------------------------------------------------
 ERROR FORMAT CONFIGURATION                                *verilog-config-efm*
+
+                                                         *g:verilog_efm_level*
+g:verilog_efm_level~
+Default: undefined
+
+    Determines which types of messages are added to |'errorformat'| for
+    detection. When undefined, all messages are detected. The following values
+    are supported:
+        - `error`   - Only Error level messages are detected.
+        - `warning` - Error and Warning level messages are detected.
+        - `lint`    - All messages are detected.
+
+Example:
+
+>
+    let g:verilog_efm_level = "error"
+<
 
                                                        *g:verilog_efm_uvm_lst*
 g:verilog_efm_uvm_lst~
@@ -480,7 +548,8 @@ Default: undefined
 
     When enabled, appends global matching string to |'errorformat'| such that
     any message that does not match any preceding rule will not appear in the
-    |quickfix| window.
+    |quickfix| window. This will result in a clean quickfix window, where only
+    parsed messages are shown.
 
 Example:
 
@@ -551,7 +620,7 @@ specific folder:
 For more information regarding supported patterns check |autocmd-patterns|.
 
 ------------------------------------------------------------------------------
-Why is opening verilog/systemverilog files so slow?
+Why is opening Verilog/SystemVerilog files so slow?
 
 If you are working with files which are over thousands of lines in length,
 then having folding enabled can significantly slow down opening these files. A
@@ -562,10 +631,10 @@ see fit):
         au!
         " Enable folding for normal size files. Folding is really slow for large files.
         au Filetype verilog_systemverilog if line('$') < 2000
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = "all"
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold_lst = "all"
         au Filetype verilog_systemverilog     syntax enable "Trigger fold calculation
         au Filetype verilog_systemverilog else
-        au Filetype verilog_systemverilog     let g:verilog_syntax_fold = ""
+        au Filetype verilog_systemverilog     let g:verilog_syntax_fold_lst = ""
         au Filetype verilog_systemverilog endif
     augroup END
 <

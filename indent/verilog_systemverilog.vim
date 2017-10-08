@@ -19,10 +19,11 @@ setlocal indentkeys=!^F,o,O,0),0},=begin,=end,=join,=endcase,=join_any,=join_non
 setlocal indentkeys+==endmodule,=endfunction,=endtask,=endspecify
 setlocal indentkeys+==endclass,=endpackage,=endsequence,=endclocking
 setlocal indentkeys+==endinterface,=endgroup,=endprogram,=endproperty
+setlocal indentkeys+==endgenerate,=endchecker,=endconfig,=endprimitive,=endtable
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
-let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+-]\)'
+let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+]\|-[^>]\)'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
@@ -34,7 +35,7 @@ let s:vlog_block_start    = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
 let s:vlog_block_end      = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
 
 let s:vlog_module         = '\<\(extern\s\+\)\@<!module\>'
-let s:vlog_interface      = '\<interface\>\s*\(\<class\>\)\@!\w\+.*[^,]$'
+let s:vlog_interface      = '\(virtual\s\+\)\@<!\<interface\>\s*\(\<class\>\)\@!\w\+.*[^,]$'
 let s:vlog_package        = '\<package\>'
 let s:vlog_covergroup     = '\<covergroup\>'
 let s:vlog_program        = '\<program\>'
@@ -81,7 +82,7 @@ function! GetVerilogSystemVerilogIndent()
   if s:curr_line =~ '^\s*)'
     let l:extra_offset = 0
     if s:curr_line =~ '^\s*);\s*$' &&
-          \ verilog_systemverilog#VariableExists('verilog_dont_deindent_eos')
+          \ index(s:verilog_disable_indent, 'eos') < 0
       let l:extra_offset = s:offset
     endif
     call verilog_systemverilog#Verbose("Indenting )")
@@ -140,7 +141,7 @@ function! GetVerilogSystemVerilogIndent()
   endif
 
   if s:curr_line =~ s:vlog_statement &&
-        \ getline(v:lnum - 1) =~ 'else\s*$'
+        \ getline(v:lnum - 1) =~ '^\s*\(end\s*\)\?else\s*$'
     return indent(v:lnum - 1) + s:offset
   endif
 
@@ -255,7 +256,7 @@ function! s:GetContextIndent()
         return len(substitute(l:line, '?\s*\zs.*', '', ""))
       endif
       " Search for assignments (=, <=) that don't end in ";"
-      if l:line =~ s:vlog_assign . '[^;]*$'
+      if l:line =~ s:vlog_assign . '[^;]*$' && (!s:InsideAssign(l:lnum))
         if l:line !~ s:vlog_assign . '\s*$'
           " If there are values after the assignment, then use that column as
           " the indentation of the open statement.
@@ -326,7 +327,10 @@ function! s:GetContextIndent()
 
     if l:oneline_mode == 1 && l:line =~ s:vlog_statement
       let l:oneline_mode = 0
-    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl
+    elseif l:oneline_mode == 1 && l:line =~ '\<begin\>.*\<end\>'
+      call verilog_systemverilog#Verbose("'begin'..'end' pair.")
+      return indent(l:lnum)
+    elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl && l:line !~ '\<begin\>.*\<end\>'
       if s:curr_line =~ '^\s*\<begin\>'
         call verilog_systemverilog#Verbose("Standalone 'begin' after block declaration.")
         return indent(l:lnum)
@@ -363,7 +367,7 @@ function! s:GetContextIndent()
       return s:GetContextStartIndent("sequence"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_property
       return s:GetContextStartIndent("property"  , l:lnum) + l:open_offset
-    elseif l:line =~ s:vlog_method
+    elseif l:line =~ s:vlog_method && s:InsideMethod(l:lnum, len(l:line))
       return s:GetContextStartIndent("method"    , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_preproc
       return s:GetContextStartIndent("preproc"   , l:lnum) + l:open_offset
@@ -392,6 +396,20 @@ endfunction
 
 function! s:IsComment(lnum)
   return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogComment"
+endfunction
+
+function! s:InsideAssign(lnum)
+  return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogAssign"
+endfunction
+
+function! s:InsideMethod(lnum, cnum)
+  for id in synstack(a:lnum, a:cnum)
+    let name = synIDattr(id, "name")
+    if name == "verilogTask" || name == "verilogFunction"
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 " vi: sw=2 sts=2:

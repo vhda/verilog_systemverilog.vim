@@ -1,4 +1,16 @@
 "-----------------------------------------------------------------------
+" Global configurations
+"-----------------------------------------------------------------------
+" Configure custom syntax
+let g:verilog_syntax_custom = {
+    \ 'spyglass' : [{
+        \ 'match_start' : '\/\/\s*spyglass\s\+disable_block\s\+\z(\(\w\|-\)\+\(\s\+\(\w\|-\)\+\)*\)',
+        \ 'match_end'   : '\/\/\s*spyglass\s\+enable_block\s\+\z1',
+        \ 'syn_argument': 'transparent keepend',
+        \ }],
+    \ }
+
+"-----------------------------------------------------------------------
 " Syntax folding test
 "-----------------------------------------------------------------------
 function! RunTestFold()
@@ -41,7 +53,7 @@ endfunction
 "-----------------------------------------------------------------------
 function! RunTestIndent()
     unlet! g:verilog_dont_deindent_eos
-    let g:verilog_disable_indent_lst = "module"
+    let g:verilog_disable_indent_lst = "module,eos"
     let test_result=0
 
     " Open syntax indent test file
@@ -86,25 +98,12 @@ function! RunTestEfm()
             unlet! g:verilog_efm_uvm_lst
         endif
 
-        silent view test/errorformat.txt
-        let test_result=TestEfm('iverilog', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('verilator', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('verilator', 2, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('ncverilog', 1, check_uvm) || test_result
-        echo ''
-
-        silent view test/errorformat.txt
-        let test_result=TestEfm('ncverilog', 2, check_uvm) || test_result
-        echo ''
+        let test_result = TestEfm('iverilog',  1, check_uvm) || test_result
+        let test_result = TestEfm('verilator', 1, check_uvm) || test_result
+        let test_result = TestEfm('verilator', 3, check_uvm) || test_result
+        let test_result = TestEfm('ncverilog', 1, check_uvm) || test_result
+        let test_result = TestEfm('ncverilog', 3, check_uvm) || test_result
+        let test_result = TestEfm('spyglass',  1, check_uvm) || test_result
     endfor
 
     " Check test results and exit accordingly
@@ -119,32 +118,58 @@ endfunction
 " Syntax test
 "-----------------------------------------------------------------------
 function! RunTestSyntax()
+    colorscheme default
+    let test_result=0
+
     set nomore "Disable pager to avoid issues with Travis
+    set foldmethod=syntax
+    set foldlevel=99
 
-    silent view test/syntax.sv
+    " Run syntax test for various folding configurations
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    " Generate HTML version of the file
-    let g:html_line_ids=0
-    let g:html_number_lines=0
-    TOhtml
-    " Clean up resulting HTML to minimize differences with other version
-    " of TOhtml script
-    1,/<body>/-1delete
-    /<\/body>/+1,$delete
-    %s/ id='vimCodeElement'//
-    " Write final buffer
-    w! test/syntax.sv.new.html
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    " Compare with reference
-    silent let output = system('diff test/syntax.sv.html test/syntax.sv.new.html')
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
-    if output == ""
-        echo 'Syntax test passed'
-        let test_result = 0
-    else
-        echo 'Syntax test failed'
-        let test_result = 1
-    endif
+    let g:verilog_syntax_fold_lst='all,block_named'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_named'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_named'
+    let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
 
     " Check test results and exit accordingly
     if test_result
