@@ -41,7 +41,7 @@ test-syntax:
 performance:
 	$(SILENT) time vim -T dumb -E \
 		--cmd 'silent edit test/indent.sv' \
-		--cmd 'normal gg=G' \
+		--cmd 'normal! gg=G' \
 		--cmd 'quit!'
 
 profile:

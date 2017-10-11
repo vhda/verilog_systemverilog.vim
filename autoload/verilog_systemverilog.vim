@@ -635,8 +635,8 @@ endfunction
 function verilog_systemverilog#FollowInstanceSearchWord(line, column)
   let @/='\<'.expand("<cword>").'\>'
   call verilog_systemverilog#FollowInstanceTag(a:line, a:column)
-  exec ":/" . @/
-  normal n
+  exec "normal!" . @/
+  normal! n
 endfunction
 " }}}
 
