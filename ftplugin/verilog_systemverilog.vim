@@ -44,7 +44,7 @@ if exists("loaded_matchit")
     \ '\<case\>\|\<casex\>\|\<casez\>:\<endcase\>,' .
     \ '`if\(n\)\?def\>:`elsif\>:`else\>:`endif\>,' .
     \ '\<module\>:\<endmodule\>,' .
-    \ '\<if\>:\<else\>,' .
+    \ '\(else\s\+\)\@<!\<if\>:\<else\>\s\+\<if\>:\(`\)\@<!\<else\>\(\s\+if\)\@!,' .
     \ '\<fork\>:\<join\(_any\|_none\)\?\>,' .
     \ '\<function\>:\<endfunction\>,' .
     \ '\<task\>:\<endtask\>,' .
