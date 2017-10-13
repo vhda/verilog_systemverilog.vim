@@ -23,7 +23,7 @@ setlocal indentkeys+==endgenerate,=endchecker,=endconfig,=endprimitive,=endtable
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
-let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+]\|-[^>]\)'
+let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/+]\|[^@(]\s*\*\|-[^>]\)'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
@@ -211,6 +211,7 @@ function! s:GetContextIndent()
   let l:look_for_open_statement = 1
   let l:look_for_open_assign = 0
   let l:open_offset = 0
+  let l:oneline_begin = 0
 
   " Loop that searches up the file to build a context and determine the correct
   " indentation.
@@ -285,7 +286,12 @@ function! s:GetContextIndent()
       return indent(l:lnum) + s:offset + l:open_offset
     elseif l:line =~ s:vlog_case
       call verilog_systemverilog#Verbose("Inside a 'case' block.")
-      return indent(l:lnum) + s:offset + l:open_offset
+      if l:oneline_begin == 1
+        call verilog_systemverilog#Verbose("Standalone 'begin' after case item.")
+        return indent(l:lnum) + s:offset
+      else
+        return indent(l:lnum) + s:offset + l:open_offset
+      endif
     endif
 
     " If we hit an 'end', 'endcase' or 'join', skip past the whole block.
@@ -323,6 +329,11 @@ function! s:GetContextIndent()
         call verilog_systemverilog#Verbose("Inside a '{}' block.")
         return indent(l:lnum) + s:offset + l:open_offset
       endif
+    endif
+
+    let l:oneline_begin = 0
+    if s:curr_line =~ '^\s*\<begin\>'
+      let l:oneline_begin = 1
     endif
 
     if l:oneline_mode == 1 && l:line =~ s:vlog_statement
