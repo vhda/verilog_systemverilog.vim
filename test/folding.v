@@ -288,4 +288,4 @@ endtask                                                       //<1><1><1>
 assign a = b & c;                                             //<1><1><1>
 // spyglass enable_block SOMETHING                            //<1><1><1>
                                                               //<0><0><0>
-// vi: set number norelativenumber expandtab softtabstop=4 shiftwidth=4:
+// vi: set expandtab softtabstop=4 shiftwidth=4:

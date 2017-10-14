@@ -360,3 +360,5 @@ always @(*) begin : label
 end
 
 assign a = myfunc(this);
+
+// vi: set expandtab softtabstop=4 shiftwidth=4:
