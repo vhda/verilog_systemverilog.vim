@@ -48,3 +48,5 @@ class base;
     endtask : ctask
 
 endclass : base
+
+// vi: set expandtab softtabstop=4 shiftwidth=4:

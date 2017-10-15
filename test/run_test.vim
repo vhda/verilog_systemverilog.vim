@@ -52,7 +52,6 @@ endfunction
 " Syntax indent test
 "-----------------------------------------------------------------------
 function! RunTestIndent()
-    unlet! g:verilog_dont_deindent_eos
     let g:verilog_disable_indent_lst = "module,eos"
     let test_result=0
 
@@ -118,7 +117,6 @@ endfunction
 " Syntax test
 "-----------------------------------------------------------------------
 function! RunTestSyntax()
-    colorscheme default
     let test_result=0
 
     set nomore "Disable pager to avoid issues with Travis

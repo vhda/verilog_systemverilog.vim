@@ -1044,4 +1044,4 @@ package automatic regmodel_dpi_pkg;
 endpackage
 // End of copied code
 
-// vim: set expandtab softtabstop=4 shiftwidth=4 nofoldenable:
+// vi: set expandtab softtabstop=4 shiftwidth=4:

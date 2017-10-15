@@ -276,7 +276,7 @@ if index(s:verilog_syntax_fold, "block_nested") >= 0 || index(s:verilog_syntax_f
         \ keepend extend
         \ contains=verilogBlock,verilogBlockNamed,verilogBlockEnd
 elseif index(s:verilog_syntax_fold, "block") >= 0 || index(s:verilog_syntax_fold, "all") >= 0
-    syn region  verilogFold
+    syn region verilogBlock
         \ matchgroup=verilogStatement
         \ start="\<begin\>"
         \ end="\<end\>"
