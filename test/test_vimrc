@@ -1,3 +1,4 @@
 set nocompatible
+set modeline
 filetype plugin indent on
 syntax enable
