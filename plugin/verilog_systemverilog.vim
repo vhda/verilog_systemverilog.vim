@@ -89,7 +89,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend contains=verilogComment,verilogNumber,verilogOperator,verilogString',
                         \ }],
       \ 'baseCluster' : [{
-                        \ 'cluster'     : 'verilogComment,verilogNumber,verilogOperator,verilogString,verilogConstant,verilogGlobal,verilogMethod,verilogObject,verilogIfdefContainer'
+                        \ 'cluster'     : 'verilogComment,verilogNumber,verilogOperator,verilogString,verilogConstant,verilogGlobal,verilogMethod,verilogObject,verilogConditional,verilogIfdefContainer'
                         \ }],
       \ 'block'       : [{
                         \ 'match_start' : '\<begin\>',
@@ -143,7 +143,7 @@ let g:verilog_syntax = {
                         \ 'match_start' : '(',
                         \ 'match_end'   : ')',
                         \ 'highlight'   : 'verilogOperator',
-                        \ 'syn_argument': 'transparent contains=@verilogBaseCluster,verilogStatement',
+                        \ 'syn_argument': 'transparent contains=@verilogBaseCluster,verilogExpression,verilogStatement',
                         \ 'no_fold'     : '1',
                         \ }],
       \ 'function'    : [{
