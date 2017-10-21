@@ -91,6 +91,7 @@ syn keyword verilogStatement   interconnect let nettype nexttime reject_on restr
 syn keyword verilogStatement   s_always s_eventually s_nexttime s_until s_until_with
 syn keyword verilogStatement   strong sync_accept_on sync_reject_on unique unique0
 syn keyword verilogStatement   until until_with untyped weak
+syn keyword verilogStatement   clog2
 
 syn keyword verilogTypeDef     typedef enum
 
