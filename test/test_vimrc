@@ -1,4 +1,5 @@
 set nocompatible
 set modeline
+set noswapfile
 filetype plugin indent on
 syntax enable

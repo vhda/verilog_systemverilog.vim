@@ -1,10 +1,14 @@
-module mymodule(
-  input  wire a,
-  input  wire b,
-  `ifdef MACRO
-  input  wire c,
-  `endif
-  output wire y
+module #(
+    parameter TEST1 = $clog(0),
+    parameter TEST2 = $clog(1),
+    parameter TEST3 = $clog(2)
+) mymodule(
+    input  wire a,
+    input  wire b,
+    `ifdef MACRO
+    input  wire c,
+    `endif
+    output wire y
 );
 
 endmodule
