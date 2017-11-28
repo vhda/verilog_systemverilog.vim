@@ -364,6 +364,18 @@ class z;
                             end
                 something();
             join_none
+
+        // Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/158
+        fork
+            p1: begin
+                myvar=1'b1;
+                `info("some message with the word join");
+            end
+            p2: begin
+                myvar2=1'b1;
+            end
+        join
+        // End of copied code
     endfunction : hello
 
     local static function void hello();

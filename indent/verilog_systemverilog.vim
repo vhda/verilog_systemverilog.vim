@@ -184,7 +184,8 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no, skip_
   call cursor(a:current_line_no, 1)
 
   " Detect whether the cursor is on a comment.
-  let l:skip_arg = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
+  let l:skip_arg  = 'synIDattr(synID(".", col("."), 0), "name") == "verilogComment"'
+  let l:skip_arg .= ' || synIDattr(synID(".", col("."), 0), "name") == "verilogString"'
 
   if a:skip_start_end == 1
     let l:skip_arg =

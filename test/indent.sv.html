@@ -366,6 +366,18 @@
                             <span class="Statement">end</span>
                 <span class="Identifier">something</span><span class="Special">();</span>
             <span class="Statement">join_none</span>
+
+        <span class="Comment">// Code from: // <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/158">https://github.com/vhda/verilog_systemverilog.vim/issues/158</a></span>
+        <span class="Statement">fork</span>
+            p1<span class="Special">:</span> <span class="Statement">begin</span>
+                myvar<span class="Special">=</span><span class="Constant">1'b1</span><span class="Special">;</span>
+                <span class="PreProc">`info</span><span class="Special">(</span><span class="Constant">&quot;some message with the word join&quot;</span><span class="Special">);</span>
+            <span class="Statement">end</span>
+            p2<span class="Special">:</span> <span class="Statement">begin</span>
+                myvar2<span class="Special">=</span><span class="Constant">1'b1</span><span class="Special">;</span>
+            <span class="Statement">end</span>
+        <span class="Statement">join</span>
+        <span class="Comment">// End of copied code</span>
     <span class="Statement">endfunction</span> <span class="Special">:</span> hello
 
     <span class="Statement">local</span> <span class="Statement">static</span> <span class="Statement">function</span> <span class="Statement">void</span> <span class="Identifier">hello</span><span class="Special">();</span>
