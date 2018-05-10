@@ -491,7 +491,7 @@ wire Val_IP  = !In_Pkt_S_Bus_enf ||
                ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
 
 wire Val_IP  =
-    !In_Pkt_S_Bus_enf ||
+    !In_Pkt_S_Bus_enf || // A, B, C
     ((Pls_Don || ResVal) && (Pls_Res || ResFnd));
 
 wire Val_IP  = !In_Pkt_S_Bus_enf ?

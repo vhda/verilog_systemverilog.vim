@@ -493,7 +493,7 @@
                <span class="Special">((</span>Pls_Don <span class="Special">||</span> ResVal<span class="Special">)</span> <span class="Special">&amp;&amp;</span> <span class="Special">(</span>Pls_Res <span class="Special">||</span> ResFnd<span class="Special">));</span>
 
 <span class="Statement">wire</span> Val_IP  <span class="Special">=</span>
-    <span class="Special">!</span>In_Pkt_S_Bus_enf <span class="Special">||</span>
+    <span class="Special">!</span>In_Pkt_S_Bus_enf <span class="Special">||</span> <span class="Comment">// A, B, C</span>
     <span class="Special">((</span>Pls_Don <span class="Special">||</span> ResVal<span class="Special">)</span> <span class="Special">&amp;&amp;</span> <span class="Special">(</span>Pls_Res <span class="Special">||</span> ResFnd<span class="Special">));</span>
 
 <span class="Statement">wire</span> Val_IP  <span class="Special">=</span> <span class="Special">!</span>In_Pkt_S_Bus_enf <span class="Special">?</span>

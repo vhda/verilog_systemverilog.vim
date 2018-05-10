@@ -174,6 +174,17 @@ function! s:SyntaxCreate(name, verilog_syntax)
                         \  ' start="'.region_start.'"'
                         \ .' end="'.region_end.'"'
 
+                    " Always skip inline comments
+                    if exists('a:verilog_syntax["comment"]')
+                        let verilog_syn_region_cmd .= ' skip="'
+                        for comment_entry in a:verilog_syntax["comment"]
+                            if exists('comment_entry["match"]')
+                                let verilog_syn_region_cmd .= comment_entry["match"]
+                            endif
+                        endfor
+                        let verilog_syn_region_cmd .= '"'
+                    endif
+
                     if exists('entry["syn_argument"]')
                         let verilog_syn_region_cmd .= ' '.entry["syn_argument"]
                     endif
