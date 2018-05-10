@@ -361,9 +361,9 @@ end
 
 always @(*) begin : label
   if (a) begin
-    y = c;
+    y = c, z = a;
   end else begin
-    y = d;
+    y = d, z = b;
   end
 end
 

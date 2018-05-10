@@ -79,7 +79,7 @@ let s:verilog_function_task_dequalifier =
 let g:verilog_syntax = {
       \ 'assign'      : [{
                         \ 'match_start' : '[^><=!]\zs<\?=\(=\)\@!',
-                        \ 'match_end'   : ';',
+                        \ 'match_end'   : '[;,]',
                         \ 'highlight'   : 'verilogOperator',
                         \ 'syn_argument': 'transparent keepend contains=@verilogBaseCluster',
                         \ }],
