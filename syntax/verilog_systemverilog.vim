@@ -219,6 +219,7 @@ let s:verilog_syntax_order = [
             \ 'function',
             \ 'interface',
             \ 'module',
+            \ 'ovm',
             \ 'property',
             \ 'sequence',
             \ 'specify',
