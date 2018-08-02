@@ -173,9 +173,13 @@ function! s:SyntaxCreate(name, verilog_syntax)
                         let verilog_syn_region_cmd .= ' matchgroup='.entry["highlight"]
                     endif
 
-                    let verilog_syn_region_cmd .=
-                        \  ' start="'.region_start.'"'
-                        \ .' end="'.region_end.'"'
+                    let verilog_syn_region_cmd .= ' start="'.region_start.'"'
+
+                    if exists('entry["match_skip"]')
+                        let verilog_syn_region_cmd .= ' skip="'.entry["match_skip"].'"'
+                    endif
+
+                    let verilog_syn_region_cmd .= ' end="'.region_end.'"'
 
                     if exists('entry["syn_argument"]')
                         let verilog_syn_region_cmd .= ' '.entry["syn_argument"]
@@ -223,6 +227,7 @@ let s:verilog_syntax_order = [
             \ 'sequence',
             \ 'specify',
             \ 'task',
+            \ 'curly',
             \ ]
 
 " Generate syntax definitions for supported types
