@@ -889,7 +889,7 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 
 <span class="PreProc">$display</span><span class="Special">(</span><span class="Constant">&quot;hi&quot;</span><span class="Special">);</span>
 
-<span class="Special">assert_value</span><span class="Special">:</span> <span class="Statement">assert</span> property <span class="Special">(@(</span><span class="Statement">posedge</span> clk<span class="Special">)</span> <span class="Statement">disable</span> <span class="Statement">iff</span> <span class="Special">(~</span>reset_n<span class="Special">)</span>
+<span class="Special">assert_value</span><span class="Special">:</span> <span class="Statement">assert</span> <span class="Statement">property</span> <span class="Special">(@(</span><span class="Statement">posedge</span> clk<span class="Special">)</span> <span class="Statement">disable</span> <span class="Statement">iff</span> <span class="Special">(~</span>reset_n<span class="Special">)</span>
     var0 <span class="Special">|-&gt;</span> var1 <span class="Special">==</span> var2
 <span class="Special">);</span>
 
@@ -933,12 +933,12 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 
 <span class="Statement">function</span> <span class="Statement">void</span> <span class="Type">sink_driver</span><span class="Special">::</span><span class="Identifier">build_phase</span><span class="Special">(</span>uvm_phase phase<span class="Special">);</span>
 
-    <span class="Statement">assert</span> property <span class="Special">(</span>prop1<span class="Special">)</span>
+    <span class="Statement">assert</span> <span class="Statement">property</span> <span class="Special">(</span>prop1<span class="Special">)</span>
     <span class="Statement">else</span> <span class="PreProc">`uvm_fatal</span><span class="Special">(</span><span class="Constant">&quot;TAG&quot;</span><span class="Special">,</span> <span class="Constant">&quot;Assertion failed.&quot;</span><span class="Special">)</span>
 
     <span class="Identifier">do_something</span><span class="Special">();</span>
 
-    <span class="Statement">assert</span> property <span class="Special">(</span>prop1<span class="Special">)</span>
+    <span class="Statement">assert</span> <span class="Statement">property</span> <span class="Special">(</span>prop1<span class="Special">)</span>
     <span class="Statement">else</span>
         <span class="PreProc">`uvm_fatal</span><span class="Special">(</span><span class="Constant">&quot;TAG&quot;</span><span class="Special">,</span> <span class="Constant">&quot;Assertion failed.&quot;</span><span class="Special">)</span>
 
@@ -1013,10 +1013,16 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 <span class="Comment">// End of copied code</span>
 
 <span class="Comment">// Code from: <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/81">https://github.com/vhda/verilog_systemverilog.vim/issues/81</a></span>
-<span class="Statement">cover</span> property <span class="Special">(</span>
+<span class="Statement">cover</span> <span class="Statement">property</span> <span class="Special">(</span>
     a <span class="Special">&amp;&amp;</span>
     b <span class="Special">&amp;&amp;</span>
     c
+<span class="Special">);</span>
+<span class="Comment">// End of copied code</span>
+
+<span class="Comment">// Code from: <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/167">https://github.com/vhda/verilog_systemverilog.vim/issues/167</a></span>
+<span class="Special">co__ack_and_req</span> <span class="Special">:</span> <span class="Statement">cover</span> <span class="Statement">sequence</span> <span class="Special">(</span>
+    req <span class="Special">&amp;&amp;</span> ack
 <span class="Special">);</span>
 <span class="Comment">// End of copied code</span>
 
@@ -1027,12 +1033,12 @@ label <span class="Special">:</span> <span class="Statement">always_ff</span> <s
 <span class="Comment">// End of copied code</span>
 
 <span class="Comment">// Code from: <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/85">https://github.com/vhda/verilog_systemverilog.vim/issues/85</a></span>
-<span class="Special">assert_label</span><span class="Special">:</span> <span class="Statement">assert</span> property <span class="Special">(</span>
+<span class="Special">assert_label</span><span class="Special">:</span> <span class="Statement">assert</span> <span class="Statement">property</span> <span class="Special">(</span>
     precondition <span class="Special">|-&gt;</span> a <span class="Special">&amp;&amp;</span>
                      b <span class="Special">&amp;&amp;</span>
                      c
 <span class="Special">);</span>
-<span class="Special">assert_label</span><span class="Special">:</span> <span class="Statement">assert</span> property <span class="Special">(</span>
+<span class="Special">assert_label</span><span class="Special">:</span> <span class="Statement">assert</span> <span class="Statement">property</span> <span class="Special">(</span>
     precondition <span class="Special">|=&gt;</span> a <span class="Special">&amp;&amp;</span>
                      b <span class="Special">&amp;&amp;</span>
                      c

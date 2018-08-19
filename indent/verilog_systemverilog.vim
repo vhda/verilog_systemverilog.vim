@@ -40,9 +40,9 @@ let s:vlog_package        = '\<package\>'
 let s:vlog_covergroup     = '\<covergroup\>'
 let s:vlog_program        = '\<program\>'
 let s:vlog_generate       = '\<generate\>'
-let s:vlog_class          = '\<\(typedef\s\+\)\@<!class\>'
-let s:vlog_property       = '\(\(assert\|assume\|cover\)\s\+\)\@<!\<property\>'
-let s:vlog_sequence       = '\<sequence\>'
+let s:vlog_class          = g:verilog_syntax['class'][0]['match_start']
+let s:vlog_property       = g:verilog_syntax['property'][0]['match_start']
+let s:vlog_sequence       = g:verilog_syntax['sequence'][0]['match_start']
 let s:vlog_preproc        = '^\s*`ifn\?def\>'
 
 let s:vlog_case           = '\<case[zx]\?\>\s*('

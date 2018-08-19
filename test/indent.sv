@@ -1018,6 +1018,12 @@ cover property (
 );
 // End of copied code
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/167
+co__ack_and_req : cover sequence (
+    req && ack
+);
+// End of copied code
+
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/84
 assign out = cond0 ? a :
              cond1 ? b :

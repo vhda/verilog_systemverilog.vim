@@ -170,7 +170,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogInterface',
                         \ }],
       \ 'property'    : [{
-                        \ 'match_start' : '\<\(\(assert\|cover\)\s\+\)\@<!\<property\>',
+                        \ 'match_start' : '\<\(\(assert\|assume\|cover\|restrict\)\s\+\)\@<!\<property\>',
                         \ 'match_end'   : '\<endproperty\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
@@ -179,7 +179,7 @@ let g:verilog_syntax = {
                         \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>',
                         \ }],
       \ 'sequence'    : [{
-                        \ 'match_start' : '\<sequence\>',
+                        \ 'match_start' : '\<\(cover\s\+\)\@<!\<sequence\>',
                         \ 'match_end'   : '\<endsequence\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
@@ -191,7 +191,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'statement'   : [{
-                        \ 'match'       : '\<interface\>',
+                        \ 'match'       : '\<interface\|property\|sequence\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
