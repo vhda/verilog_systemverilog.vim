@@ -13,6 +13,10 @@ module #(
 
 endmodule
 
+`define DEF_WITH_EQ = 1'b0
+`define DEF_MULTI_LINE cond(a,b,c) \
+    a ? b : c
+
 `ifdef SYSTEM_VERILOG_KEYWORDS
 accept_on
 alias
