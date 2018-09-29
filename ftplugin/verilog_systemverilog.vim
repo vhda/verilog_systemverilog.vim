@@ -32,7 +32,7 @@ if (has("gui_win32") || has("gui_gtk")) && !exists("b:browsefilter")
   let b:browsefilter = ""
         \ . "Verilog Family Source Files\t*.v;*.vh;*.vp;*.sv;*.svh;*.svi;*.svp\n"
         \ . "Verilog Source Files (*.v *.vh)\t*.v;*.vh\n"
-        \ . "SystemVerilog Source Files (*.sv *.svh *.svi)\t*.sv;*.svh;*.svi\n"
+        \ . "SystemVerilog Source Files (*.sv *.svh *.svi *.sva)\t*.sv;*.svh;*.svi;*.sva\n"
         \ . "Protected Files (*.vp *.svp)\t*.vp;*.svp\n"
         \ . "All Files (*.*)\t*.*\n"
 endif
