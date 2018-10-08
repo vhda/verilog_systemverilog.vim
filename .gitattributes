@@ -1,0 +1,5 @@
+# Hide fixtures in diffs and language stats on GitHub
+test/*.html linguist-vendored
+
+# Fix misclassification of Verilog files
+test/*.v linguist-language=SystemVerilog

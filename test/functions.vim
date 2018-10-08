@@ -1,23 +1,21 @@
 function! TestFold(...)
     let fail = 0
-    let fail_lines = ''
-    let linenr = 0
+    let linenr = 4 "Start after header
     if exists("a:1")
         let index = a:1
     else
         let index = 0
     endif
     while linenr < line("$")
-        let linenr += 1
         let line = getline(linenr)
         let levels = substitute(line, '.\{-}<\(\d*\)>', '\1::', 'g')
         let levels_list = split(levels, '::')
-        " Skip commented out lines
-        if line =~ '^\/\/'
-            continue
-        " Check if requested index is NOT available in the levels list
+        if len(line) == 0
+            " Empty lines can be used as separators and will have zero " folding
+            let level_expected=0
         elseif index < 0 || (index >= len(levels_list))
-            echo 'Invalid line format:'
+            " Abort if requested index is NOT available in the levels list
+            echo 'Invalid line format: (' . linenr . ')'
             echo line
             return 1
         else
@@ -28,19 +26,14 @@ function! TestFold(...)
         let level = foldlevel(linenr)
         if (level != level_expected)
             let fail = 1
-            echo "Error: level=" . level . " level_expected=" . level_expected . " >>>>" . line
-            if (fail_lines == '')
-                let fail_lines = linenr
-            else
-                let fail_lines = fail_lines.','.linenr
-            endif
+            echo "Error: level=" . level . " level_expected=" . level_expected . " (" . linenr . ") >>>>" . line
         endif
+        let linenr += 1
     endwhile
 
     if (fail == 1)
         echo 'Fold test failed:'
         echo 'g:verilog_syntax_fold_lst: ' . g:verilog_syntax_fold_lst
-        echo fail_lines
         return 1
     else
         echo 'Fold test passed'

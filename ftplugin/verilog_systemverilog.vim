@@ -45,7 +45,7 @@ if exists("loaded_matchit")
     \ '`if\(n\)\?def\>:`elsif\>:`else\>:`endif\>,' .
     \ '\<module\>:\<endmodule\>,' .
     \ '\<if\>:\<else\>,' .
-    \ '\<fork\>:\<join\(_any\|_none\)\?\>,' .
+    \ '\<fork\>\s*;\@!$:\<join\(_any\|_none\)\?\>,' .
     \ '\<function\>:\<endfunction\>,' .
     \ '\<task\>:\<endtask\>,' .
     \ '\<specify\>:\<endspecify\>,' .

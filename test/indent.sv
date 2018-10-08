@@ -364,6 +364,18 @@ class z;
                             end
                 something();
             join_none
+
+        // Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/158
+        fork
+            p1: begin
+                myvar=1'b1;
+                `info("some message with the word join");
+            end
+            p2: begin
+                myvar2=1'b1;
+            end
+        join
+        // End of copied code
     endfunction : hello
 
     local static function void hello();
@@ -1003,6 +1015,12 @@ cover property (
     a &&
     b &&
     c
+);
+// End of copied code
+
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/167
+co__ack_and_req : cover sequence (
+    req && ack
 );
 // End of copied code
 
