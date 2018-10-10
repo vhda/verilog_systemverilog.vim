@@ -191,7 +191,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'statement'   : [{
-                        \ 'match'       : '\<interface\|property\|sequence\>',
+                        \ 'match'       : '\<\(interface\|property\|sequence\)\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
