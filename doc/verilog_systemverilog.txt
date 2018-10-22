@@ -474,14 +474,24 @@ Default: undefined
         - `highlight`    - Highlight to be used on as |:syn-matchgroup|.
         - `syn_argument` - Other optional |:syn-arguments|.
 
-Example:
+Examples:
 
 >
+    " Fold on SpyGlass pragmas
     let g:verilog_syntax_custom = {
         \ 'spyglass' : [{
             \ 'match_start' : '\/\/\s*spyglass\s\+disable_block\s\+\z(\(\w\|-\)\+\(\s\+\(\w\|-\)\+\)*\)',
             \ 'match_end'   : '\/\/\s*spyglass\s\+enable_block\s\+\z1',
             \ 'syn_argument': 'transparent keepend',
+            \ }],
+        \ }
+
+    " Fold on consecutive line comments
+    let g:verilog_syntax_custom = {
+        \ 'comment' : [{
+            \ 'match_start' : '^\s*//',
+            \ 'match_end'   : '^\%(\s*//\)\@!',
+            \ 'syn_argument': 'contains=verilogTodo,verilogDirective,@Spell keepend extend'
             \ }],
         \ }
 <
