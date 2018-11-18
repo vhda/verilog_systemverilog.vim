@@ -217,10 +217,18 @@ Alternatively, if the cursor is placed over a port of the instance the command
 |:VerilogFollowPort| can be used to navigate to the module declaration and
 immediately searching for that port.
 
+The navigation is implemented using tags, so normal |'tagstack'| related
+commands can be used to return from the module declaration. Alternatively, the
+command |:VerilogReturnInstance| can be used for this purpose.
+
+When |g:verilog_navigate_split| is defined these commands will use Vim window
+splits instead of navigating in the same window.
+
 These commands can be mapped as following:
 
 >
     nnoremap <leader>i :VerilogFollowInstance<CR>
+    nnoremap <leader>o :VerilogReturnInstance<CR>
     nnoremap <leader>I :VerilogFollowPort<CR>
 <
 
@@ -251,6 +259,12 @@ COMMANDS                                                    *verilog-commands*
     The instance is searched for starting from the current cursor position.
     After that, the module is searched for in the |tags| file and, if found,
     jumps to its defintion using |:tag|.
+
+:VerilogReturnInstance                                *:VerilogReturnInstance*
+    Jump from module declaration back to previously followed instance.
+
+    Uses |'tagstack'| through |pop| function to return from previously
+    followed instance.
 
 :VerilogFollowPort                                        *:VerilogFollowPort*
     Jump to module declaration of current port and search for it.
@@ -317,6 +331,7 @@ following mappings are added to your |vimrc|.
 >
     nnoremap <leader>u :VerilogGotoInstanceStart<CR>
     nnoremap <leader>i :VerilogFollowInstance<CR>
+    nnoremap <leader>o :VerilogReturnInstance<CR>
     nnoremap <leader>I :VerilogFollowPort<CR>
 <
 ==============================================================================
@@ -577,6 +592,38 @@ Example:
 
 >
     let g:verilog_efm_custom = %t:\ %m
+<
+
+------------------------------------------------------------------------------
+NAVIGATION CONFIGURATION                           *verilog-config-navigation*
+
+                                                    *g:verilog_navigate_split*
+g:verilog_navigate_split~
+Default: undefined
+
+    Opens a split when following an instance.
+    Makes use of |:wincmd| and supports the same arguments. In particular:
+        - undefined - Split not opened when following instances
+        - `"s"`       - Opens horizontal split
+        - `"v"`       - Opens vertical split
+
+Example:
+
+>
+    let g:verilog_navigate_split = 1
+<
+
+                                              *g:verilog_navigate_split_close*
+g:verilog_navigate_split_close~
+Default: undefined
+
+    Command to execute when returning from an instance, when split is enabled.
+    The command |:quit| is used by default when this variable is undefined.
+
+Example:
+
+>
+    let g:verilog_navigate_split_close = "bdel"
 <
 
 ------------------------------------------------------------------------------

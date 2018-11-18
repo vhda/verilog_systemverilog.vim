@@ -4,6 +4,7 @@ let g:verilog_disable_indent_lst="eos"
 " Command definitions
 command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)
 command!          VerilogFollowInstance call verilog_systemverilog#FollowInstanceTag(line('.'), col('.'))
+command!          VerilogReturnInstance call verilog_systemverilog#ReturnFromInstanceTag()
 command!          VerilogFollowPort call verilog_systemverilog#FollowInstanceSearchWord(line('.'), col('.'))
 command!          VerilogGotoInstanceStart call verilog_systemverilog#GotoInstanceStart(line('.'), col('.'))
 command! -nargs=+ -complete=customlist,verilog_systemverilog#CompleteCommand

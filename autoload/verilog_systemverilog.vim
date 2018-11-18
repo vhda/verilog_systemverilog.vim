@@ -627,8 +627,23 @@ endfunction
 
 function verilog_systemverilog#FollowInstanceTag(line, column)
   let values = s:GetInstanceInfo(a:line, col('$'))
+  if exists("g:verilog_navigate_split")
+    exec "wincmd ".g:verilog_navigate_split
+  endif
   if values[1] != ""
     execute "tag " . values[1]
+  endif
+endfunction
+
+function verilog_systemverilog#ReturnFromInstanceTag()
+  if winnr('$') > 1 && exists("g:verilog_navigate_split")
+    if exists("g:verilog_navigate_split_close")
+      exec g:verilog_navigate_split_close
+    else
+      exec "quit"
+    endif
+  else
+    exec "pop"
   endif
 endfunction
 
