@@ -128,6 +128,13 @@ let g:verilog_syntax = {
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
+      \ 'curly'       : [{
+                        \ 'match_start' : '{',
+                        \ 'match_skip'  : '/[*/].*',
+                        \ 'match_end'   : '}',
+                        \ 'highlight'   : 'verilogOperator',
+                        \ 'syn_argument': 'transparent',
+                        \ }],
       \ 'define'      : [{
                         \ 'match_start' : '`ifn\?def\>',
                         \ 'match_mid'   : '`els\(e\|if\)\>',
