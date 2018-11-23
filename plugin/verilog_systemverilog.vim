@@ -67,24 +67,24 @@ let g:tagbar_type_verilog_systemverilog = {
 
 " Define regular expressions for Verilog/SystemVerilog statements
 let s:verilog_function_task_dequalifier =
-    \  '\('
-    \ .    '\('
-    \ .        'extern\s\+\(\(pure\s\+\)\?virtual\s\+\)\?'
+    \  '\%('
+    \ .    '\%('
+    \ .        'extern\s\+\%(\%(pure\s\+\)\?virtual\s\+\)\?'
     \ .        '\|'
     \ .        'pure\s\+virtual\s\+'
     \ .    '\)'
-    \ .    '\(\(static\|protected\|local\)\s\+\)\?'
+    \ .    '\%(\%(static\|protected\|local\)\s\+\)\?'
     \ .'\)'
 
 let g:verilog_syntax = {
       \ 'assign'      : [{
-                        \ 'match_start' : '[^><=!]\zs<\?=\(=\)\@!',
+                        \ 'match_start' : '[^><=!]\zs<\?=\%(=\)\@!',
                         \ 'match_end'   : '[;,]',
                         \ 'highlight'   : 'verilogOperator',
                         \ 'syn_argument': 'transparent keepend contains=@verilogBaseCluster',
                         \ }],
       \ 'attribute'   : [{
-                        \ 'match_start' : '\(@\s*\)\@<!(\*',
+                        \ 'match_start' : '\%(@\s*\)\@<!(\*',
                         \ 'match_end'   : '\*)',
                         \ 'highlight'   : 'verilogDirective',
                         \ 'syn_argument': 'transparent keepend contains=verilogComment,verilogNumber,verilogOperator,verilogString',
@@ -154,33 +154,33 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'instance'    : [{
-                        \ 'match_start' : '^\s*\zs\w\+\(\s*#\s*(\(.*)\s*\w\+\s*;\)\@!\|\s\+\(\<if\>\)\@!\w\+\s*(\)',
+                        \ 'match_start' : '^\s*\zs\w\+\%(\s*#\s*(\%(.*)\s*\w\+\s*;\)\@!\|\s\+\%(\<if\>\)\@!\w\+\s*(\)',
                         \ 'match_end'   : ';',
                         \ 'syn_argument': 'transparent keepend contains=verilogListParam,verilogStatement,@verilogBaseCluster',
                         \ }],
       \ 'interface'   : [{
-                        \ 'match_start' : '\(\<virtual\s\+\)\@<!\<interface\>\(\s\+class\)\@!',
+                        \ 'match_start' : '\%(\<virtual\s\+\)\@<!\<interface\>\%(\s\+class\)\@!',
                         \ 'match_end'   : '\<endinterface\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'module'      : [{
-                        \ 'match_start' : '\<\(extern\s\+\)\@<!\<module\>',
+                        \ 'match_start' : '\<\%(extern\s\+\)\@<!\<module\>',
                         \ 'match_end'   : '\<endmodule\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogInterface',
                         \ }],
       \ 'property'    : [{
-                        \ 'match_start' : '\<\(\(assert\|assume\|cover\|restrict\)\s\+\)\@<!\<property\>',
+                        \ 'match_start' : '\<\%(\%(assert\|assume\|cover\|restrict\)\s\+\)\@<!\<property\>',
                         \ 'match_end'   : '\<endproperty\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'prototype'   : [{
-                        \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\(task\|function\)\>',
+                        \ 'match'       : s:verilog_function_task_dequalifier.'\@<=\<\%(task\|function\)\>',
                         \ }],
       \ 'sequence'    : [{
-                        \ 'match_start' : '\<\(cover\s\+\)\@<!\<sequence\>',
+                        \ 'match_start' : '\<\%(cover\s\+\)\@<!\<sequence\>',
                         \ 'match_end'   : '\<endsequence\>',
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend',
@@ -192,7 +192,7 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'statement'   : [{
-                        \ 'match'       : '\<\(interface\|property\|sequence\|class\)\>',
+                        \ 'match'       : '\<\%(interface\|property\|sequence\|class\)\>',
                         \ }],
       \ 'task'        : [{
                         \ 'match_start' : s:verilog_function_task_dequalifier.'\@<!\<task\>',
