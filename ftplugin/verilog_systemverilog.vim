@@ -33,6 +33,7 @@ if (has("gui_win32") || has("gui_gtk")) && !exists("b:browsefilter")
         \ . "Verilog Family Source Files\t*.v;*.vh;*.vp;*.sv;*.svh;*.svi;*.svp\n"
         \ . "Verilog Source Files (*.v *.vh)\t*.v;*.vh\n"
         \ . "SystemVerilog Source Files (*.sv *.svh *.svi *.sva)\t*.sv;*.svh;*.svi;*.sva\n"
+        \ . "Verilog AMS Source Files (*.va *.vams)\t*.va;*.vams\n"
         \ . "Protected Files (*.vp *.svp)\t*.vp;*.svp\n"
         \ . "All Files (*.*)\t*.*\n"
 endif

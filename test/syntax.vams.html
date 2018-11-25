@@ -1,0 +1,44 @@
+<body>
+<pre>
+<span class="Comment">// Contents obtained from: <a href="https://blog.kurttomlinson.com/posts/verilog-ams-a-personal-reference">https://blog.kurttomlinson.com/posts/verilog-ams-a-personal-reference</a></span>
+<span class="PreProc">`include</span> <span class="Constant">&quot;constants.vams&quot;</span>
+<span class="PreProc">`include</span> <span class="Constant">&quot;disciplines.vams&quot;</span>
+<span class="Comment">// Simple DAC model</span>
+<span class="Statement">module</span> <span class="Identifier">dac_simple</span><span class="Special">(</span>aout<span class="Special">,</span> clk<span class="Special">,</span> din<span class="Special">,</span> vref<span class="Special">);</span>
+
+    <span class="Comment">// Parameters</span>
+    <span class="Type">parameter</span> <span class="Type">integer</span> bits <span class="Special">=</span> <span class="Constant">4</span> <span class="Type">from</span> <span class="Special">[</span><span class="Constant">1</span><span class="Special">:</span><span class="Constant">24</span><span class="Special">];</span>
+    <span class="Type">parameter</span> <span class="Type">integer</span> td <span class="Special">=</span> <span class="Constant">1n</span> <span class="Type">from</span><span class="Special">[</span><span class="Constant">0</span><span class="Special">:</span><span class="Statement">inf</span><span class="Special">);</span>  <span class="Comment">// Processing delay of the DAC</span>
+
+    <span class="Comment">// Define input/output</span>
+    <span class="Type">input</span> clk<span class="Special">,</span> vref<span class="Special">;</span>
+    <span class="Type">input</span> <span class="Special">[</span>bits<span class="Special">-</span><span class="Constant">1</span><span class="Special">:</span><span class="Constant">0</span><span class="Special">]</span> din<span class="Special">;</span>
+    <span class="Type">output</span> aout<span class="Special">;</span>
+
+    <span class="Comment">//Define port types</span>
+    <span class="Statement">logic</span> clk<span class="Special">;</span>
+    <span class="Statement">logic</span> <span class="Special">[</span>bits<span class="Special">-</span><span class="Constant">1</span><span class="Special">:</span><span class="Constant">0</span><span class="Special">]</span> din<span class="Special">;</span>
+    <span class="Type">electrical</span>  aout<span class="Special">,</span> vref<span class="Special">;</span>
+
+    <span class="Comment">// Internal variables</span>
+    <span class="Type">real</span> aout_new<span class="Special">,</span> <span class="Statement">ref</span><span class="Special">;</span>
+    <span class="Type">integer</span> i<span class="Special">;</span>
+
+    <span class="Comment">// Change signal in the analog part</span>
+    <span class="Statement">analog</span> <span class="Statement">begin</span>
+        <span class="Special">@(</span><span class="Statement">initial_step</span><span class="Special">)</span> <span class="Statement">V</span><span class="Special">(</span>aout<span class="Special">)</span> <span class="Special">&lt;+</span> <span class="Constant">0</span><span class="Special">;</span> <span class="Comment">// Set output to 0 when the simulation starts</span>
+        <span class="Special">@(</span><span class="Statement">posedge</span> clk<span class="Special">)</span> <span class="Statement">begin</span> <span class="Comment">// Change output only for rising clock edge</span>
+
+            aout_new <span class="Special">=</span> <span class="Constant">0</span><span class="Special">;</span>
+            <span class="Statement">ref</span> <span class="Special">=</span> <span class="Statement">V</span><span class="Special">(</span>vref<span class="Special">);</span>
+
+            <span class="Statement">for</span><span class="Special">(</span>i<span class="Special">=</span><span class="Constant">0</span><span class="Special">;</span> i<span class="Special">&lt;</span>bits<span class="Special">;</span> i<span class="Special">=</span>i<span class="Special">+</span><span class="Constant">1</span><span class="Special">)</span> <span class="Statement">begin</span>
+                <span class="Statement">ref</span> <span class="Special">=</span> <span class="Statement">ref</span><span class="Special">/</span><span class="Constant">2</span><span class="Special">;</span>
+                aout_new <span class="Special">=</span> aout_new <span class="Special">+</span> <span class="Statement">ref</span> <span class="Special">*</span> din<span class="Special">[</span>i<span class="Special">];</span>
+            <span class="Statement">end</span>
+        <span class="Statement">end</span>
+        <span class="Statement">V</span><span class="Special">(</span>aout<span class="Special">)</span> <span class="Special">&lt;+</span> <span class="Statement">transition</span><span class="Special">(</span>aout_new<span class="Special">,</span> td<span class="Special">,</span> <span class="Constant">5n</span><span class="Special">);</span> <span class="Comment">// Get a smoother transition when output level changes</span>
+    <span class="Statement">end</span>
+<span class="Statement">endmodule</span>
+</pre>
+</body>

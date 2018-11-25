@@ -124,6 +124,7 @@ function! RunTestSyntax()
     set foldlevel=99
 
     " Run syntax test for various folding configurations
+    " syntax.sv
     let g:verilog_syntax_fold_lst=''
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
@@ -139,6 +140,7 @@ function! RunTestSyntax()
     let g:verilog_syntax_fold_lst='all,instance'
     let test_result = TestSyntax('syntax.sv', g:verilog_syntax_fold_lst) || test_result
 
+    " folding.v
     let g:verilog_syntax_fold_lst=''
     let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
 
@@ -154,6 +156,7 @@ function! RunTestSyntax()
     let g:verilog_syntax_fold_lst='all,instance'
     let test_result = TestSyntax('folding.v', g:verilog_syntax_fold_lst) || test_result
 
+    " indent.sv
     let g:verilog_syntax_fold_lst=''
     let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
 
@@ -168,6 +171,22 @@ function! RunTestSyntax()
 
     let g:verilog_syntax_fold_lst='all,instance'
     let test_result = TestSyntax('indent.sv', g:verilog_syntax_fold_lst) || test_result
+
+    " syntax.vams
+    let g:verilog_syntax_fold_lst=''
+    let test_result = TestSyntax('syntax.vams', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all'
+    let test_result = TestSyntax('syntax.vams', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_nested'
+    let test_result = TestSyntax('syntax.vams', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,block_named'
+    let test_result = TestSyntax('syntax.vams', g:verilog_syntax_fold_lst) || test_result
+
+    let g:verilog_syntax_fold_lst='all,instance'
+    let test_result = TestSyntax('syntax.vams', g:verilog_syntax_fold_lst) || test_result
 
     " Check test results and exit accordingly
     if test_result

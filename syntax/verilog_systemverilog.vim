@@ -342,6 +342,11 @@ syn match   verilogDirective   "//\s*\$s\>.*$"
 syn region  verilogDirective   start="/\*\s*\$s\>" end="\*/"
 syn region  verilogDirective   start="//\s*\$s dc_script_begin\>" end="//\s*\$s dc_script_end\>"
 
+" Include Verilog AMS syntax
+if (expand("%:e") == "va" || expand("%:e") == "vams")
+    runtime syntax/verilogams.vim
+endif
+
 "Modify the following as needed.  The trade-off is performance versus
 "functionality.
 syn sync minlines=50
