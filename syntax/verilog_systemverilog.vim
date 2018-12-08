@@ -214,6 +214,7 @@ let s:verilog_syntax_order = [
             \ 'class',
             \ 'clocking',
             \ 'covergroup',
+            \ 'define',
             \ 'export',
             \ 'expression',
             \ 'function',

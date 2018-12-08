@@ -44,6 +44,7 @@ let s:vlog_class          = g:verilog_syntax['class'][0]['match_start']
 let s:vlog_property       = g:verilog_syntax['property'][0]['match_start']
 let s:vlog_sequence       = g:verilog_syntax['sequence'][0]['match_start']
 let s:vlog_preproc        = '^\s*`ifn\?def\>'
+let s:vlog_define         = '^\s*`define\>'
 
 let s:vlog_case           = '\<case[zx]\?\>\s*('
 let s:vlog_join           = '\<join\(_any\|_none\)\?\>'
@@ -133,6 +134,10 @@ function! GetVerilogSystemVerilogIndent()
     return indent(s:SearchForBlockStart(s:vlog_preproc, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
     return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum, 1))
+  endif
+
+  if s:InsideDefine(v:lnum) && s:curr_line !~ s:vlog_define
+    return (indent(s:SearchBackForPattern(s:vlog_define, v:lnum)) + s:offset)
   endif
 
   if s:curr_line =~ '^\s*'.s:vlog_comment.'\s*$' &&
@@ -401,6 +406,15 @@ endfunction
 
 function! s:InsideAssign(lnum)
   return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogAssign"
+endfunction
+
+function! s:InsideDefine(lnum)
+  for id in synstack(a:lnum, 1)
+    if synIDattr(id, "name") == "verilogDefine"
+      return 1
+    endif
+  endfor
+  return 0
 endfunction
 
 function! s:InsideMethod(lnum, cnum)

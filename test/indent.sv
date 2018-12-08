@@ -581,6 +581,9 @@ device d1 (
 
 `define VALUE 3
 
+`define VALUE_MULTI_LINE \
+    16'hFF
+
 `ifdef V95     
     device d2 ( out, portA, portB );
     device d2 ( out, portA, portB );

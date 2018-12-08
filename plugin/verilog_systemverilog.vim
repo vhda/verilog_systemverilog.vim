@@ -130,9 +130,9 @@ let g:verilog_syntax = {
                         \ 'syn_argument': 'transparent keepend',
                         \ }],
       \ 'define'      : [{
-                        \ 'match_start' : '`ifn\?def\>',
-                        \ 'match_mid'   : '`els\(e\|if\)\>',
-                        \ 'match_end'   : '`endif\>',
+                        \ 'match_start' : '`define\>',
+                        \ 'match_end'   : '\(\\\s*\)\@<!$',
+                        \ 'syn_argument': 'contains=@verilogBaseCluster'
                         \ }],
       \ 'export'      : [{
                         \ 'match_start' : '\<export\>',
