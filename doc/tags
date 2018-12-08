@@ -6,6 +6,7 @@
 :VerilogFollowInstance	verilog_systemverilog.txt	/*:VerilogFollowInstance*
 :VerilogFollowPort	verilog_systemverilog.txt	/*:VerilogFollowPort*
 :VerilogGotoInstanceStart	verilog_systemverilog.txt	/*:VerilogGotoInstanceStart*
+:VerilogReturnInstance	verilog_systemverilog.txt	/*:VerilogReturnInstance*
 b:verilog_disable_indent_lst	verilog_systemverilog.txt	/*b:verilog_disable_indent_lst*
 b:verilog_indent_assign_fix	verilog_systemverilog.txt	/*b:verilog_indent_assign_fix*
 b:verilog_indent_width	verilog_systemverilog.txt	/*b:verilog_indent_width*
@@ -19,6 +20,8 @@ g:verilog_efm_quickfix_clean	verilog_systemverilog.txt	/*g:verilog_efm_quickfix_
 g:verilog_efm_uvm_lst	verilog_systemverilog.txt	/*g:verilog_efm_uvm_lst*
 g:verilog_indent_assign_fix	verilog_systemverilog.txt	/*g:verilog_indent_assign_fix*
 g:verilog_indent_width	verilog_systemverilog.txt	/*g:verilog_indent_width*
+g:verilog_navigate_split	verilog_systemverilog.txt	/*g:verilog_navigate_split*
+g:verilog_navigate_split_close	verilog_systemverilog.txt	/*g:verilog_navigate_split_close*
 g:verilog_quick_syntax	verilog_systemverilog.txt	/*g:verilog_quick_syntax*
 g:verilog_syntax_custom	verilog_systemverilog.txt	/*g:verilog_syntax_custom*
 g:verilog_syntax_fold_lst	verilog_systemverilog.txt	/*g:verilog_syntax_fold_lst*
@@ -29,6 +32,7 @@ verilog-config	verilog_systemverilog.txt	/*verilog-config*
 verilog-config-efm	verilog_systemverilog.txt	/*verilog-config-efm*
 verilog-config-general	verilog_systemverilog.txt	/*verilog-config-general*
 verilog-config-indent	verilog_systemverilog.txt	/*verilog-config-indent*
+verilog-config-navigation	verilog_systemverilog.txt	/*verilog-config-navigation*
 verilog-config-syntax	verilog_systemverilog.txt	/*verilog-config-syntax*
 verilog-contents	verilog_systemverilog.txt	/*verilog-contents*
 verilog-credits	verilog_systemverilog.txt	/*verilog-credits*
