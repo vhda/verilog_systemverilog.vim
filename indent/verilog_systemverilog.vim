@@ -43,6 +43,7 @@ let s:vlog_generate       = '\<generate\>'
 let s:vlog_class          = '\<\(typedef\s\+\)\@<!class\>'
 let s:vlog_property       = g:verilog_syntax['property'][0]['match_start']
 let s:vlog_sequence       = g:verilog_syntax['sequence'][0]['match_start']
+let s:vlog_clocking       = g:verilog_syntax['clocking'][0]['match_start']
 let s:vlog_preproc        = '^\s*`ifn\?def\>'
 let s:vlog_define         = '^\s*`define\>'
 
@@ -51,7 +52,7 @@ let s:vlog_join           = '\<join\(_any\|_none\)\?\>'
 
 let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
 
-let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|interface\|task\)\>\|`endif\>'
+let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|clocking\|interface\|task\)\>\|`endif\>'
 
 let s:vlog_assign         = '\([^=!]=\([^=]\|$\)\|return\||[-=]>\)'
 let s:vlog_conditional    = '?.*:.*$'
@@ -371,6 +372,8 @@ function! s:GetContextIndent()
       return s:GetContextStartIndent("generate"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_sequence
       return s:GetContextStartIndent("sequence"  , l:lnum) + l:open_offset
+    elseif l:line =~ s:vlog_clocking
+      return s:GetContextStartIndent("clocking"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_property
       return s:GetContextStartIndent("property"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_method && s:InsideMethod(l:lnum, len(l:line))

@@ -453,6 +453,12 @@ class a;
     endclass
 endclass
 
+clocking ck1 @(posedge clk);
+    default input #1step output negedge;
+    input a;
+    output y;
+endclocking
+
 // TODO: Unsupported
 // class a;
 //     typedef class a;

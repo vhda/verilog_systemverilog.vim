@@ -455,6 +455,12 @@
     <span class="Statement">endclass</span>
 <span class="Statement">endclass</span>
 
+<span class="Statement">clocking</span> ck1 <span class="Special">@(</span><span class="Statement">posedge</span> clk<span class="Special">);</span>
+    <span class="Statement">default</span> <span class="Statement">input</span> <span class="Special">#</span><span class="Constant">1step</span> <span class="Statement">output</span> <span class="Statement">negedge</span><span class="Special">;</span>
+    <span class="Statement">input</span> a<span class="Special">;</span>
+    <span class="Statement">output</span> y<span class="Special">;</span>
+<span class="Statement">endclocking</span>
+
 <span class="Comment">// </span><span class="Todo">TODO</span><span class="Comment">: Unsupported</span>
 <span class="Comment">// class a;</span>
 <span class="Comment">//     typedef class a;</span>
