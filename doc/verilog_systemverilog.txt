@@ -483,9 +483,11 @@ Default: undefined
     Dictionary containing custom syntax declarations.
     Each dictionary key is a list of syntax definitions that is a dictionary
     with the following keys:
+        - `keyword`      - Space separated list of keywords for a |:syn-keyword| entry.
         - `match`        - Match expression for a |:syn-match| entry.
         - `match_start`  - Match start expression for a |:syn-region| entry.
         - `match_end`    - Match end expression for a |:syn-region| entry.
+        - `cluster`      - Value to be used in "contains=" in a |:syn-cluster| entry.
         - `highlight`    - Highlight to be used on as |:syn-matchgroup|.
         - `syn_argument` - Other optional |:syn-arguments|.
 

@@ -190,6 +190,10 @@ function! s:SyntaxCreate(name, verilog_syntax)
                 " syn-cluster definitions
 
                 execute 'syn cluster '.verilog_syn_region_name.' contains='.entry["cluster"]
+            elseif exists('entry["keyword"]')
+                " syn-cluster definitions
+
+                execute 'syn keyword '.verilog_syn_region_name.' '.entry["keyword"]
             else
                 echoerr 'Incorrect syntax defintion for '.a:name
             endif
