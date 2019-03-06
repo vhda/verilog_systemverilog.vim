@@ -23,7 +23,7 @@ setlocal indentkeys+==endgenerate,=endchecker,=endconfig,=endprimitive,=endtable
 setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
-let s:vlog_open_statement = '\(\<or\>\|[<>:!=?&|^%/*+]\|-[^>]\)'
+let s:vlog_open_statement = '\([<>:!=?&|^%/*+]\|-[^>]\)'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
@@ -137,7 +137,7 @@ function! GetVerilogSystemVerilogIndent()
     return indent(s:SearchForBlockStart('^\s*\<fork\>', '', s:vlog_join, v:lnum, 1))
   endif
 
-  if s:InsideDefine(v:lnum) && s:curr_line !~ s:vlog_define
+  if s:InsideSynPattern('verilogDefine', v:lnum) && s:curr_line !~ s:vlog_define
     return (indent(s:SearchBackForPattern(s:vlog_define, v:lnum)) + s:offset)
   endif
 
@@ -244,7 +244,8 @@ function! s:GetContextIndent()
             \ l:line !~ '/\*\s*$' ||
             \ s:curr_line =~ '^\s*' . s:vlog_open_statement &&
             \ s:curr_line !~ '^\s*/\*' &&
-            \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum)
+            \ s:curr_line !~ s:vlog_comment && !s:IsComment(v:lnum) ||
+            \ l:line =~ '\<or\>' && s:InsideSynPattern("verilogExpression", l:lnum, "$")
         let l:open_offset = s:offset
         call verilog_systemverilog#Verbose("Increasing indent for an open statement.")
         if (!verilog_systemverilog#VariableExists("verilog_indent_assign_fix"))
@@ -376,7 +377,7 @@ function! s:GetContextIndent()
       return s:GetContextStartIndent("clocking"  , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_property
       return s:GetContextStartIndent("property"  , l:lnum) + l:open_offset
-    elseif l:line =~ s:vlog_method && s:InsideMethod(l:lnum, len(l:line))
+    elseif l:line =~ s:vlog_method && s:InsideSynPattern('verilog\(Task\|Function\)', l:lnum, "$")
       return s:GetContextStartIndent("method"    , l:lnum) + l:open_offset
     elseif l:line =~ s:vlog_preproc
       return s:GetContextStartIndent("preproc"   , l:lnum) + l:open_offset
@@ -411,19 +412,20 @@ function! s:InsideAssign(lnum)
   return synIDattr(synID(a:lnum, 1, 0), "name") == "verilogAssign"
 endfunction
 
-function! s:InsideDefine(lnum)
-  for id in synstack(a:lnum, 1)
-    if synIDattr(id, "name") == "verilogDefine"
-      return 1
-    endif
-  endfor
-  return 0
-endfunction
+function! s:InsideSynPattern(pattern, lnum, ...)
+  " Check for optional column number/pattern
+  if a:0 >= 1
+    let l:cnum = a:1
+  else
+    let l:cnum = 1
+  endif
+  " Determine column number if using a pattern
+  if type(l:cnum) != 0
+    let l:cnum = col([a:lnum, l:cnum])
+  endif
 
-function! s:InsideMethod(lnum, cnum)
-  for id in synstack(a:lnum, a:cnum)
-    let name = synIDattr(id, "name")
-    if name == "verilogTask" || name == "verilogFunction"
+  for id in synstack(a:lnum, l:cnum)
+    if synIDattr(id, "name") =~ a:pattern
       return 1
     endif
   endfor

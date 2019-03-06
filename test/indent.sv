@@ -506,6 +506,8 @@ MyModule #(
     .O (wire2)
 );
 
+or or_0();
+
 endmodule
 // End of copied code
 
