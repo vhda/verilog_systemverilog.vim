@@ -659,19 +659,19 @@ The following example allows using different settings for Verilog and
 SystemVerilog files:
 
 >
-    let g:verilog_dont_deindent_eos=1
-    augroup verilog_dont_deindent_eos
+    let g:verilog_indent_width=2
+    augroup verilog_indent_width
         autocmd!
-        autocmd BufNewFile,BufRead *.sv let b:verilog_dont_deindent_eos=0
+        autocmd BufNewFile,BufRead *.sv let b:verilog_indent_width=4
     augroup END
 <
 Another example that uses a different configuration for files inside a
 specific folder:
 >
-    let g:verilog_dont_deindent_eos=1
-    augroup verilog_dont_deindent_eos
+    let g:verilog_indent_width=2
+    augroup verilog_indent_width
         autocmd!
-        autocmd BufNewFile,BufRead */test/*.sv let b:verilog_dont_deindent_eos=0
+        autocmd BufNewFile,BufRead */test/*.sv let b:verilog_indent_width=4
     augroup END
 <
 For more information regarding supported patterns check |autocmd-patterns|.
