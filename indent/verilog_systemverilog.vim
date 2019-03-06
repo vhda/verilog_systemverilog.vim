@@ -50,7 +50,7 @@ let s:vlog_define         = '^\s*`define\>'
 let s:vlog_case           = '\<case[zx]\?\>\s*('
 let s:vlog_join           = '\<join\(_any\|_none\)\?\>'
 
-let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always .'\|'. s:vlog_module
+let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\)\>\s*(\)\|\<\(else\|do\)\>\|' . s:vlog_always
 
 let s:vlog_context_end    = '\<end\(package\|function\|class\|module\|group\|generate\|program\|property\|sequence\|clocking\|interface\|task\)\>\|`endif\>'
 
