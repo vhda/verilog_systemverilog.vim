@@ -1,4 +1,4 @@
-#Vim Syntax Plugin for Verilog and SystemVerilog
+# Vim Syntax Plugin for Verilog and SystemVerilog
 
 [![Build Status](https://travis-ci.org/vhda/verilog_systemverilog.vim.svg?branch=master)](https://travis-ci.org/vhda/verilog_systemverilog.vim)
 
