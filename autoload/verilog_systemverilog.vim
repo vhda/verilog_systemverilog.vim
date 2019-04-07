@@ -95,7 +95,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
-        call map(tags, 'strpart(v:val["name"], len(s:module . "."))')
+        call map(tags, 's:ConvertTagToCompletion(v:val, s:module)')
         if (v:version >= 704)
           return {'words' : tags}
         else
@@ -108,7 +108,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
-        call map(tags, 'strpart(v:val["name"], len(s:module . "."))')
+        call map(tags, 's:ConvertTagToCompletion(v:val, s:module)')
         if (v:version >= 704)
           return {'words' : tags}
         else
@@ -128,7 +128,7 @@ function! verilog_systemverilog#Complete(findstart, base)
       endif
       call verilog_systemverilog#Verbose("Searching tags starting with " . base)
       let tags = s:TagsFilterPortsOrConstants(taglist('^' . base . '\.'))
-      call map(tags, 'strpart(v:val["name"], len(base . "."))')
+      call map(tags, 's:ConvertTagToCompletion(v:val, base)')
       if (v:version >= 704)
         return {'words' : tags}
       else
@@ -155,18 +155,17 @@ function! verilog_systemverilog#Complete(findstart, base)
         let tags = s:GetInheritanceTags(type, object)
         call verilog_systemverilog#Verbose("Searching tags starting with " . type)
         let localtags = taglist('^' . type . '\.' . s:word)
-        let localtags = s:AppendSignature(localtags)
         " Filter out parameters
         call filter(localtags, 'v:val["kind"] != "c"')
         " Remove the variable type prefix
-        call map(localtags, 'strpart(v:val["name"], len(type)+1)')
+        call map(localtags, 's:ConvertTagToCompletion(v:val, type)')
         let tags += localtags
         " Break if no tags were found
         if len(tags) == 0
           return -1
         endif
         " Filter out hierarchical ports
-        call filter(tags, 'len(split(v:val, "\\.")) > 1 ? 0 : 1')
+        call filter(tags, 'len(split(v:val["word"], "\\.")) > 1 ? 0 : 1')
         if (v:version >= 704)
           return {'words' : tags}
         else
@@ -295,17 +294,32 @@ function! s:GetInstanceInfo(linenr, column)
 endfunction
 " }}}
 
-" Append signature to functions and tasks
-function s:AppendSignature(tags)
+" Transform tag list into completion items
+function s:ConvertTagToCompletion(tag, prefix)
 " {{{
-  let newtags = []
-  for t in a:tags
-    if t["kind"] == "t" || t["kind"] == "f"
-      let t["name"] = t["name"] . "()"
-    endif
-    call add(newtags, t)
-  endfor
-  return newtags
+  let item = {}
+
+  " Cut completion item word starts until after prefix
+  " NOTE: Assumes that prefix and completion word have a separator!
+  let item["word"] = strpart(a:tag["name"], len(a:prefix)+1)
+
+  " Use tag kind as extra text to show in popup menu
+  let item["menu"] = a:tag["kind"]
+
+  " Prepare preview window contents
+  if a:tag["cmd"] =~ '^\/'
+    " Pattern based location
+    let item["info"] = substitute(a:tag["cmd"], '^\/\^\s*\(.*\)\$\/$', '\1', '')
+  elseif a:tag["cmd"] =~ '^\d'
+    " Line number based location
+    let location = a:tag["cmd"]
+    let contents = readfile(a:tag["filename"], '', location)
+    let item["info"] = contents[location-1]
+  else
+    let item["info"] = a:tag["cmd"]
+  endif
+
+  return item
 endfunction
 " }}}
 
@@ -339,8 +353,7 @@ function s:GetInheritanceTags(class, object)
     endif
     " Get tags from inherited class
     let localtags = taglist('^' . inheritance . '.' . s:word)
-    let localtags = s:AppendSignature(localtags)
-    call map(localtags, 'strpart(v:val["name"], len(inheritance)+1)')
+    call map(localtags, 's:ConvertTagToCompletion(v:val, inheritance)')
     let tags += localtags
     let classtag = taglist('^' . inheritance . '$')
   endwhile
