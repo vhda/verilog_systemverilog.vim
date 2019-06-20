@@ -22,7 +22,7 @@ CompilerSet errorformat+=%C%\\s%\\+%l:\ %m
 CompilerSet errorformat+=%C%m\"%f\"\\,%.%#
 CompilerSet errorformat+=%Z%p^                      "Column pointer
 CompilerSet errorformat+=%C%m                       "Catch all rule
-CompilerSet errorformat+=%Z%m                       "Finalization messages
+CompilerSet errorformat+=%Z                         "Error message end on empty line
 
 " Warning level formats
 if (!exists("g:verilog_efm_level") || g:verilog_efm_level != "error")
