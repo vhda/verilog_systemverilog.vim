@@ -72,6 +72,8 @@ let s:verilog_function_task_dequalifier =
     \ .        'extern\s\+\%(\%(pure\s\+\)\?virtual\s\+\)\?'
     \ .        '\|'
     \ .        'pure\s\+virtual\s\+'
+    \ .        '\|'
+    \ .        'import\s\+\"DPI\%(-[^\"]\+\)\?\"\s\+\%(context\s\+\)\?'
     \ .    '\)'
     \ .    '\%(\%(static\|protected\|local\)\s\+\)\?'
     \ .'\)'
