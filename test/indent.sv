@@ -449,6 +449,7 @@ endclass
 
 class a;
     class nested;
+        import "DPI-C" function void c_print();
         int b;
     endclass
 endclass
