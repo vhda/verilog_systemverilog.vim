@@ -349,6 +349,11 @@ typedef class c;
 * TODO todo check
 */
 
+// Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/186
+string foo = "bar, baz";
+int foo2 = 0;
+// End of copied code
+
 // Comment with DEFINE-ML
 
 always@(posedge clk or posedge rst)

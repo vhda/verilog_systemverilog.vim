@@ -83,7 +83,7 @@ let g:verilog_syntax = {
                         \ 'match_start' : '[^><=!]\zs<\?=\%(=\)\@!',
                         \ 'match_end'   : '[;,]',
                         \ 'highlight'   : 'verilogOperator',
-                        \ 'syn_argument': 'transparent keepend contains=@verilogBaseCluster',
+                        \ 'syn_argument': 'transparent contains=@verilogBaseCluster',
                         \ }],
       \ 'attribute'   : [{
                         \ 'match_start' : '\%(@\s*\)\@<!(\*',
