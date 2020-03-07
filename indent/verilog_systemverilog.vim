@@ -24,6 +24,7 @@ setlocal indentkeys+==`else,=`endif
 setlocal indentkeys+=;
 
 let s:vlog_open_statement = '\([<>:!=?&|^%/*+]\|-[^>]\)'
+let s:vlog_end_statement  = ')\s*;'
 let s:vlog_comment        = '\(//.*\|/\*.*\*/\)'
 let s:vlog_macro          = '`\k\+\((.*)\)\?\s*$'
 let s:vlog_statement      = '.*;\s*$\|'. s:vlog_macro
@@ -83,7 +84,7 @@ function! GetVerilogSystemVerilogIndent()
 
   if s:curr_line =~ '^\s*)'
     let l:extra_offset = 0
-    if s:curr_line =~ '^\s*);\s*$' &&
+    if s:curr_line =~ '^\s*'.s:vlog_end_statement.'\s*$' &&
           \ index(s:verilog_disable_indent, 'eos') < 0
       let l:extra_offset = s:offset
     endif
@@ -129,8 +130,8 @@ function! GetVerilogSystemVerilogIndent()
     endif
   endif
 
-  if s:curr_line =~ '^\s*\<while\>\s*(.*)\s*;'
-    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*)\s*;', v:lnum, 1))
+  if s:curr_line =~ '^\s*\<while\>\s*(.*'.s:vlog_end_statement
+    return indent(s:SearchForBlockStart('\<do\>', '', '\<while\>\s*(.*'.s:vlog_end_statement, v:lnum, 1))
   elseif s:curr_line =~ '^\s*`\(endif\|else\|elsif\)\>'
     return indent(s:SearchForBlockStart(s:vlog_preproc, '`else\>\|`elsif\>', '`endif\>', v:lnum, 1))
   elseif s:curr_line =~ '^\s*' . s:vlog_join
@@ -313,6 +314,21 @@ function! s:GetContextIndent()
       let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 1)
       let l:oneline_mode = 0
       let l:line = s:GetLineStripped(l:lnum)
+    endif
+
+    " Store end-of-statement indent level in case this is an instance
+    if l:line =~ s:vlog_end_statement
+      let l:instance_indent = indent(l:lnum)
+      if index(s:verilog_disable_indent, 'eos') < 0
+        let l:instance_indent -= s:offset
+      endif
+      call verilog_systemverilog#Verbose("Found possible end of instance on line ".l:lnum." with level ".l:instance_indent)
+    endif
+
+    " If a instance port connection is found, then return previously detected instance indent level
+    if l:line =~ '^\s*\.\k' && exists('l:instance_indent')
+      call verilog_systemverilog#Verbose("Found instance at line ".l:lnum.". Returning previously stored indent level ".l:instance_indent)
+      return l:instance_indent
     endif
 
     if l:line =~ '[()]'
