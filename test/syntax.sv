@@ -349,6 +349,10 @@ typedef class c;
 * TODO todo check
 */
 
+/*//my comment */
+
+//my /*comment*/
+
 // Code from: https://github.com/vhda/verilog_systemverilog.vim/issues/186
 string foo = "bar, baz";
 int foo2 = 0;

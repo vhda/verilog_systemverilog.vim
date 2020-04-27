@@ -175,7 +175,7 @@ function! s:SyntaxCreate(name, verilog_syntax)
                         \ .' end="'.region_end.'"'
 
                     " Always skip inline comments
-                    if exists('a:verilog_syntax["comment"]')
+                    if a:name != "comment" && exists('a:verilog_syntax["comment"]')
                         let verilog_syn_region_cmd .= ' skip="'
                         for comment_entry in a:verilog_syntax["comment"]
                             if exists('comment_entry["match"]')
