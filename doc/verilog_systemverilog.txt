@@ -513,6 +513,15 @@ Examples:
         \ }
 <
 
+                                                      *g:verilog_disable_constant_highlight*
+g:verilog_disable_constant_highlight~
+Default: undefined
+
+    Disables constants highlight.
+    This is useful when coding guidelines require keywords starting in
+    uppercase that are not constants.
+
+
                                                       *g:verilog_quick_syntax*
 g:verilog_quick_syntax~
 Default: undefined
