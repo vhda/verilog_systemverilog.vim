@@ -11,6 +11,18 @@ module #(
     output wire y
 );
 
+    othermodule #(.something (a),
+      .somethingelse(b)
+    ) inst(.p1(), .p2(), .p3 (),
+        .p4(),
+        .p5(), .p6(), .p7(),
+        .p8 ()
+        .p9 (a)
+    );
+
+    mymod MOD(.IN1(), .IN2(), .OP(),
+    .OUT());
+
 endmodule
 
 `define DEF_WITH_EQ = 1'b0

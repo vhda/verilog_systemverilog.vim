@@ -13,6 +13,18 @@
     <span class="Statement">output</span> <span class="Statement">wire</span> y
 <span class="Special">);</span>
 
+    othermodule <span class="Special">#(.</span>something <span class="Special">(</span>a<span class="Special">),</span>
+      <span class="Special">.</span>somethingelse<span class="Special">(</span>b<span class="Special">)</span>
+    <span class="Special">)</span> <span class="Identifier">inst</span><span class="Special">(.</span>p1<span class="Special">(),</span> <span class="Special">.</span>p2<span class="Special">(),</span> <span class="Special">.</span>p3 <span class="Special">(),</span>
+        <span class="Special">.</span>p4<span class="Special">(),</span>
+        <span class="Special">.</span>p5<span class="Special">(),</span> <span class="Special">.</span>p6<span class="Special">(),</span> <span class="Special">.</span>p7<span class="Special">(),</span>
+        <span class="Special">.</span>p8 <span class="Special">()</span>
+        <span class="Special">.</span>p9 <span class="Special">(</span>a<span class="Special">)</span>
+    <span class="Special">);</span>
+
+    mymod <span class="Identifier">MOD</span><span class="Special">(.</span><span class="Constant">IN1</span><span class="Special">(),</span> <span class="Special">.</span><span class="Constant">IN2</span><span class="Special">(),</span> <span class="Special">.</span><span class="Constant">OP</span><span class="Special">(),</span>
+    <span class="Special">.</span><span class="Constant">OUT</span><span class="Special">());</span>
+
 <span class="Statement">endmodule</span>
 
 <span class="PreProc">`define</span> <span class="Constant">DEF_WITH_EQ</span> <span class="Special">=</span> <span class="Constant">1'b0</span>
