@@ -14,10 +14,12 @@ let s:cpo_save = &cpo
 set cpo-=C
 
 " Error level formats
-CompilerSet errorformat=%%%trror%.%#:\ %f:%l:\ %m
+CompilerSet errorformat=%%%trror%.%#:\ %f:%l:%c:\ %m
+CompilerSet errorformat+=%%%trror%.%#:\ %f:%l:\ %m
 
 " Warning level formats
 if (!exists("g:verilog_efm_level") || g:verilog_efm_level != "error")
+  CompilerSet errorformat+=%%%tarning%.%#:\ %f:%l:%c:\ %m
   CompilerSet errorformat+=%%%tarning%.%#:\ %f:%l:\ %m
 endif
 
