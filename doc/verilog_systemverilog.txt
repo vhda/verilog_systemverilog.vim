@@ -387,7 +387,7 @@ Example:
                    *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
 b:verilog_disable_indent_lst~
 g:verilog_disable_indent_lst~
-Default: "eos"
+Default: "eos,standalone"
 
     Disables indent for specific Verilog/SystemVerilog contexts.
     The following contexts are supported:
@@ -404,25 +404,26 @@ Default: "eos"
         - `preproc`
         - `conditional`
         - `eos`
+        - `standalone`
 
-Example:
+Examples:
 
 >
     let g:verilog_disable_indent_lst = "module,class,interface"
 <
     Disabling indentation of `conditional` will change the following:
 >
-    // Default indent
-    assign a = cond ? b :
-                      c ;
-    // Disabling 'conditional'
-    assign a = cond ? b :
-               c ;
+        // Default indent
+        assign a = cond ? b :
+                          c ;
+        // Disabling 'conditional'
+        assign a = cond ? b :
+                   c ;
 <
 
     Disabling indentation of `eos` will affect how the closing parentheses of
     modules, functions, tasks, etc. are indented.
-    By default:
+    When enabled:
 >
         module mod(
             input wire a,
@@ -435,6 +436,23 @@ Example:
             input wire a,
             input wire b,
         );
+<
+
+    Disabling indentation of `standalone` will affect how standalone blocks,
+    like begin..end or {..} are indented.
+    When enabled:
+>
+        if (expr)
+            begin
+                func();
+            end
+<
+    When disabled:
+>
+        if (expr)
+        begin
+            func();
+        end
 <
 
     Note: The commands |:VerilogIndentAdd| and |:VerilogIndentRemove| are

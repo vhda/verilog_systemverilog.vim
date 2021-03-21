@@ -357,15 +357,20 @@ function! s:GetContextIndent()
       call verilog_systemverilog#Verbose("'begin'..'end' pair.")
       return indent(l:lnum)
     elseif l:oneline_mode == 1 && l:line =~ s:vlog_block_decl && l:line !~ '\<begin\>.*\<end\>'
+      if index(s:verilog_disable_indent, 'standalone') < 0
+        let l:standalone = s:offset
+      else
+        let l:standalone = 0
+      endif
       if s:curr_line =~ '^\s*\<begin\>'
         call verilog_systemverilog#Verbose("Standalone 'begin' after block declaration.")
-        return indent(l:lnum)
+        return indent(l:lnum) + l:standalone
       elseif s:curr_line =~ '^\s*{\s*$' && l:cbracket_level == 0
         call verilog_systemverilog#Verbose("Standalone '{' after block declaration.")
-        return indent(l:lnum)
+        return indent(l:lnum) + l:standalone
       elseif s:curr_line =~ '^\s*(\s*$' && l:bracket_level == 0
         call verilog_systemverilog#Verbose("Standalone '(' after block declaration.")
-        return indent(l:lnum)
+        return indent(l:lnum) + l:standalone
       else
         call verilog_systemverilog#Verbose("Indenting a single line block.")
         return indent(l:lnum) + s:offset + l:open_offset

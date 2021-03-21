@@ -52,7 +52,7 @@ endfunction
 " Syntax indent test
 "-----------------------------------------------------------------------
 function! RunTestIndent()
-    let g:verilog_disable_indent_lst = "module,eos"
+    let g:verilog_disable_indent_lst = "module,eos,standalone"
     let test_result=0
 
     " Open syntax indent test file
