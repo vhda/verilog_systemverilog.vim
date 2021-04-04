@@ -384,6 +384,39 @@ Example:
     let b:verilog_indent_assign_fix = 1
 <
 
+         *b:verilog_indent_block_on_keyword* *g:verilog_indent_block_on_keyword*
+b:verilog_indent_block_on_keyword~
+g:verilog_indent_block_on_keyword~
+Default: undefined
+
+    Always indent lines following a block start on the "begin" keyword.
+    By default, the indentation script will use the indent of the line where
+    the block starts:
+>
+        case (value)
+            default : begin
+                x <= y;
+                y <= z;
+            end
+        endcase
+<
+    When this option is enabled the indentation will be offset to the start of
+    the "begin" keyword, as following:
+>
+        case (value)
+            default : begin
+                          x <= y;
+                          y <= z;
+                      end
+        endcase
+<
+
+Example:
+
+>
+    let b:verilog_indent_block_on_keyword = 1
+<
+
                    *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
 b:verilog_disable_indent_lst~
 g:verilog_disable_indent_lst~

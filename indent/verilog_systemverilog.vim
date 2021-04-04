@@ -126,7 +126,15 @@ function! GetVerilogSystemVerilogIndent()
     elseif s:curr_line =~ '^\s*\<endclass\>'
       return indent(s:SearchForBlockStart('\<class\>' , '', '\<endclass\>' , v:lnum, 0))
     elseif s:curr_line =~ '^\s*\<end\>'
-      return indent(s:SearchForBlockStart('\<begin\>' , '', '\<end\>'      , v:lnum, 1))
+      let l:start_lnum = s:SearchForBlockStart('\<begin\>' , '', '\<end\>'      , v:lnum, 1)
+      let l:start_indent = indent(l:start_lnum)
+      if (verilog_systemverilog#VariableExists("verilog_indent_block_on_keyword"))
+        let l:block_offset = match(getline(l:start_lnum)[l:start_indent:], 'begin')
+        call verilog_systemverilog#Verbose('Return indent to start of block keyword (offset=' . l:block_offset . ')')
+        return l:start_indent + l:block_offset
+      else
+        return l:start_indent
+      endif
     elseif s:curr_line =~ '^\s*\<endcase\>'
       return indent(s:SearchForBlockStart(s:vlog_case , '', '\<endcase\>'  , v:lnum, 0))
     endif
@@ -290,7 +298,12 @@ function! s:GetContextIndent()
 
     if l:line =~ '\<begin\>' && l:line !~ '\<begin\>.*\<end\>'
       call verilog_systemverilog#Verbose("Inside a 'begin end' block.")
-      return indent(l:lnum) + s:offset + l:open_offset
+      let l:block_offset = 0
+      if (verilog_systemverilog#VariableExists("verilog_indent_block_on_keyword"))
+        call verilog_systemverilog#Verbose("Matching start of block keyword")
+        let l:block_offset = match(l:line[indent(l:lnum):], 'begin')
+      endif
+      return indent(l:lnum) + s:offset + l:open_offset + l:block_offset
     elseif l:line =~ '^\s*\<fork\>'
       call verilog_systemverilog#Verbose("Inside a 'fork join' block.")
       return indent(l:lnum) + s:offset + l:open_offset
