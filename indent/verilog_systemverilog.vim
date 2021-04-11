@@ -210,7 +210,7 @@ function! s:SearchForBlockStart(start_wd, mid_wd, end_wd, current_line_no, skip_
   endif
 
   let l:lnum = searchpair(a:start_wd, a:mid_wd, a:end_wd, 'bnW', l:skip_arg)
-  call verilog_systemverilog#Verbose('SearchForBlockStart: returning l:lnum ' . l:lnum)
+  call verilog_systemverilog#Verbose('SearchForBlockStart: ' . a:start_wd . ' returning l:lnum ' . l:lnum)
   return l:lnum
 endfunction
 
