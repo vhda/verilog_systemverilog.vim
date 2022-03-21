@@ -384,6 +384,33 @@ Example:
     let b:verilog_indent_assign_fix = 1
 <
 
+         *b:verilog_indent_assign_on_symbol* *g:verilog_indent_assign_on_symbol*
+b:verilog_indent_assign_on_symbol~
+g:verilog_indent_assign_on_symbol~
+Default: undefined
+
+    Indent lines following an assignment on the assignment symbol (= or <=).
+>
+        assign y = a
+                 & b;
+        assign z =
+                 c && d;
+<
+    By default, the indentation script aligns to the first word after the
+    assignment symbol, if existing:
+>
+        assign y = a
+                   & b;
+        assign z =
+            c && d;
+<
+
+Example:
+
+>
+    let b:verilog_indent_assign_on_symbol = 1
+<
+
          *b:verilog_indent_block_on_keyword* *g:verilog_indent_block_on_keyword*
 b:verilog_indent_block_on_keyword~
 g:verilog_indent_block_on_keyword~
