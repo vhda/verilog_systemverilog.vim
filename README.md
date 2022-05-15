@@ -149,7 +149,7 @@ nnoremap <leader>u :VerilogGotoInstanceStart<CR>
 
 ## Installation
 
-### Using [vim-plug][P]
+### Using [vim-plug][pl]
 
 1. Add the following to your `vimrc`:
 
@@ -177,7 +177,7 @@ nnoremap <leader>u :VerilogGotoInstanceStart<CR>
    $ vim +PluginInstall +qall
    ```
 
-### Using [Pathogen][p]
+### Using [Pathogen][pa]
 
 ```Shell
 $ cd ~/.vim/bundle
@@ -239,9 +239,9 @@ page.
 
 [c]: https://github.com/universal-ctags/ctags
 [f]: https://github.com/Konfekt/FastFold
-[p]: https://github.com/tpope/vim-pathogen
+[pa]: https://github.com/tpope/vim-pathogen
 [v]: https://github.com/gmarik/vundle
-[P]: https://github.com/junegunn/vim-plug
+[pl]: https://github.com/junegunn/vim-plug
 [e]: https://ctags.io
 [t]: http://majutsushi.github.io/tagbar/
 [hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
