@@ -11,5 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt install vim
-      - run: make V=1 all
+      - run: make all
+  Report:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: Build
+    steps:
+      - run: cat test-efm.log
+      - run: cat test-syntax.log
+      - run: cat test/syntax.sv.new.html
