@@ -11,7 +11,7 @@ VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
 
 all: test
 
-test: test-fold test-indent test-efm test-syntax
+test: test-fold test-indent test-syntax
 
 test-fold:
 	$(SILENT) $(VIM) \

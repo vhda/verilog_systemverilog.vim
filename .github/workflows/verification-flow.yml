@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: vim --version
       - run: make all
   Report:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     needs: Build
     steps:
-      - run: cat test-efm.log
       - run: cat test-syntax.log
       - run: cat test/syntax.sv.new.html
