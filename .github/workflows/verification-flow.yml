@@ -3,6 +3,7 @@ name: Verification flow
   push:
     branches:
       - master
+      - github-runner
   pull_request:
     branches:
       - master
