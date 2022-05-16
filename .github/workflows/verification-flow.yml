@@ -15,7 +15,8 @@ jobs:
       - run: vim --version
       - run: make --version
       - run: which tee
-      - run: make -d all
+      - run: make all
+        shell: bash
   Report:
     runs-on: ubuntu-latest
     if: ${{ always() }}
