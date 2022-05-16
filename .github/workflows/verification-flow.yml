@@ -14,7 +14,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: vim --version
       - run: make --version
-      - run: make all
+      - run: which tee
+      - run: make -d all
   Report:
     runs-on: ubuntu-latest
     if: ${{ always() }}
