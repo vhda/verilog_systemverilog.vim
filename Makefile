@@ -4,8 +4,7 @@ SILENT   = $(SILENT_$(V))
 SILENT_0 = @
 SILENT_1 =
 
-SHELL = bash
-.SHELLFLAGS: -o pipefail
+SHELL = /bin/bash -o pipefail
 VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
 
 .PHONY: help test test-fold test-indent test-efm
@@ -52,11 +51,11 @@ profile:
 		-c 'source test/run_test.vim'
 
 help:
-	@echo 'Test targets:'
-	@echo ''
-	@echo 'make test        - Run addon tests'
-	@echo 'make performance - Measure performance'
-	@echo 'make profile     - Measure performance using vims built in profiler'
+	@echo "Test targets:"
+	@echo ""
+	@echo "make test        - Run addon tests"
+	@echo "make performance - Measure performance"
+	@echo "make profile     - Measure performance using vims built in profiler"
 	@echo
-	@echo 'Options:'
-	@echo 'V=1       - Enable verbose mode'
+	@echo "Options:"
+	@echo "V=1       - Enable verbose mode"
