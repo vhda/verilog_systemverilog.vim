@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: make all
+      - run: make -d all
   Report:
     runs-on: ubuntu-latest
     if: ${{ always() }}
