@@ -30,15 +30,13 @@ test-efm:
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestEfm()' | \
-		tee test-efm.log | grep '^Error format test'
+		-c 'call RunTestEfm()' | tee test-efm.log | grep '^Error format test'
 
 test-syntax:
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | tr -d '[]' | \
-		tee test-syntax.log | grep '^Syntax test'
+		-c 'call RunTestSyntax()' | tr -d '[]' | tee test-syntax.log | grep '^Syntax test'
 
 performance:
 	$(SILENT) time $(VIM) \
