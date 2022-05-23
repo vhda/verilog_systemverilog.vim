@@ -4,7 +4,8 @@ SILENT   = $(SILENT_$(V))
 SILENT_0 = @
 SILENT_1 =
 
-SHELL = bash -o pipefail
+SHELL = bash
+.SHELLFLAGS: -o pipefail
 VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
 
 .PHONY: help test test-fold test-indent test-efm
