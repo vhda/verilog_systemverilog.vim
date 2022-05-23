@@ -16,4 +16,3 @@ jobs:
       - run: |
           cat test-efm.log
           cat test-syntax.log
-          cat test/syntax.sv.new.html
