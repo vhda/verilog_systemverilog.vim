@@ -31,14 +31,14 @@ test-efm:
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
 		-c 'call RunTestEfm()' | \
-		tee test-efm.log
+		tee test-efm.log | grep '^Error format test'
 
 test-syntax:
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | \
-		tee test-syntax.log | grep "^Syntax test"
+		-c 'call RunTestSyntax()' | tr -d '[]' | \
+		tee test-syntax.log | grep '^Syntax test'
 
 performance:
 	$(SILENT) time $(VIM) \
@@ -54,11 +54,11 @@ profile:
 		-c 'source test/run_test.vim'
 
 help:
-	@echo "Test targets:"
-	@echo ""
-	@echo "make test        - Run addon tests"
-	@echo "make performance - Measure performance"
-	@echo "make profile     - Measure performance using vims built in profiler"
+	@echo 'Test targets:'
+	@echo ''
+	@echo 'make test        - Run addon tests'
+	@echo 'make performance - Measure performance'
+	@echo 'make profile     - Measure performance using vims built in profiler'
 	@echo
-	@echo "Options:"
-	@echo "V=1       - Enable verbose mode"
+	@echo 'Options:'
+	@echo 'V=1       - Enable verbose mode'
