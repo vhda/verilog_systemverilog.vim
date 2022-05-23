@@ -8,17 +8,12 @@ on:
     branches:
       - master
 jobs:
-  Build:
+  Run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: make all
-  Debug:
-    runs-on: ubuntu-latest
-    if: ${{ failure() }}
-    needs: Build
-    steps:
       - run: |
-        cat test-efm.log
-        cat test-syntax.log
-        cat test/syntax.sv.new.html
+          cat test-efm.log
+          cat test-syntax.log
+          cat test/syntax.sv.new.html
