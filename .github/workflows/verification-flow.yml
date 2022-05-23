@@ -1,5 +1,5 @@
 name: Verification flow
-'on':
+on:
   push:
     branches:
       - master
@@ -12,11 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: vim --version
-      - run: make --version
-      - run: which tee
       - run: make all
-        shell: bash
   Report:
     runs-on: ubuntu-latest
     if: ${{ always() }}
