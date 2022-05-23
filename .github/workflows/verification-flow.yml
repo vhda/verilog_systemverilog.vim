@@ -19,5 +19,5 @@ jobs:
     if: ${{ always() }}
     needs: Build
     steps:
-      - run: cat test-syntax.log
-      - run: cat test/syntax.sv.new.html
+      - run: grep '^Error format test' test-efm.log
+      - run: grep '^Syntax test'       test-syntax.log

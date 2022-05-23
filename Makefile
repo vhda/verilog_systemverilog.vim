@@ -5,6 +5,7 @@ SILENT_0 = @
 SILENT_1 =
 
 SHELL = bash
+.SHELLFLAGS: -o pipefail
 VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
 
 .PHONY: help test test-fold test-indent test-efm
@@ -29,13 +30,13 @@ test-efm:
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestEfm()' | tee test-efm.log | grep '^Error format test'
+		-c 'call RunTestEfm()' > test-efm.log
 
 test-syntax:
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | tr -d '[]' | tee test-syntax.log | grep '^Syntax test'
+		-c 'call RunTestSyntax()' | tr -d '[]' > test-syntax.log
 
 performance:
 	$(SILENT) time $(VIM) \
