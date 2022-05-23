@@ -12,7 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: make all
+      - name: Run tests
+        id: run_tests
+        run: |
+          MAKE_OUTPUT=$(make all)
+          echo "$MAKE_OUTPUT"
+          echo "MAKE_OUTPUT<<EOF" >> $GITHUB_ENV
+          echo "\"$MAKE_OUTPUT\"" >> $GITHUB_ENV
+          echo "EOF"              >> $GITHUB_ENV
+      - name: Output results
+        run: echo "${{ env.MAKE_OUTPUT }}"
       - run: |
           cat test-efm.log
           cat test-syntax.log
