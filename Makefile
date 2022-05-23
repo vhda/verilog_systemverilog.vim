@@ -37,7 +37,7 @@ test-syntax:
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | tr -d '[]' | \
+		-c 'call RunTestSyntax()' | \
 		tee test-syntax.log | grep "^Syntax test"
 
 performance:
