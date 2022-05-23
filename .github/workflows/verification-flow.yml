@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: which tr
-      - run: make -d all
-  Report:
+      - run: make all
+  Debug:
     runs-on: ubuntu-latest
-    if: ${{ always() }}
+    if: ${{ failure() }}
     needs: Build
     steps:
-      - run: grep '^Error format test' test-efm.log
-      - run: grep '^Syntax test'       test-syntax.log
+      - run: |
+        cat test-efm.log
+        cat test-syntax.log
+        cat test/syntax.sv.new.html
