@@ -71,6 +71,8 @@ function! GetVerilogSystemVerilogIndent()
 
   if verilog_systemverilog#VariableExists('verilog_indent_width')
     let s:offset = verilog_systemverilog#VariableGetValue('verilog_indent_width')
+  elseif exists('?shiftwidth')
+    let s:offset = shiftwidth()
   else
     let s:offset = &sw
   endif
