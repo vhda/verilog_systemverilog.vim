@@ -243,7 +243,7 @@ page.
 [v]: https://github.com/gmarik/vundle
 [pl]: https://github.com/junegunn/vim-plug
 [e]: https://ctags.io
-[t]: http://majutsushi.github.io/tagbar/
+[t]: https://github.com/preservim/tagbar
 [hl_matchit]:   https://github.com/vimtaku/hl_matchit.vim
 [supertab]:     https://github.com/ervandew/supertab
 [vim-omni]:     http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O
