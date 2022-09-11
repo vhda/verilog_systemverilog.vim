@@ -179,7 +179,6 @@ function! TestEfm(tool, mode, search_uvm)
     for qf_entry in qf_list
         echo qf_entry
     endfor
-    redir! > /dev/stdout
     if errors == expected_errors && warnings == expected_warnings && lints == expected_lints
         echo 'Error format test passed'
         return 0
@@ -187,7 +186,6 @@ function! TestEfm(tool, mode, search_uvm)
         echo 'Error format test failed:'
         return 1
     endif
-    redir END
 endfunction
 
 function! TestSyntax(file_name, test_name)
