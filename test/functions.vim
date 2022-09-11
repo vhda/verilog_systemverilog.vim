@@ -180,10 +180,10 @@ function! TestEfm(tool, mode, search_uvm)
         echo qf_entry
     endfor
     if errors == expected_errors && warnings == expected_warnings && lints == expected_lints
-        echo 'Error format test passed'
+        echomsg 'Error format test passed'
         return 0
     else
-        echo 'Error format test failed:'
+        echomsg 'Error format test failed:'
         return 1
     endif
 endfunction
