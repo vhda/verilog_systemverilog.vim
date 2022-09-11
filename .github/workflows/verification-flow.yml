@@ -23,3 +23,5 @@ jobs:
           name: logfiles
           path: |
             make.log
+            test-efm.log
+            test-syntax.log
