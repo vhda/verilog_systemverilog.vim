@@ -29,7 +29,7 @@ test-efm:
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'unsilent call RunTestEfm()' | \
+		-c 'call RunTestEfm()' | \
 		tee test-efm.log | grep "^Error format test"
 
 test-syntax:
