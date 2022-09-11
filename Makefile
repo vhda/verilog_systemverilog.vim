@@ -5,7 +5,7 @@ SILENT_0 = @
 SILENT_1 =
 
 SHELL = /bin/bash -o pipefail
-VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
+VIM = vim -u test/test_vimrc -U none -T builtin_ansi -E --cmd "set runtimepath+=${PWD}"
 
 .PHONY: help test test-fold test-indent test-efm
 
