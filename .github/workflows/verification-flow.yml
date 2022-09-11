@@ -20,4 +20,6 @@ jobs:
         uses: actions/upload-artifact@v3
         if: failure()
         with:
-          path: *.log
+          name: logfiles
+          path: |
+            make.log
