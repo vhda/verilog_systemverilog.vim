@@ -63,11 +63,11 @@ function! TestIndent()
     endwhile
 
     if (fail == 1)
-        echo 'Indent test failed:'
+        echo 'Indent test failed (' . g:verilog_disable_indent_lst . '):'
         echo fail_lines
         return 1
     else
-        echo 'Indent test passed'
+        echo 'Indent test passed (' . g:verilog_disable_indent_lst . ')'
         return 0
     endif
 
