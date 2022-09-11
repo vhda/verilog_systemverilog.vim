@@ -6,7 +6,7 @@ class z;
     // this is a comment
     // -----------------
     typedef struct {
-        real a;
+    real a;
         int b;
         int c;
         real d; } ts;
