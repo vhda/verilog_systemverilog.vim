@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Install vim
+        run: |
+          sudo apt-get update
+          sudo apt-get install vim-gtk3
       - name: Run tests
         id: run_tests
         run: make V=1 all > make.log 2>&1
