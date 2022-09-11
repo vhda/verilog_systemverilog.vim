@@ -601,7 +601,8 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'method',
           \ 'preproc',
           \ 'conditional',
-          \ 'eos'
+          \ 'eos',
+          \ 'standalone'
           \ ]
     for item in current_values
       call filter(valid_completions, 'v:val !=# item')

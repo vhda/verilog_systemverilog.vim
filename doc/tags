@@ -9,6 +9,7 @@
 :VerilogReturnInstance	verilog_systemverilog.txt	/*:VerilogReturnInstance*
 b:verilog_disable_indent_lst	verilog_systemverilog.txt	/*b:verilog_disable_indent_lst*
 b:verilog_indent_assign_fix	verilog_systemverilog.txt	/*b:verilog_indent_assign_fix*
+b:verilog_indent_block_on_keyword	verilog_systemverilog.txt	/*b:verilog_indent_block_on_keyword*
 b:verilog_indent_width	verilog_systemverilog.txt	/*b:verilog_indent_width*
 b:verilog_syntax_custom	verilog_systemverilog.txt	/*b:verilog_syntax_custom*
 b:verilog_syntax_fold_lst	verilog_systemverilog.txt	/*b:verilog_syntax_fold_lst*
@@ -20,6 +21,7 @@ g:verilog_efm_level	verilog_systemverilog.txt	/*g:verilog_efm_level*
 g:verilog_efm_quickfix_clean	verilog_systemverilog.txt	/*g:verilog_efm_quickfix_clean*
 g:verilog_efm_uvm_lst	verilog_systemverilog.txt	/*g:verilog_efm_uvm_lst*
 g:verilog_indent_assign_fix	verilog_systemverilog.txt	/*g:verilog_indent_assign_fix*
+g:verilog_indent_block_on_keyword	verilog_systemverilog.txt	/*g:verilog_indent_block_on_keyword*
 g:verilog_indent_width	verilog_systemverilog.txt	/*g:verilog_indent_width*
 g:verilog_navigate_split	verilog_systemverilog.txt	/*g:verilog_navigate_split*
 g:verilog_navigate_split_close	verilog_systemverilog.txt	/*g:verilog_navigate_split_close*

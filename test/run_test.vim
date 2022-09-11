@@ -52,11 +52,33 @@ endfunction
 " Syntax indent test
 "-----------------------------------------------------------------------
 function! RunTestIndent()
-    let g:verilog_disable_indent_lst = "module,eos"
     let test_result=0
+
+    " Disable indent of standalone statements (default) """"""""""""""""""""""""
+    let g:verilog_disable_indent_lst = "module,eos,standalone"
 
     " Open syntax indent test file
     silent edit test/indent.sv
+
+    " Verify indent
+    let test_result=TestIndent() || test_result
+    echo ''
+    silent edit!
+
+    " Test again with 'ignorecase' enabled
+    setlocal ignorecase
+    let test_result=TestIndent() || test_result
+    echo ''
+    silent edit!
+
+    " Make file read-only to guarantee that vim quits with exit status 0
+    silent view!
+
+    " Indent standalone statements """""""""""""""""""""""""""""""""""""""""""""
+    let g:verilog_disable_indent_lst = "module,eos"
+
+    " Open syntax indent test file
+    silent edit test/indent_standalone.sv
 
     " Verify indent
     let test_result=TestIndent() || test_result
