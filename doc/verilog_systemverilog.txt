@@ -151,6 +151,10 @@ To enable syntax folding set the following option:
 Take into account that all folding is disabled by default and the list of
 items to be folded must be configured using |g:verilog_syntax_fold_lst|.
 
+The commands |VerilogFoldingAdd| and |VerilogFoldingRemove|, which support
+command line completion, can also be used to dynamically enable or disable
+folding for certain types of code.
+
 ------------------------------------------------------------------------------
 VERILOG ERROR FORMATS                                            *verilog-efm*
 
