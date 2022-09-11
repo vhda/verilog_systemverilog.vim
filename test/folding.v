@@ -2,7 +2,7 @@
 //                                                               |  all,block_nested
 //                                                               |  |  all,block_named
 
-function f;                                                   //<1><1><1>
+function f;                                                   //<2><1><1>
 begin                                                         //<2><2><1>
                                                               //<2><2><1>
 end                                                           //<2><2><1>
