@@ -1,6 +1,6 @@
 # Vim Syntax Plugin for Verilog and SystemVerilog
 
-[![Build Status](https://travis-ci.org/vhda/verilog_systemverilog.vim.svg?branch=master)](https://travis-ci.org/vhda/verilog_systemverilog.vim)
+[![Build Status](https://github.com/vhda/verilog_systemverilog.vim/actions/workflows/verification-flow.yml/badge.svg?branch=master)](https://github.com/vhda/verilog_systemverilog.vim/actions/workflows/verification-flow.yml)
 
 ## About
 
