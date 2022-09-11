@@ -26,6 +26,7 @@ test-indent:
 		-c 'call RunTestIndent()'
 
 test-efm:
+	$(SILENT) $(VIM) --version
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
