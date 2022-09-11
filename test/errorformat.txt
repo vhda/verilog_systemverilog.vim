@@ -1,4 +1,4 @@
-### iverilog E=5, W=0
+### iverilog E=6, W=0
 path/file.v:5: syntax error
 path/file.v:5: error: Invalid module instantiation
 path/file.v:18: syntax error
