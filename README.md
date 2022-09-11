@@ -74,8 +74,11 @@ __Note__: Proper SystemVerilog tag generation requires development version of
 To enable syntax folding set the following option:
 
 ```VimL
+let g:verilog_syntax_fold_lst = "all"
 set foldmethod=syntax
 ```
+
+For more information check the help page `:help veriog-fold`.
 
 ### Verilog Compilation and Error format
 
