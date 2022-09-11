@@ -26,18 +26,38 @@ test-indent:
 		-c 'call RunTestIndent()'
 
 test-efm:
+ifndef CI
+	$(SILENT) $(VIM) \
+		-c 'source test/functions.vim' \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestEfm()' | \
+		tee test-efm.log | \
+		grep "^Error format test"
+else
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
 		-c 'call RunTestEfm()' | \
 		tee test-efm.log
+endif
 
 test-syntax:
+ifndef CI
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | tr -d '[]' | \
+		-c 'call RunTestSyntax()' | \
+		tr -d '[]' | \
+		tee test-syntax.log | \
+		grep "^Syntax test"
+else
+	$(SILENT) $(VIM) \
+	        -c 'source test/functions.vim' \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestSyntax()' | \
+		tr -d '[]' | \
 		tee test-syntax.log
+endif
 
 performance:
 	$(SILENT) time $(VIM) \
