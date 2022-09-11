@@ -179,11 +179,15 @@ function! TestEfm(tool, mode, search_uvm)
     for qf_entry in qf_list
         echo qf_entry
     endfor
+    let test_string=a:tool . '@' . a:mode
+    if a:search_uvm
+        let test_string.='+check UVM'
+    endif
     if errors == expected_errors && warnings == expected_warnings && lints == expected_lints
-        echo 'Error format test passed'
+        echo 'Error format test passed (' . test_string . ')'
         return 0
     else
-        echo 'Error format test failed:'
+        echo 'Error format test failed (' . test_string . ')'
         return 1
     endif
 endfunction
