@@ -151,6 +151,10 @@ To enable syntax folding set the following option:
 Take into account that all folding is disabled by default and the list of
 items to be folded must be configured using |g:verilog_syntax_fold_lst|.
 
+The commands |VerilogFoldingAdd| and |VerilogFoldingRemove|, which support
+command line completion, can also be used to dynamically enable or disable
+folding for certain types of code.
+
 ------------------------------------------------------------------------------
 VERILOG ERROR FORMATS                                            *verilog-efm*
 
@@ -380,10 +384,43 @@ Example:
     let b:verilog_indent_assign_fix = 1
 <
 
+         *b:verilog_indent_block_on_keyword* *g:verilog_indent_block_on_keyword*
+b:verilog_indent_block_on_keyword~
+g:verilog_indent_block_on_keyword~
+Default: undefined
+
+    Always indent lines following a block start on the "begin" keyword.
+    By default, the indentation script will use the indent of the line where
+    the block starts:
+>
+        case (value)
+            default : begin
+                x <= y;
+                y <= z;
+            end
+        endcase
+<
+    When this option is enabled the indentation will be offset to the start of
+    the "begin" keyword, as following:
+>
+        case (value)
+            default : begin
+                          x <= y;
+                          y <= z;
+                      end
+        endcase
+<
+
+Example:
+
+>
+    let b:verilog_indent_block_on_keyword = 1
+<
+
                    *b:verilog_disable_indent_lst* *g:verilog_disable_indent_lst*
 b:verilog_disable_indent_lst~
 g:verilog_disable_indent_lst~
-Default: "eos"
+Default: "eos,standalone"
 
     Disables indent for specific Verilog/SystemVerilog contexts.
     The following contexts are supported:
@@ -400,25 +437,26 @@ Default: "eos"
         - `preproc`
         - `conditional`
         - `eos`
+        - `standalone`
 
-Example:
+Examples:
 
 >
     let g:verilog_disable_indent_lst = "module,class,interface"
 <
     Disabling indentation of `conditional` will change the following:
 >
-    // Default indent
-    assign a = cond ? b :
-                      c ;
-    // Disabling 'conditional'
-    assign a = cond ? b :
-               c ;
+        // Default indent
+        assign a = cond ? b :
+                          c ;
+        // Disabling 'conditional'
+        assign a = cond ? b :
+                   c ;
 <
 
     Disabling indentation of `eos` will affect how the closing parentheses of
     modules, functions, tasks, etc. are indented.
-    By default:
+    When enabled:
 >
         module mod(
             input wire a,
@@ -431,6 +469,23 @@ Example:
             input wire a,
             input wire b,
         );
+<
+
+    Disabling indentation of `standalone` will affect how standalone blocks,
+    like begin..end or {..} are indented.
+    When enabled:
+>
+        if (expr)
+            begin
+                func();
+            end
+<
+    When disabled:
+>
+        if (expr)
+        begin
+            func();
+        end
 <
 
     Note: The commands |:VerilogIndentAdd| and |:VerilogIndentRemove| are

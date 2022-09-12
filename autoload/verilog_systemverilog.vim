@@ -4,22 +4,27 @@
 
 "------------------------------------------------------------------------
 " Omni completion functions
+" {{{
 "
 " Requires ctags from:
 " https://github.com/fishman/ctags
 " https://github.com/exuberant-ctags/ctags
 " ctags must be run with --extra=+q
-" {{{
 function! verilog_systemverilog#Complete(findstart, base)
+" {{{
   "------------------------------------------------------------------------
   " Phase 1: Find and return prefix of completion
+  " s:word   contains the keyword to be completed
+  " s:prefix contains the "name." prefix preceding s:word
+  " s:instname name of the instance ("." completion only)
+  " s:module name of the instance ("." completion only)
   if a:findstart
     let linenr = line('.')
     let line = getline('.')
     let start = col('.')
     let prefixpos = -1
     let s:instname = ''
-    let s:insttype = ''
+    let s:module = ''
 
     " Define start position depending on relation with end of line
     if start == col('$')
@@ -56,11 +61,13 @@ function! verilog_systemverilog#Complete(findstart, base)
       let s:prefix = strpart(line, start, prefixpos - start)
       let s:word = strpart(line, prefixpos, wordpos - prefixpos)
 
+      " If the prefix is simply a "." assume that this is an instance
+      " port connection and search for its declaration
       if s:prefix == '.'
         " Get instance info and break from while loop
         let values = s:GetInstanceInfo(linenr, start)
         let s:instname = values[0]
-        let s:insttype = values[1]
+        let s:module = values[1]
       endif
     endif
 
@@ -72,23 +79,23 @@ function! verilog_systemverilog#Complete(findstart, base)
   if exists("s:prefix") && s:prefix != ''
     call verilog_systemverilog#Verbose("Prefix: " . s:prefix)
     call verilog_systemverilog#Verbose("Word  : " . s:word)
-    if s:insttype != ''
+    if s:module != ''
       " Process an instance
       call verilog_systemverilog#Verbose("Process instance")
       if exists("s:word")
-        let tags = taglist('^' . s:insttype . '\.' . s:word)
+        let tags = taglist('^' . s:module . '\.' . s:word)
       else
-        let tags = taglist('^' . s:insttype . '\.')
+        let tags = taglist('^' . s:module . '\.')
       endif
       call verilog_systemverilog#Verbose("Number of tags found: " . len(tags))
       if s:instname != ''
         " In instances only return ports
-        let tags = s:FilterPorts(tags)
+        let tags = s:TagsFilterPorts(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
-        call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
+        call map(tags, 'strpart(v:val["name"], len(s:module . "."))')
         if (v:version >= 704)
           return {'words' : tags}
         else
@@ -96,12 +103,12 @@ function! verilog_systemverilog#Complete(findstart, base)
         endif
       else
         " In parameter list only return constants
-        let tags = s:FilterConstants(tags)
+        let tags = s:TagsFilterConstants(tags)
         " Filter out hierarchical ports
         call filter(tags, 'len(split(v:val["name"], "\\.")) > 2 ? 0 : 1')
         call verilog_systemverilog#Verbose("Number of tags after filtering: " . len(tags))
         " Remove the module name prefix
-        call map(tags, 'strpart(v:val["name"], len(s:insttype . "."))')
+        call map(tags, 'strpart(v:val["name"], len(s:module . "."))')
         if (v:version >= 704)
           return {'words' : tags}
         else
@@ -120,7 +127,7 @@ function! verilog_systemverilog#Complete(findstart, base)
         let base = s:instname
       endif
       call verilog_systemverilog#Verbose("Searching tags starting with " . base)
-      let tags = s:FilterPortsOrConstants(taglist('^' . base . '\.'))
+      let tags = s:TagsFilterPortsOrConstants(taglist('^' . base . '\.'))
       call map(tags, 'strpart(v:val["name"], len(base . "."))')
       if (v:version >= 704)
         return {'words' : tags}
@@ -172,17 +179,19 @@ function! verilog_systemverilog#Complete(findstart, base)
     return -1
   endif
 endfunction
+" }}}
 
 " Search file for instance information:
 " * name
 " * type (typically a module name, but can also be a function/task/etc)
 " * line number
 function! s:GetInstanceInfo(linenr, column)
+" {{{
   let linenr = a:linenr
   let line = getline(linenr)
   let start = a:column
   let instname = ""
-  let insttype = ""
+  let module = ""
   let ininstdecl = 0
   let ininsttype = 0
   let p = 0
@@ -253,11 +262,11 @@ function! s:GetInstanceInfo(linenr, column)
         let ininsttype = start
       elseif ininsttype > 0 && (line[start - 1] =~ '\s' || start == 1)
         if start == 1 && line[start - 1] !~ '\s'
-          let insttype = strpart(line, 0, ininsttype)
+          let module = strpart(line, 0, ininsttype)
         else
-          let insttype = strpart(line, start, ininsttype - start)
+          let module = strpart(line, start, ininsttype - start)
         endif
-        call verilog_systemverilog#Verbose("Found instance type \"" . insttype . "\", on line " . linenr)
+        call verilog_systemverilog#Verbose("Found instance type \"" . module . "\", on line " . linenr)
         break
       endif
 
@@ -281,12 +290,14 @@ function! s:GetInstanceInfo(linenr, column)
     let start = len(line)
   endwhile
 
-  call verilog_systemverilog#Verbose("Found instance. Name: »" . instname . "« Type: »" . insttype . "«")
-  return [instname, insttype, linenr]
+  call verilog_systemverilog#Verbose("Found instance. Name: »" . instname . "« Type: »" . module . "«")
+  return [instname, module, linenr]
 endfunction
+" }}}
 
 " Append signature to functions and tasks
 function s:AppendSignature(tags)
+" {{{
   let newtags = []
   for t in a:tags
     if t["kind"] == "t" || t["kind"] == "f"
@@ -296,9 +307,11 @@ function s:AppendSignature(tags)
   endfor
   return newtags
 endfunction
+" }}}
 
 " Get list of inheritance tags
 function s:GetInheritanceTags(class, object)
+" {{{
   call verilog_systemverilog#Verbose("Searching inheritance of " . a:object)
   let tags = []
   let inheritance = a:class
@@ -333,9 +346,11 @@ function s:GetInheritanceTags(class, object)
   endwhile
   return tags
 endfunction
+" }}}
 
 " Searches for declaration of "word" and returns its type
 function s:GetVariableType(word)
+" {{{
   let position = getpos(".")
   if searchdecl(a:word, 0) == 0
     let line = getline('.')
@@ -348,9 +363,11 @@ function s:GetVariableType(word)
   endif
   return 0
 endfunction
+" }}}
 
 " Searches for declaration of "object" and returns "parameter" initialization value
 function s:GetObjectParameterValue(object, parameter)
+" {{{
   let position = getpos(".")
   if searchdecl(a:object, 0) == 0
     let line = getline('.')
@@ -366,9 +383,11 @@ function s:GetObjectParameterValue(object, parameter)
   call setpos(".", position)
   return ""
 endfunction
+" }}}
 
 " Searches for declaration of "class" and returns default "parameter" value
 function s:GetClassDefaultParameterValue(class, parameter)
+" {{{
   if a:class == ""
     call verilog_systemverilog#Verbose("Search for default value of parameter " . a:parameter . " in current class")
     let declaration = {'cmd': '/.*type\s\+' . a:parameter . '\s*='}
@@ -412,27 +431,34 @@ function s:GetClassDefaultParameterValue(class, parameter)
     return ""
   endif
 endfunction
+" }}}
 
 " Filter tag list to only return ports
-function s:FilterPorts(tags)
+function s:TagsFilterPorts(tags)
+" {{{
   let tags = a:tags
   call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" : 1')
   return tags
 endfunction
+" }}}
 
 " Filter tag list to only return constants
-function s:FilterConstants(tags)
+function s:TagsFilterConstants(tags)
+" {{{
   let tags = a:tags
   call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "c" : 1')
   return tags
 endfunction
+" }}}
 
 " Filter tag list to only return ports or constants
-function s:FilterPortsOrConstants(tags)
+function s:TagsFilterPortsOrConstants(tags)
+" {{{
   let tags = a:tags
   call filter(tags, 'has_key(v:val, "kind") ? v:val["kind"] == "p" || v:val["kind"] == "c" : 1')
   return tags
 endfunction
+" }}}
 " }}}
 
 "------------------------------------------------------------------------
@@ -441,32 +467,39 @@ endfunction
 " Verbose messaging
 " Only displays messages if b:verilog_verbose or g:verilog_verbose is defined
 function verilog_systemverilog#Verbose(message)
+" {{{
   if verilog_systemverilog#VariableExists("verilog_verbose")
     echom a:message
   endif
 endfunction
+" }}}
 
 " Configuration control
 " Pushes value to list only if new
 " Based on: http://vi.stackexchange.com/questions/6619/append-to-global-variable-and-completion
 function verilog_systemverilog#PushToVariable(variable, value)
+" {{{
   let list = verilog_systemverilog#VariableGetValue(a:variable)
   if (count(list, a:value) == 0)
     call add(list, a:value)
   endif
   call verilog_systemverilog#VariableSetValue(a:variable, list)
 endfunction
+" }}}
 
 function verilog_systemverilog#PopFromVariable(variable, value)
+" {{{
   let list = verilog_systemverilog#VariableGetValue(a:variable)
   call verilog_systemverilog#VariableSetValue(a:variable, filter(list, "v:val !=# a:value"))
 endfunction
+" }}}
 
 " Get variable value
 " Searches for both b:variable and g:variable, with this priority.
 " If the variable name includes '_lst' it is automatically split into a
 " list.
 function verilog_systemverilog#VariableGetValue(variable)
+" {{{
   if exists('b:' . a:variable)
     let value = eval('b:' . a:variable)
   elseif exists('g:' . a:variable)
@@ -480,6 +513,7 @@ function verilog_systemverilog#VariableGetValue(variable)
     return value
   endif
 endfunction
+" }}}
 
 " Set variable value
 " Searches for both b:variable and g:variable, with this priority.
@@ -487,6 +521,7 @@ endfunction
 " If the variable name includes '_lst' the value argument is assumed to
 " be a list.
 function verilog_systemverilog#VariableSetValue(variable, value)
+" {{{
   if a:variable =~ '_lst'
     let value = join(a:value, ',')
   else
@@ -498,17 +533,21 @@ function verilog_systemverilog#VariableSetValue(variable, value)
     exec 'let g:' . a:variable . ' = value'
   endif
 endfunction
+" }}}
 
 " Checks for variable existence
 function verilog_systemverilog#VariableExists(variable)
+" {{{
   return exists('b:' . a:variable) || exists('g:' . a:variable)
 endfunction
+" }}}
 " }}}
 
 "------------------------------------------------------------------------
 " Command completion functions
 " {{{
 function verilog_systemverilog#CompleteCommand(lead, command, cursor)
+" {{{
   " Get list with current values in variable
   if (a:command =~ 'Folding')
     let current_values = verilog_systemverilog#VariableGetValue("verilog_syntax_fold_lst")
@@ -562,7 +601,8 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
           \ 'method',
           \ 'preproc',
           \ 'conditional',
-          \ 'eos'
+          \ 'eos',
+          \ 'standalone'
           \ ]
     for item in current_values
       call filter(valid_completions, 'v:val !=# item')
@@ -614,18 +654,22 @@ function verilog_systemverilog#CompleteCommand(lead, command, cursor)
   endif
 endfunction
 " }}}
+" }}}
 
 "------------------------------------------------------------------------
 " External functions
 " {{{
 function verilog_systemverilog#GotoInstanceStart(line, column)
+" {{{
   let values = s:GetInstanceInfo(a:line, col('$'))
   if values[2] != ""
     call cursor(values[2], a:column)
   endif
 endfunction
+" }}}
 
 function verilog_systemverilog#FollowInstanceTag(line, column)
+" {{{
   let values = s:GetInstanceInfo(a:line, col('$'))
   if exists("g:verilog_navigate_split")
     exec "wincmd ".g:verilog_navigate_split
@@ -634,8 +678,10 @@ function verilog_systemverilog#FollowInstanceTag(line, column)
     execute "tag " . values[1]
   endif
 endfunction
+" }}}
 
 function verilog_systemverilog#ReturnFromInstanceTag()
+" {{{
   if winnr('$') > 1 && exists("g:verilog_navigate_split")
     if exists("g:verilog_navigate_split_close")
       exec g:verilog_navigate_split_close
@@ -646,19 +692,23 @@ function verilog_systemverilog#ReturnFromInstanceTag()
     exec "pop"
   endif
 endfunction
+" }}}
 
 function verilog_systemverilog#FollowInstanceSearchWord(line, column)
+" {{{
   let @/='\<'.expand("<cword>").'\>'
   call verilog_systemverilog#FollowInstanceTag(a:line, a:column)
   exec "normal!" . @/
   normal! n
 endfunction
 " }}}
+" }}}
 
 "------------------------------------------------------------------------
 " Command to control errorformat and compiler
 " {{{
 function! verilog_systemverilog#VerilogErrorFormat(...)
+" {{{
   " Choose tool
   if (a:0 == 0)
     let l:tool = inputlist([
@@ -741,6 +791,7 @@ function! verilog_systemverilog#VerilogErrorFormat(...)
     echoerr 'Unknown tool name "' . l:tool . '"'
   endif
 endfunction
+" }}}
 " }}}
 
 " vi: sw=2 sts=2 fdm=marker:

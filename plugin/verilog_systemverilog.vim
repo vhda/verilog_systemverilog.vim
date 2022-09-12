@@ -1,5 +1,5 @@
 " Global plugin settings
-let g:verilog_disable_indent_lst="eos"
+let g:verilog_disable_indent_lst="eos,standalone"
 
 " Command definitions
 command! -nargs=* VerilogErrorFormat call verilog_systemverilog#VerilogErrorFormat(<f-args>)

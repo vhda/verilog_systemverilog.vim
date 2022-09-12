@@ -1,0 +1,27 @@
+name: Verification flow
+on:
+  push:
+    branches:
+      - master
+      - github-runner
+  pull_request:
+    branches:
+      - master
+jobs:
+  Run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run tests
+        id: run_tests
+        run: make V=1 all > make.log 2>&1
+      - name: Upload log
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            make.log
+            test-efm.log
+            test-syntax.log

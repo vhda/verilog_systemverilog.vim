@@ -5,7 +5,7 @@ SILENT_0 = @
 SILENT_1 =
 
 SHELL = /bin/bash -o pipefail
-VIM = vim -u test/test_vimrc -U none -T dumb -E --cmd "set runtimepath+=${PWD}"
+VIM = vim -u test/test_vimrc -U NONE -i NONE -T dumb -E --cmd "set runtimepath+=${PWD}"
 
 .PHONY: help test test-fold test-indent test-efm
 
@@ -26,18 +26,38 @@ test-indent:
 		-c 'call RunTestIndent()'
 
 test-efm:
+ifndef CI
 	$(SILENT) $(VIM) \
 		-c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
 		-c 'call RunTestEfm()' | \
-		tee test-efm.log | grep "^Error format test"
+		tee test-efm.log | \
+		grep "^Error format test"
+else
+	$(SILENT) $(VIM) \
+		-c 'source test/functions.vim' \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestEfm()' | \
+		tee test-efm.log
+endif
 
 test-syntax:
+ifndef CI
 	$(SILENT) $(VIM) \
 	        -c 'source test/functions.vim' \
 		-c 'source test/run_test.vim' \
-		-c 'call RunTestSyntax()' | tr -d '[]' | \
-		tee test-syntax.log | grep "^Syntax test"
+		-c 'call RunTestSyntax()' | \
+		tr -d '[]' | \
+		tee test-syntax.log | \
+		grep "^Syntax test"
+else
+	$(SILENT) $(VIM) \
+	        -c 'source test/functions.vim' \
+		-c 'source test/run_test.vim' \
+		-c 'call RunTestSyntax()' | \
+		tr -d '[]' | \
+		tee test-syntax.log
+endif
 
 performance:
 	$(SILENT) time $(VIM) \
