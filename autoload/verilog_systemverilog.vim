@@ -675,7 +675,7 @@ function verilog_systemverilog#FollowInstanceTag(line, column)
     exec "wincmd ".g:verilog_navigate_split
   endif
   if values[1] != ""
-    execute "tag " . values[1]
+    execute "tjump " . values[1]
   endif
 endfunction
 " }}}
