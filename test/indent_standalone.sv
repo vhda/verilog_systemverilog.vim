@@ -26,6 +26,11 @@ class z;
 
     int unsigned cnt=0;
 
+    // Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/232
+    foo--;
+    bar();
+    // End of copied code
+
     function new();
         super.new();
     endfunction;
