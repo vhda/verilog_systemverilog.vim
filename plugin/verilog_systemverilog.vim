@@ -176,6 +176,12 @@ let g:verilog_syntax = {
                         \ 'highlight'   : 'verilogStatement',
                         \ 'syn_argument': 'transparent keepend contains=ALLBUT,verilogInterface',
                         \ }],
+      \ 'ovm'         : [{
+                        \ 'match_start' : '`\<\(ovm\|uvm\)_\a\+_utils_begin\>',
+                        \ 'match_end'   : '`\<\(ovm\|uvm\)_\a\+_utils_end\>',
+                        \ 'highlight'   : 'verilogStatement',
+                        \ 'syn_argument': 'transparent keepend',
+                        \ }],
       \ 'property'    : [{
                         \ 'match_start' : '\<\%(\%(assert\|assume\|cover\|restrict\)\s\+\)\@<!\<property\>',
                         \ 'match_end'   : '\<endproperty\>',
