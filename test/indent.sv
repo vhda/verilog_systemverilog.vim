@@ -1079,4 +1079,23 @@ package automatic regmodel_dpi_pkg;
 endpackage
 // End of copied code
 
+// Code from: // https://github.com/vhda/verilog_systemverilog.vim/issues/231
+class my_class;
+
+    int my_var;
+
+    constraint reg_addr_c {
+        `ifndef MY_MACRO
+            my_var == 2;
+        `else
+            my_var == 3;
+        `endif
+    }
+
+    function new();
+    endfunction
+
+endclass
+// End of copied code
+
 // vi: set expandtab softtabstop=4 shiftwidth=4:
