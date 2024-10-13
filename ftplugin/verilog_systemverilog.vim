@@ -41,7 +41,7 @@ if exists("loaded_matchit")
   let b:match_ignorecase=0
   let b:match_words=
     \ '\<begin\>:\<end\>,' .
-    \ '\<case\>\|\<casex\>\|\<casez\>:\<endcase\>,' .
+    \ '\<case\>\|\<casex\>\|\<casez\>\|\<randcase\>:\<endcase\>,' .
     \ '`if\(n\)\?def\>:`elsif\>:`else\>:`endif\>,' .
     \ '\<module\>:\<endmodule\>,' .
     \ '\<if\>:\<else\>,' .

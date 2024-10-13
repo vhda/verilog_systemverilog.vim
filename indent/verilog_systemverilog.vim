@@ -32,9 +32,6 @@ let s:vlog_sens_list      = '\(@\s*(.*)\)'
 let s:vlog_always         = '\<always\(_ff\|_comb\|_latch\)\?\>\s*' . s:vlog_sens_list . '\?'
 let s:vlog_method         = '^\(\s*pure\s\+virtual\|\s*extern\)\@!.*\<\(function\|task\)\>\s\+\(\[.*\]\s*\)\?\w\+'
 
-let s:vlog_block_start    = '\<\(begin\|case\|^\s*fork\)\>\|{\|('
-let s:vlog_block_end      = '\<\(end\|endcase\|join\(_all\|_none\)\?\)\>\|}\|)'
-
 let s:vlog_module         = '\<\(extern\s\+\)\@<!module\>'
 let s:vlog_interface      = '\(virtual\s\+\)\@<!\<interface\>\s*\(\<class\>\)\@!\w\+.*[^,]$'
 let s:vlog_package        = '\<package\>'
@@ -48,7 +45,7 @@ let s:vlog_clocking       = g:verilog_syntax['clocking'][0]['match_start']
 let s:vlog_preproc        = '^\s*`ifn\?def\>'
 let s:vlog_define         = '^\s*`define\>'
 
-let s:vlog_case           = '\<case[zx]\?\>\s*('
+let s:vlog_case           = '\<case[zx]\?\>\s*(\|\<randcase\>'
 let s:vlog_join           = '\<join\(_any\|_none\)\?\>'
 
 let s:vlog_block_decl     = '\(\<\(while\|if\|foreach\|for\|repeat\)\>\s*(\)\|\<\(initial\|forever\|else\|do\)\>\|' . s:vlog_always

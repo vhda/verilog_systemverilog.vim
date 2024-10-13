@@ -526,6 +526,12 @@ case (Signal)
 endcase
 // End of copied code
 
+randcase
+    1: value <= 0;
+    2: value <= 1;
+    3: value <= 2;
+endcase
+
 interface class base;
 
     pure virtual function void a(input int unsigned N, ref t Data);

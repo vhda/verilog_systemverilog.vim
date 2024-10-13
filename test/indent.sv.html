@@ -528,6 +528,12 @@ MyModule <span class="Special">#(</span>
 <span class="Statement">endcase</span>
 <span class="Comment">// End of copied code</span>
 
+<span class="Statement">randcase</span>
+    <span class="Constant">1</span><span class="Special">:</span> value <span class="Special">&lt;=</span> <span class="Constant">0</span><span class="Special">;</span>
+    <span class="Constant">2</span><span class="Special">:</span> value <span class="Special">&lt;=</span> <span class="Constant">1</span><span class="Special">;</span>
+    <span class="Constant">3</span><span class="Special">:</span> value <span class="Special">&lt;=</span> <span class="Constant">2</span><span class="Special">;</span>
+<span class="Statement">endcase</span>
+
 <span class="Statement">interface</span> <span class="Statement">class</span> base<span class="Special">;</span>
 
     <span class="Statement">pure</span> <span class="Statement">virtual</span> <span class="Statement">function</span> <span class="Statement">void</span> <span class="Identifier">a</span><span class="Special">(</span><span class="Statement">input</span> <span class="Statement">int</span> <span class="Statement">unsigned</span> <span class="Constant">N</span><span class="Special">,</span> <span class="Statement">ref</span> t Data<span class="Special">);</span>
