@@ -78,7 +78,7 @@ let g:verilog_syntax_fold_lst = "all"
 set foldmethod=syntax
 ```
 
-For more information check the help page `:help veriog-fold`.
+For more information check the help page `:help verilog-fold`.
 
 ### Verilog Compilation and Error format
 
