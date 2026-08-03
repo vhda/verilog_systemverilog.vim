@@ -38,22 +38,22 @@ syn keyword verilogStatement   endprimitive endtable
 syn keyword verilogStatement   event force fork join
 syn keyword verilogStatement   join_any join_none forkjoin
 syn keyword verilogStatement   generate genvar highz0 highz1 ifnone
-syn keyword verilogStatement   incdir include initial inout input
-syn keyword verilogStatement   instance integer large liblist
-syn keyword verilogStatement   library localparam macromodule medium
+syn keyword verilogStatement   initial
+syn keyword verilogStatement   instance large liblist
+syn keyword verilogStatement   library macromodule medium
 syn keyword verilogStatement   nand negedge nmos nor
 syn keyword verilogStatement   noshowcancelled not notif0 notif1 or
-syn keyword verilogStatement   output parameter pmos posedge primitive
+syn keyword verilogStatement   pmos posedge primitive
 syn keyword verilogStatement   pull0 pull1 pulldown pullup
 syn keyword verilogStatement   pulsestyle_onevent pulsestyle_ondetect
-syn keyword verilogStatement   rcmos real realtime reg release
+syn keyword verilogStatement   rcmos release
 syn keyword verilogStatement   rnmos rpmos rtran rtranif0 rtranif1
 syn keyword verilogStatement   scalared showcancelled signed small
 syn keyword verilogStatement   specparam strong0 strong1
-syn keyword verilogStatement   supply0 supply1 table time tran
-syn keyword verilogStatement   tranif0 tranif1 tri tri0 tri1 triand
+syn keyword verilogStatement   supply0 supply1 table tran
+syn keyword verilogStatement   tranif0 tranif1 tri0 tri1 triand
 syn keyword verilogStatement   trior trireg unsigned use vectored wait
-syn keyword verilogStatement   wand weak0 weak1 wire wor xnor xor
+syn keyword verilogStatement   wand weak0 weak1 wor xnor xor
 syn keyword verilogStatement   semaphore mailbox
 
 syn keyword verilogStatement   always_comb always_ff always_latch
@@ -66,13 +66,10 @@ syn keyword verilogStatement   randcase
 syn keyword verilogStatement   randsequence
 syn keyword verilogStatement   get_randstate set_randstate
 syn keyword verilogStatement   srandom
-syn keyword verilogStatement   logic bit byte time
-syn keyword verilogStatement   int longint shortint
-syn keyword verilogStatement   struct packed
+syn keyword verilogStatement   packed
 syn keyword verilogStatement   final
 syn keyword verilogStatement   import
 syn keyword verilogStatement   context pure
-syn keyword verilogStatement   void shortreal chandle string
 syn keyword verilogStatement   modport
 syn keyword verilogStatement   cover coverpoint
 syn keyword verilogStatement   program endprogram
@@ -92,7 +89,11 @@ syn keyword verilogStatement   s_always s_eventually s_nexttime s_until s_until_
 syn keyword verilogStatement   strong sync_accept_on sync_reject_on unique unique0
 syn keyword verilogStatement   until until_with untyped weak
 
-syn keyword verilogTypeDef     enum
+syn keyword verilogDataType    reg wire integer real time realtime
+syn keyword verilogDataType    logic bit byte shortint int longint shortreal tri
+syn keyword verilogDataType    void string chandle
+
+syn keyword verilogTypeDef     enum struct
 
 syn keyword verilogConditional iff
 syn keyword verilogConditional if else case casex casez default endcase
@@ -101,11 +102,19 @@ syn keyword verilogRepeat      forever repeat while for
 syn keyword verilogRepeat      return break continue
 syn keyword verilogRepeat      do while foreach
 
+syn keyword verilogDirection   input output inout
+
+syn keyword verilogParameter   parameter localparam
+
+syn keyword verilogInclude     incdir include
+
 syn match   verilogGlobal      "`[a-zA-Z_][a-zA-Z0-9_$]\+"
 syn match   verilogGlobal      "$[a-zA-Z0-9_$]\+"
 
+syn match   verilogInclude     "`include"
+
 if !exists('g:verilog_disable_constant_highlight')
-    syn match   verilogConstant    "\<[A-Z][A-Z0-9_$]*\>"
+    syn match   verilogConstant    "\(^\|[^.]\)\zs\<[A-Z][A-Z0-9_$]*\>"
 endif
 
 syn match   verilogNumber      "\(\d\+\)\?'[sS]\?[bB]\s*[0-1_xXzZ?]\+"
@@ -126,9 +135,9 @@ syn match   verilogEscape      "\\\o\o\=\o\=" contained
 
 syn keyword verilogMethod      new
 if v:version >= 704
-    syn match   verilogMethod  "\(\(\s\|[(/]\|^\)\.\)\@2<!\<\w\+\ze#\?("
+    syn match   verilogMethod  "\(\(\s\|[(/]\|^\)\.\)\@2<!\<\w\+\ze#\? *("
 else
-    syn match   verilogMethod  "\(\(\s\|[(/]\|^\)\.\)\@<!\<\w\+\ze#\?("
+    syn match   verilogMethod  "\(\(\s\|[(/]\|^\)\.\)\@<!\<\w\+\ze#\? *("
 endif
 
 syn match   verilogLabel       "\<\k\+\>\ze\s*:\s*\<\(assert\|assume\|cover\(point\)\?\|cross\)\>"
@@ -391,8 +400,11 @@ if version >= 508 || !exists("did_verilog_syn_inits")
    HiLink verilogEscape          Special
    HiLink verilogMethod          Function
    HiLink verilogTypeDef         TypeDef
+   HiLink verilogDataType        Type
    HiLink verilogObject          Type
-
+   HiLink verilogInclude         Include
+   HiLink verilogDirection       StorageClass
+   HiLink verilogParameter       StorageClass
    delcommand HiLink
 endif
 
