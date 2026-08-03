@@ -532,6 +532,27 @@ randcase
     3: value <= 2;
 endcase
 
+// indent after endcase
+// https://github.com/vhda/verilog_systemverilog.vim/issues/250
+begin
+    case (a)
+        1: value = 1;
+    endcase
+
+    begin
+    end
+end
+
+begin
+    randcase
+        1: value = 1;
+    endcase
+
+    begin
+    end
+end
+
+
 interface class base;
 
     pure virtual function void a(input int unsigned N, ref t Data);

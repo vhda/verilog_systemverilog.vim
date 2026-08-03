@@ -329,7 +329,7 @@ function! s:GetContextIndent()
     endif
 
     if l:line =~ '\<endcase\>'
-      let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 1)
+      let l:lnum = s:SearchForBlockStart(s:vlog_case, '', '\<endcase\>', l:lnum, 0)
       let l:oneline_mode = 0
       let l:line = s:GetLineStripped(l:lnum)
     endif
