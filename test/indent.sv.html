@@ -1087,6 +1087,25 @@ do_something_else<span class="Special">;</span>
 <span class="Statement">endpackage</span>
 <span class="Comment">// End of copied code</span>
 
+<span class="Comment">// Code from: // <a href="https://github.com/vhda/verilog_systemverilog.vim/issues/231">https://github.com/vhda/verilog_systemverilog.vim/issues/231</a></span>
+<span class="Statement">class</span> my_class<span class="Special">;</span>
+
+    <span class="Statement">int</span> my_var<span class="Special">;</span>
+
+    <span class="Statement">constraint</span> reg_addr_c <span class="Special">{</span>
+        <span class="PreProc">`ifndef</span> <span class="Constant">MY_MACRO</span>
+            my_var <span class="Special">==</span> <span class="Constant">2</span><span class="Special">;</span>
+        <span class="PreProc">`else</span>
+            my_var <span class="Special">==</span> <span class="Constant">3</span><span class="Special">;</span>
+        <span class="PreProc">`endif</span>
+    <span class="Special">}</span>
+
+    <span class="Statement">function</span> <span class="Identifier">new</span><span class="Special">();</span>
+    <span class="Statement">endfunction</span>
+
+<span class="Statement">endclass</span>
+<span class="Comment">// End of copied code</span>
+
 <span class="Comment">// vi&#0058; set expandtab softtabstop=4 shiftwidth=4:</span>
 </pre>
 </body>

@@ -355,6 +355,15 @@ function! s:GetContextIndent()
       if l:bracket_level < 0
         call verilog_systemverilog#Verbose("Inside a '()' block.")
         return indent(l:lnum) + s:offset
+      elseif l:bracket_level > 0
+        call verilog_systemverilog#Verbose("Inside a '()' block. Skipping the whole block.")
+        while l:bracket_level > 0
+          let l:lnum = s:SearchForBlockStart('(', '', ')', l:lnum, 0)
+          let l:line = s:GetLineStripped(l:lnum)
+          let l:bracket_level +=
+                \ s:CountMatches(l:line, ')') - s:CountMatches(l:line, '(')
+        endwhile
+        call verilog_systemverilog#Verbose("End of '()' block found at line " . l:lnum . ".")
       endif
     endif
 
@@ -364,6 +373,15 @@ function! s:GetContextIndent()
       if l:cbracket_level < 0
         call verilog_systemverilog#Verbose("Inside a '{}' block.")
         return indent(l:lnum) + s:offset + l:open_offset
+      elseif l:cbracket_level > 0
+        call verilog_systemverilog#Verbose("Inside a '{}' block. Skipping the whole block.")
+        while l:cbracket_level > 0
+          let l:lnum = s:SearchForBlockStart('{', '', '}', l:lnum, 0)
+          let l:line = s:GetLineStripped(l:lnum)
+          let l:cbracket_level +=
+                \ s:CountMatches(l:line, '}') - s:CountMatches(l:line, '{')
+        endwhile
+        call verilog_systemverilog#Verbose("End of '{}' block found at line " . l:lnum . ".")
       endif
     endif
 
